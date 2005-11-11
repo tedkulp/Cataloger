@@ -90,7 +90,7 @@ class Cataloger extends CMSModule
 		$dict->ExecuteSQLArray($sqlarray);
 		$query = 'INSERT INTO '. cms_db_prefix(). 'module_catalog_template_type VALUES (?,?)';
 		$dbresult = $db->Execute($query,array(1, $this->Lang('item_page')));
-		$dbresult = $db->Execute($query,array(2, $this->Lang('section_page')));
+		$dbresult = $db->Execute($query,array(2, $this->Lang('category_page')));
 		$dbresult = $db->Execute($query,array(3, $this->Lang('catalog_page')));
 		$dbresult = $db->Execute($query,array(4, $this->Lang('catalog_datasheet')));
 
@@ -118,11 +118,52 @@ class Cataloger extends CMSModule
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
 		$dbresult = $db->Execute($query,array($new_id, 3, 'Copyright'));
 
-        $fileDir = dirname($this->cms->config['uploads_path'].'/images/catalog/index.html');
-        if (!is_dir($fileDir))
-            {
-            mkdir($fileDir);
+		$catalogdirs = array('catalog','catalog_src');
+		foreach ($catalogdirs as $thisDir)
+			{
+        	$fileDir = dirname($this->cms->config['uploads_path'].'/images/'.$thisDir.'/index.html');
+        	if (!is_dir($fileDir))
+            	{
+            	mkdir($fileDir);
+            	}
+			touch($fileDir.'/index.html');
             }
+            
+		$dir=opendir(dirname(__FILE__).'/includes');
+   		$temps = array();
+   		while($filespec=readdir($dir))
+   			{
+       		if(! preg_match('/\.tpl$/i',$filespec))
+       			{
+       			continue;
+       			}
+       		array_push($temps, $filespec);
+			}        
+		sort($temps);
+		$query = 'INSERT INTO '. cms_db_prefix().
+				'module_catalog_template (id, type_id, title, template) '.
+				' VALUES (?,?,?,?)';
+
+		foreach ($temps as $filespec)
+			{
+       		$template = file_get_contents(dirname(__FILE__).'/includes/'.$filespec);
+       		$temp_name = preg_replace('/\.tpl$/i','',$filespec);
+			$type_id = -1;
+       		if (substr($temp_name,0,5) == 'Item-')
+       			{
+       			$type_id = 1;
+       			}
+       		else if (substr($temp_name,0,9) == 'Category-')
+       			{
+       			$type_id = 2;
+       			}
+       		
+    		$temp_id = $db->GenID(cms_db_prefix().
+    			'module_catalog_template_seq');
+			$dbresult = $db->Execute($query,
+				array($temp_id,$type_id, $temp_name,$template));
+       		$this->SetTemplate('catalog_'.$temp_id,$template);
+       		}
         
         $this->SetPreference('image_count', 2);
 		$this->CreatePermission('Modify Catalog Settings', 'Modify Catalog Settings');
@@ -172,15 +213,15 @@ class Cataloger extends CMSModule
 				$this->DisplayItem($id, $params, $returnid);
 				break;
 				}
-			case "defaultsection":
+			case "defaultcategory":
 				{
-				$this->DisplaySection($id, $params, $returnid);
+				$this->DisplayCategory($id, $params, $returnid);
 				break;
 				}
 			case "other":
-				if (isset($params["section"]))
+				if (isset($params["category"]))
 				{
-					# show a summary of all works in a section
+					# show a summary of all works in a category
 				}
 				else if (isset($params["item_id"])) 
 				{
@@ -285,7 +326,7 @@ class Cataloger extends CMSModule
 		echo $this->ProcessTemplateFromDatabase('catalog_'.$params['sub_template']);
 	}
 
-    function DisplaySection($id, &$params, $returnid)
+    function DisplayCategory($id, &$params, $returnid)
     {
 		$db = &$this->cms->db;
 		foreach ($params as $key=>$val)
@@ -305,7 +346,7 @@ class Cataloger extends CMSModule
 		$curHierarchy = $curPage->Hierarchy();
 
         $curHierLen = strlen($curHierarchy);
-        $sectionItems = array();
+        $categoryItems = array();
         if (isset($params['sort_order']) && $params['sort_order'] == 'alpha')
             {
             usort($content,array("Cataloger", "contentalpha"));
@@ -334,9 +375,9 @@ class Cataloger extends CMSModule
                 {
                 $type_ok = true;
                 }
-            else if ($thisPage->Type() == 'catalogsection' &&
-                          ($params['recurse'] == 'sections_one' ||
-                           $params['recurse'] == 'sections_all' ||
+            else if ($thisPage->Type() == 'catalogcategory' &&
+                          ($params['recurse'] == 'categories_one' ||
+                           $params['recurse'] == 'categories_all' ||
                            $params['recurse'] == 'mixed_one' ||
                            $params['recurse'] == 'mixed_all'))
                     {
@@ -347,7 +388,7 @@ class Cataloger extends CMSModule
                 continue;
                 }
             if (($params['recurse'] == 'items_one' ||
-                 $params['recurse'] == 'sections_one' ||
+                 $params['recurse'] == 'categories_one' ||
                  $params['recurse'] == 'mixed_one') &&
                  substr_count($thisPage->Hierarchy(),'.') == $curHierLen + 1 &&
                  substr($thisPage->Hierarchy(),0,$curHierLen) == $curHierarchy)
@@ -355,7 +396,7 @@ class Cataloger extends CMSModule
                 $depth_ok = true;
                 }
             else if (($params['recurse'] == 'items_all' ||
-                 $params['recurse'] == 'sections_all' ||
+                 $params['recurse'] == 'categories_all' ||
                  $params['recurse'] == 'mixed_all') &&
                  substr($thisPage->Hierarchy(),0,$curHierLen) == $curHierarchy)
                     {
@@ -365,23 +406,23 @@ class Cataloger extends CMSModule
                 {
                 continue;
                 }
-			// in the section, and approved for addition
+			// in the category, and approved for addition
 			$thisItem = array();
 			switch ($thisPage->Type())
 				{
                 case 'catalogitem':
 				    $thisItem['image'] = $thisPage->Alias().'_s_1.jpg';
 				    break;
-				case 'catalogsection':
-				    $thisItem['image'] = $thisPage->Alias().'_st_1.jpg';
+				case 'catalogcategory':
+				    $thisItem['image'] = $thisPage->Alias().'_ct_1.jpg';
 				    break;
 				}
 			$thisItem['link'] = $thisPage->GetUrl();
 			$thisItem['title'] = $thisPage->MenuText();
-			array_push($sectionItems,$thisItem);
+			array_push($categoryItems,$thisItem);
 			}
             
-        $count = count($sectionItems);
+        $count = count($categoryItems);
         if (isset($_REQUEST['start']))
         	{
         	$start = $_REQUEST['start'];
@@ -440,8 +481,8 @@ class Cataloger extends CMSModule
        		}
 
 		$navstr = rtrim($navstr,':');
-        $sectionItems = array_splice($sectionItems, $start, $end);
-        $this->smarty->assign('items',$sectionItems);
+        $categoryItems = array_splice($categoryItems, $start, $end);
+        $this->smarty->assign('items',$categoryItems);
         $this->smarty->assign('navstr',$navstr);
         
 		echo $this->ProcessTemplateFromDatabase('catalog_'.$params['sub_template']);
@@ -487,25 +528,25 @@ class Cataloger extends CMSModule
 
         $this->smarty->assign('tab_headers',$this->StartTabHeaders().
             $this->SetTabHeader('item',$this->Lang('title_item_tab')).
-            $this->SetTabHeader('section',$this->Lang('title_section_tab')).
+            $this->SetTabHeader('category',$this->Lang('title_category_tab')).
             $this->SetTabHeader('catalog',$this->Lang('title_catalog_tab')).
             $this->EndTabHeaders().$this->StartTabContent());
         $this->smarty->assign('end_tab',$this->EndTab());
         $this->smarty->assign('tab_footers',$this->EndTabContent());
         $this->smarty->assign('start_item_tab',$this->StartTab('item'));
-        $this->smarty->assign('start_section_tab',$this->StartTab('section'));
+        $this->smarty->assign('start_category_tab',$this->StartTab('category'));
         $this->smarty->assign('start_catalog_tab',$this->StartTab('catalog'));
 
         $this->smarty->assign_by_ref('message', $message);
         $this->smarty->assign('attribute_inputs', $attributes);
         $this->smarty->assign('title_item_attributes', $this->Lang('title_item_tab'));
         $this->smarty->assign('title_catalog_attributes', $this->Lang('title_catalog_tab'));
-        $this->smarty->assign('title_section_attributes', $this->Lang('title_section_tab'));
+        $this->smarty->assign('title_category_attributes', $this->Lang('title_category_tab'));
         $this->smarty->assign('title_item_attributes_help', $this->Lang('title_item_attributes_help'));
         $this->smarty->assign('title_catalog_attributes_help', $this->Lang('title_catalog_attributes_help'));
-        $this->smarty->assign('title_section_attributes_help', $this->Lang('title_section_attributes_help'));
+        $this->smarty->assign('title_category_attributes_help', $this->Lang('title_category_attributes_help'));
 
-        $this->smarty->assign('section', $this->Lang('manageattrs'));
+        $this->smarty->assign('category', $this->Lang('manageattrs'));
 
         #Display template
         echo $this->ProcessTemplate('adminattrs.tpl');
@@ -560,24 +601,24 @@ class Cataloger extends CMSModule
 
         $this->smarty->assign('tab_headers',$this->StartTabHeaders().
         $this->SetTabHeader('itemimage',$this->Lang('title_item_image_tab')).
-        $this->SetTabHeader('sectionimage',$this->Lang('title_section_image_tab')).
+        $this->SetTabHeader('categoryimage',$this->Lang('title_category_image_tab')).
         $this->SetTabHeader('aspect',$this->Lang('title_aspect_tab')).
         $this->EndTabHeaders().$this->StartTabContent());
         $this->smarty->assign('end_tab',$this->EndTab());
         $this->smarty->assign('tab_footers',$this->EndTabContent());
         $this->smarty->assign('start_item_image_tab',$this->StartTab('itemimage'));
-        $this->smarty->assign('start_section_image_tab',$this->StartTab('sectionimage'));
+        $this->smarty->assign('start_category_image_tab',$this->StartTab('categoryimage'));
         $this->smarty->assign('start_aspect_tab',$this->StartTab('aspect'));
 
         $this->smarty->assign('title_item_image_count', $this->Lang('title_item_image_count'));
-        $this->smarty->assign('title_section_image_count', $this->Lang('title_section_image_count'));
+        $this->smarty->assign('title_category_image_count', $this->Lang('title_category_image_count'));
         $this->smarty->assign('title_item_image_size_hero', $this->Lang('title_item_image_size_hero'));
         $this->smarty->assign('title_item_image_size_thumbnail', $this->Lang('title_item_image_size_thumbnail'));
-        $this->smarty->assign('title_section_image_size_hero', $this->Lang('title_section_image_size_hero'));
-        $this->smarty->assign('title_section_image_size_thumbnail', $this->Lang('title_section_image_size_thumbnail'));
-        $this->smarty->assign('title_item_image_size_section', $this->Lang('title_item_image_size_section'));
+        $this->smarty->assign('title_category_image_size_hero', $this->Lang('title_category_image_size_hero'));
+        $this->smarty->assign('title_category_image_size_thumbnail', $this->Lang('title_category_image_size_thumbnail'));
+        $this->smarty->assign('title_item_image_size_category', $this->Lang('title_item_image_size_category'));
         $this->smarty->assign('title_item_image_size_catalog', $this->Lang('title_item_image_size_catalog'));
-        $this->smarty->assign('title_section_recurse',$this->Lang('title_section_recurse'));
+        $this->smarty->assign('title_category_recurse',$this->Lang('title_category_recurse'));
         $this->smarty->assign('title_force_aspect_ratio', $this->Lang('title_force_aspect_ratio'));
         $this->smarty->assign('title_image_aspect_ratio', $this->Lang('title_image_aspect_ratio'));
         $this->smarty->assign('title_aspect_ratio_help', $this->Lang('title_aspect_ratio_help'));
@@ -587,33 +628,33 @@ class Cataloger extends CMSModule
         	$number[$i]=$i;
         	}
         $this->smarty->assign('input_item_image_count', $this->CreateInputDropdown($id, 'item_image_count', $number, -1,  $this->GetPreference('image_count', '2')));
-        $this->smarty->assign('input_section_image_count', $this->CreateInputDropdown($id, 'section_image_count', $number, -1,  $this->GetPreference('section_count', '1')));
+        $this->smarty->assign('input_category_image_count', $this->CreateInputDropdown($id, 'category_image_count', $number, -1,  $this->GetPreference('category_count', '1')));
 
-		$recurse =  $this->GetPreference('section_recurse', 'mixed_all'); 
-		$this->smarty->assign('input_section_recurse',
-			'<input type="radio" name="'.$id.'section_recurse" value="items_all"' .
+		$recurse =  $this->GetPreference('category_recurse', 'mixed_all'); 
+		$this->smarty->assign('input_category_recurse',
+			'<input type="radio" name="'.$id.'category_recurse" value="items_all"' .
 				($recurse == 'items_all'?' checked="checked"':'').' />'.
-				$this->Lang('title_section_recurse_items_all').'<br />'.
-			'<input type="radio" name="'.$id.'section_recurse" value="items_one"' .
+				$this->Lang('title_category_recurse_items_all').'<br />'.
+			'<input type="radio" name="'.$id.'category_recurse" value="items_one"' .
 				($recurse == 'items_one'?' checked="checked"':'').' />'.
-				$this->Lang('title_section_recurse_items_one').'<br />'.
-			'<input type="radio" name="'.$id.'section_recurse" value="sections_all"' .
-				($recurse == 'sections_all'?' checked="checked"':'').' />'.
-				$this->Lang('title_section_recurse_sections_all').'<br />'.
-			'<input type="radio" name="'.$id.'section_recurse" value="sections_one"' .
-				($recurse == 'sections_one'?' checked="checked"':'').' />'.
-				$this->Lang('title_section_recurse_sections_one').'<br />'.
-			'<input type="radio" name="'.$id.'section_recurse" value="mixed_all"' .
+				$this->Lang('title_category_recurse_items_one').'<br />'.
+			'<input type="radio" name="'.$id.'category_recurse" value="categories_all"' .
+				($recurse == 'categories_all'?' checked="checked"':'').' />'.
+				$this->Lang('title_category_recurse_categories_all').'<br />'.
+			'<input type="radio" name="'.$id.'category_recurse" value="categories_one"' .
+				($recurse == 'categories_one'?' checked="checked"':'').' />'.
+				$this->Lang('title_category_recurse_categories_one').'<br />'.
+			'<input type="radio" name="'.$id.'category_recurse" value="mixed_all"' .
 				($recurse == 'mixed_all'?' checked="checked"':'').' />'.
-				$this->Lang('title_section_recurse_mixed_all').'<br />'.
-			'<input type="radio" name="'.$id.'section_recurse" value="mixed_one"' .
+				$this->Lang('title_category_recurse_mixed_all').'<br />'.
+			'<input type="radio" name="'.$id.'category_recurse" value="mixed_one"' .
 				($recurse == 'mixed_one'?' checked="checked"':'').' />'.
-				$this->Lang('title_section_recurse_mixed_one'));
+				$this->Lang('title_category_recurse_mixed_one'));
         $this->smarty->assign('input_item_image_size_hero', $this->CreateInputText($id, 'item_image_size_hero', $this->GetPreference('image_size_hero', '400'), 10, 10));
         $this->smarty->assign('input_item_image_size_thumbnail', $this->CreateInputText($id, 'item_image_size_thumbnail', $this->GetPreference('image_size_thumbnail', '70'), 10, 10));
-        $this->smarty->assign('input_section_image_size_hero', $this->CreateInputText($id, 'section_image_size_hero', $this->GetPreference('image_size_hero', '400'), 10, 10));
-        $this->smarty->assign('input_section_image_size_thumbnail', $this->CreateInputText($id, 'section_image_size_thumbnail', $this->GetPreference('image_size_thumbnail', '70'), 10, 10));
-        $this->smarty->assign('input_item_image_size_section', $this->CreateInputText($id, 'item_image_size_section', $this->GetPreference('image_size_section', '70'), 10, 10));
+        $this->smarty->assign('input_category_image_size_hero', $this->CreateInputText($id, 'category_image_size_hero', $this->GetPreference('image_size_hero', '400'), 10, 10));
+        $this->smarty->assign('input_category_image_size_thumbnail', $this->CreateInputText($id, 'category_image_size_thumbnail', $this->GetPreference('image_size_thumbnail', '70'), 10, 10));
+        $this->smarty->assign('input_item_image_size_category', $this->CreateInputText($id, 'item_image_size_category', $this->GetPreference('image_size_category', '70'), 10, 10));
         $this->smarty->assign('input_item_image_size_catalog', $this->CreateInputText($id, 'item_image_size_catalog', $this->GetPreference('image_size_catalog', '100'), 10, 10));
 
 		$this->smarty->assign('input_force_aspect_ratio',$this->CreateInputCheckbox($id, 'force_aspect_ratio', 1, $this->GetPreference('force_aspect_ratio', 0)).'&nbsp;'.
@@ -627,15 +668,15 @@ class Cataloger extends CMSModule
                 	'7'=>'7','8'=>'8','9'=>'9','10'=>'10','11'=>'11','12'=>'12',
                 	'13'=>'13','14'=>'14','15'=>'15','16'=>'16','17'=>'17','18'=>'18',
                 	'19'=>'19','20'=>'20','24'=>'24','25'=>'25','30'=>'30','40'=>'40',
-                	'50'=>'50', '1000'=>'1000'), -1, $this->GetPreference('section_items_per_page','10')));
+                	'50'=>'50', '1000'=>'1000'), -1, $this->GetPreference('category_items_per_page','10')));
         $this->smarty->assign('title_item_sort_order',$this->Lang('title_item_sort_order'));
 		$this->smarty->assign('input_item_sort_order',$this->CreateInputDropdown($id,
 		 	'item_sort_order',array($this->Lang('natural_order')=>'natural',
-		 	$this->Lang('alpha_order')=>'alpha'), -1, $this->GetPreference('section_sort_order','natural')));
+		 	$this->Lang('alpha_order')=>'alpha'), -1, $this->GetPreference('category_sort_order','natural')));
 
         $this->smarty->assign_by_ref('message', $message);
 
-        $this->smarty->assign('section', $this->Lang('manageprefs'));
+        $this->smarty->assign('category', $this->Lang('manageprefs'));
 
         #Display template
         echo $this->ProcessTemplate('adminprefs.tpl');
@@ -645,18 +686,18 @@ class Cataloger extends CMSModule
     function submitPrefs($id, &$params, $returnid)
     {
         $this->SetPreference('item_image_count', isset($params['item_image_count'])?$params['item_image_count']:2);
-        $this->SetPreference('section_image_count', isset($params['section_image_count'])?$params['section_image_count']:1);
+        $this->SetPreference('category_image_count', isset($params['category_image_count'])?$params['category_image_count']:1);
 		$this->SetPreference('item_image_size_hero', isset($params['item_image_size_hero'])?$params['item_image_size_hero']:'400');
 		$this->SetPreference('item_image_size_thumbnail', isset($params['item_image_size_thumbnail'])?$params['item_image_size_thumbnail']:'70');
-		$this->SetPreference('section_image_size_hero', isset($params['section_image_size_hero'])?$params['section_image_size_hero']:'400');
-		$this->SetPreference('section_image_size_thumbnail', isset($params['section_image_size_thumbnail'])?$params['section_image_size_thumbnail']:'70');
-		$this->SetPreference('item_image_size_section', isset($params['item_image_size_section'])?$params['item_image_size_section']:'70');
+		$this->SetPreference('category_image_size_hero', isset($params['category_image_size_hero'])?$params['category_image_size_hero']:'400');
+		$this->SetPreference('category_image_size_thumbnail', isset($params['category_image_size_thumbnail'])?$params['category_image_size_thumbnail']:'70');
+		$this->SetPreference('item_image_size_category', isset($params['item_image_size_category'])?$params['item_image_size_category']:'70');
 		$this->SetPreference('item_image_size_catalog', isset($params['item_image_size_catalog'])?$params['item_image_size_catalog']:'100');
 		$this->SetPreference('force_aspect_ratio', isset($params['force_aspect_ratio'])?$params['force_aspect_ratio']:0);
 		$this->SetPreference('image_aspect_ratio', isset($params['image_aspect_ratio'])?$params['image_aspect_ratio']:'4:3');
-		$this->SetPreference('section_recurse', isset($params['section_recurse'])?$params['section_recurse']:'mixed_all');
-		$this->SetPreference('section_sort_order', isset($params['item_sort_order'])?$params['item_sort_order']:'natural');
-		$this->SetPreference('section_items_per_page', isset($params['items_per_page'])?$params['items_per_page']:'10');
+		$this->SetPreference('category_recurse', isset($params['category_recurse'])?$params['category_recurse']:'mixed_all');
+		$this->SetPreference('category_sort_order', isset($params['item_sort_order'])?$params['item_sort_order']:'natural');
+		$this->SetPreference('category_items_per_page', isset($params['items_per_page'])?$params['items_per_page']:'10');
 
         return $this->adminPrefs($id, $params, $returnid, $this->Lang('prefsupdated'));
     }
@@ -706,7 +747,7 @@ class Cataloger extends CMSModule
 
         $this->smarty->assign_by_ref('items', $entryarray);
         $this->smarty->assign('itemcount', count($entryarray));
-        $this->smarty->assign('section',$this->Lang('templatelist'));
+        $this->smarty->assign('category',$this->Lang('templatelist'));
         $this->smarty->assign('title_template',$this->Lang('title_template'));
         $this->smarty->assign('title_template_type',$this->Lang('title_template_type'));
         $this->smarty->assign('notemplates',$this->Lang('notemplates'));
@@ -841,7 +882,7 @@ class Cataloger extends CMSModule
 			$this->CreateLink($id, 'adminprefs', $returnid, $this->Lang('manageprefs'), array()));
         }
 
-	function GetAdminSection()
+	function GetAdminCategory()
 	{
 		return 'extensions';
 	}
@@ -988,7 +1029,7 @@ class CatalogItem extends CMSModuleContentType
 				htmlentities($this->mAlias).'">'));
 		}
 		array_push($ret,array(lang('parent').
-			'/Section',
+			'/Category',
 			ContentManager::CreateHierarchyDropdown($this->mId,
 			$this->mParentId)));
 		array_push($ret,array('Page '.
@@ -1014,7 +1055,8 @@ class CatalogItem extends CMSModuleContentType
 		}
 		if ($tab == 1)
 		  {
-            $imgcount = get_site_preference('Cataloger_mapi_pref_image_count', '1');
+            $imgcount = get_site_preference('Cataloger_mapi_pref_image_count', '2');
+            $thumbsize = get_site_preference('Cataloger_mapi_pref_item_image_size_thumbnail', '70');
             $imgsrc = '<table>';
             for ($i=1; $i<= $imgcount; $i++)
                 {
@@ -1026,18 +1068,22 @@ class CatalogItem extends CMSModuleContentType
                     }
                 else
                     {
-                    $dirspec = dirname($config['uploads_path'].'/images/catalog/index.html');
-                    $filespec = $this->mAlias.'_t_'.$i.'.jpg';
-                    if (file_exists($dirspec.'/'.$filespec))
+//                    $dirspec = dirname($config['uploads_path'].'/images/catalog/index.html');
+                    $filespec = $this->mAlias.'_t_'.$i.'_'.$thumbsize.'.jpg';
+/*                    if (file_exists($dirspec.'/'.$filespec))
                         {
                         $imgsrc .= '<img src="'.$config['uploads_url'].
                         	'/images/catalog/'.
                             $filespec.'" />';
+
+						$imgsrc .= '<img src="'.$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?'.$filespec.'" />';
                         }
                     else
                         {
                         $imgsrc .= '(No Image Uploaded)';
                         }
+*/
+					$imgsrc .= '<img src="'.$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$filespec.'" />';
                     }
                 $imgsrc .= '</td><td style="vertical-align:top">&nbsp;<input type="file" name="image'.$i.'" />';
                 $imgsrc .= '</td></tr>';
@@ -1132,40 +1178,46 @@ class CatalogItem extends CMSModuleContentType
 			}
 			
 			// Copy and resize the image files...
-            $imgcount = get_site_preference('Cataloger_mapi_pref_item_image_count', '1');
+            $imgcount = get_site_preference('Cataloger_mapi_pref_item_image_count', '2');
             $herosize = get_site_preference('Cataloger_mapi_pref_item_image_size_hero', '400');
             $thumbsize = get_site_preference('Cataloger_mapi_pref_item_image_size_thumbnail', '70');
             $catalogsize = get_site_preference('Cataloger_mapi_pref_item_image_size_catalog', '100');
-            $sectionsize = get_site_preference('Cataloger_mapi_pref_item_image_size_section', '70');
+            $categorysize = get_site_preference('Cataloger_mapi_pref_item_image_size_category', '70');
             for ($i=1; $i<= $imgcount; $i++)
                 {
 			    if (isset($_FILES['image'.$i]['size']) && $_FILES['image'.$i]['size']>0)
                     {
                     // we's gots us an upload!
                     // transfer it ... scaling, if necessary
-                    $this->imageTransform($_FILES['image'.$i]['tmp_name'],
+/*                    $this->imageTransform($_FILES['image'.$i]['tmp_name'],
                         dirname($config['uploads_path'].
                         '/images/catalog/index.html') .
-                        '/'.$this->mAlias.'_f_'.$i.'.jpg',
+                        '/'.$this->mAlias.'_f_'.$i.'_'.$herosize.'.jpg',
                         $herosize);
 
                     $this->imageTransform($_FILES['image'.$i]['tmp_name'],
                         dirname($config['uploads_path'].
                         '/images/catalog/index.html') .
-                        '/'.$this->mAlias.'_t_'.$i.'.jpg',
+                        '/'.$this->mAlias.'_t_'.$i.'_'.$thumbsize.'.jpg',
                         $thumbsize);
 
                     $this->imageTransform($_FILES['image'.$i]['tmp_name'],
                         dirname($config['uploads_path'].
                         '/images/catalog/index.html') .
-                        '/'.$this->mAlias.'_s_'.$i.'.jpg',
-                        $sectionsize);
+                        '/'.$this->mAlias.'_s_'.$i.'_'.$categorysize.'.jpg',
+                        $categorysize);
 
                     $this->imageTransform($_FILES['image'.$i]['tmp_name'],
                         dirname($config['uploads_path'].
                         '/images/catalog/index.html') .
-                        '/'.$this->mAlias.'_c_'.$i.'.jpg',
+                        '/'.$this->mAlias.'_c_'.$i.'_'.$catalogsize.'.jpg',
                         $catalogsize);
+*/                        
+                    // and keep a raw copy
+                    copy($_FILES['image'.$i]['tmp_name'],
+                        dirname($config['uploads_path'].
+                        '/images/catalog_src/index.html') .
+                        '/'.$this->mAlias.'_item_src_'.$i.'.jpg');
                     }
                 }
 		}
@@ -1275,7 +1327,7 @@ class CatalogItem extends CMSModuleContentType
 	}
 }
 
-class CatalogSection extends CMSModuleContentType
+class CatalogCategory extends CMSModuleContentType
 {
     var $attrs;
 
@@ -1371,7 +1423,7 @@ class CatalogSection extends CMSModuleContentType
 		{
 			array_push($ret,array(lang('pagealias'),'<input type="text" name="alias" value="'.htmlentities($this->mAlias).'">'));
 		}
-		array_push($ret,array(lang('parent').'/Section',ContentManager::CreateHierarchyDropdown($this->mId, $this->mParentId)));
+		array_push($ret,array(lang('parent').'/Category',ContentManager::CreateHierarchyDropdown($this->mId, $this->mParentId)));
 		array_push($ret,array('Page '.lang('template'),TemplateOperations::TemplateDropdown('template_id', $this->mTemplateId)));
 		array_push($ret,array('Sub '.lang('template'),CMSModule::CreateInputDropdown('', 'sub_template', $subTemplates, -1, $this->GetPropertyValue('sub_template'))));
         
@@ -1389,7 +1441,7 @@ class CatalogSection extends CMSModuleContentType
 		}
 		if ($tab == 1)
 		  {
-            $imgcount = get_site_preference('Cataloger_mapi_pref_section_image_count', '1');
+            $imgcount = get_site_preference('Cataloger_mapi_pref_category_image_count', '1');
             $imgsrc = '<table>';
             for ($i=1; $i<= $imgcount; $i++)
                 {
@@ -1402,7 +1454,7 @@ class CatalogSection extends CMSModuleContentType
                 else
                     {
                     $dirspec = dirname($config['uploads_path'].'/images/catalog/index.html');
-                    $filespec = $this->mAlias.'_t_'.$i.'.jpg';
+                    $filespec = $this->mAlias.'_ct_'.$i.'.jpg';
                     if (file_exists($dirspec.'/'.$filespec))
                         {
                         $imgsrc .= '<img src="'.$config['uploads_url'].'/images/catalog/'.
@@ -1424,12 +1476,12 @@ class CatalogSection extends CMSModuleContentType
 			$ipp = $this->GetPropertyValue('items_per_page');
 			if ($ipp == -1)
 				{
-				$ipp = get_site_preference('Cataloger_mapi_pref_section_items_per_page', '10');
+				$ipp = get_site_preference('Cataloger_mapi_pref_category_items_per_page', '10');
 				}
 			$so = $this->GetPropertyValue('sort_order');
 			if ($so == '')
 				{
-				$so = get_site_preference('Cataloger_mapi_pref_section_sort_order', 'natural');
+				$so = get_site_preference('Cataloger_mapi_pref_category_sort_order', 'natural');
 				}
             array_push($ret,array('Items Per Page',CMSModule::CreateInputDropdown('', 'items_per_page',
                 array('1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6',
@@ -1444,15 +1496,15 @@ class CatalogSection extends CMSModuleContentType
             $recurse = $this->GetPropertyValue('recurse');
             if ($recurse == '')
                 {
-                $recurse = get_site_preference('Cataloger_mapi_pref_section_recurse', 'mixed_all');
+                $recurse = get_site_preference('Cataloger_mapi_pref_category_recurse', 'mixed_all');
                 }
             array_push($ret,array('Display Behavior',
-            '<table><tr><td><input type="radio" name="recurse" value="items_all" '.(($recurse=='items_all')?'checked':'').'/>&nbsp;Include all Items within this section, including items in sub-sections</td></tr>'.
-            '<tr><td><input type="radio" name="recurse" value="items_one" '.(($recurse=='items_one')?'checked':'').'/>&nbsp;Include all Items immediately within this section, but not items in sub-sections</td></tr>' .
-            '<tr><td><input type="radio" name="recurse" value="sections_all" '.(($recurse=='sections_all')?'checked':'').'/>&nbsp;Include all Sections within this section, including sections in sub-sections</td></tr>' .
-            '<tr><td><input type="radio" name="recurse" value="sections_one" '.(($recurse=='sections_one')?'checked':'').'/>&nbsp;Include all Sections immediately within this section, but not sections in sub-sections</td></tr>' .
-            '<tr><td><input type="radio" name="recurse" value="mixed_all" '.(($recurse=='mixed_all')?'checked':'').'/>&nbsp;Include all Items and Sections within this section, including items and sections in sub-sections</td></tr>' .
-            '<tr><td><input type="radio" name="recurse" value="mixed_one" '.(($recurse=='mixed_one')?'checked':'').'/>&nbsp;Include all Items and Sections immediately within this section, but not items or sections in sub-sections</td></tr></table>'));
+            '<table><tr><td><input type="radio" name="recurse" value="items_all" '.(($recurse=='items_all')?'checked':'').'/>&nbsp;Include all Items within this category, including items in sub-categories</td></tr>'.
+            '<tr><td><input type="radio" name="recurse" value="items_one" '.(($recurse=='items_one')?'checked':'').'/>&nbsp;Include all Items immediately within this category, but not items in sub-categories</td></tr>' .
+            '<tr><td><input type="radio" name="recurse" value="categories_all" '.(($recurse=='categories_all')?'checked':'').'/>&nbsp;Include all Categories within this category, including Categories in sub-Categories</td></tr>' .
+            '<tr><td><input type="radio" name="recurse" value="categories_one" '.(($recurse=='categories_one')?'checked':'').'/>&nbsp;Include all Categories immediately within this category, but not Categories in sub-Categories</td></tr>' .
+            '<tr><td><input type="radio" name="recurse" value="mixed_all" '.(($recurse=='mixed_all')?'checked':'').'/>&nbsp;Include all Items and Categories within this category, including items and Categories in sub-Categories</td></tr>' .
+            '<tr><td><input type="radio" name="recurse" value="mixed_one" '.(($recurse=='mixed_one')?'checked':'').'/>&nbsp;Include all Items and Categories immediately within this category, but not items or Categories in sub-Categories</td></tr></table>'));
             array_push($ret,array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="true"':'').'>'));
 		  array_push($ret,array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="true"':'').'>'));
         }
@@ -1538,60 +1590,36 @@ class CatalogSection extends CMSModuleContentType
 				$this->mShowInMenu = false;
 			}
 			// Copy and resize the image files...
-            $imgcount = get_site_preference('Cataloger_mapi_pref_section_image_count', '1');
-            $herosize = get_site_preference('Cataloger_mapi_pref_section_image_size_hero', '400');
-            $thumbsize = get_site_preference('Cataloger_mapi_pref_section_image_size_thumbnail', '70');
+            $imgcount = get_site_preference('Cataloger_mapi_pref_category_image_count', '1');
+            $herosize = get_site_preference('Cataloger_mapi_pref_category_image_size_hero', '400');
+            $thumbsize = get_site_preference('Cataloger_mapi_pref_category_image_size_thumbnail', '70');
             for ($i=1; $i<= $imgcount; $i++)
                 {
 			    if (isset($_FILES['image'.$i]['size']) && $_FILES['image'.$i]['size']>0)
                     {
                     // we's gots us an upload!
                     // transfer it ... scaling, if necessary
-                    $this->imageTransform($_FILES['image'.$i]['tmp_name'],
+/*                    $this->imageTransform($_FILES['image'.$i]['tmp_name'],
                         dirname($config['uploads_path'].
                         '/images/catalog/index.html') .
-                        '/'.$this->mAlias.'_sf_'.$i.'.jpg',
+                        '/'.$this->mAlias.'_cf_'.$i.'_'.$herosize.'.jpg',
                         $herosize);
 
                     $this->imageTransform($_FILES['image'.$i]['tmp_name'],
                         dirname($config['uploads_path'].
                         '/images/catalog/index.html') .
-                        '/'.$this->mAlias.'_st_'.$i.'.jpg',
+                        '/'.$this->mAlias.'_ct_'.$i.'_'.$thumbsize.'.jpg',
                         $thumbsize);
+*/                        
+                    copy($_FILES['image'.$i]['tmp_name'],
+                        dirname($config['uploads_path'].
+                        '/images/catalog_src/index.html') .
+                        '/'.$this->mAlias.'_cat_src_'.$i.'.jpg');
                     }
                 }
 
 		}
 	}
-
-    function imageTransform($srcSpec, $destSpec, $size, $aspect_ratio='')
-    {
-        global $gCms;
-		$config = &$gCms->config;
-        // skip the require until we need it
-        require_once('../lib/filemanager/ImageManager/Classes/Transform.php');
-        $img = Image_Transform::factory($config['image_manipulation_prog']);
-        $img->load($srcSpec);
-        if ($img->img_x < $img->img_y)
-            {
-            $long_axis = $img->img_y;
-            }
-        else
-            {
-            $long_axis = $img->img_x;
-            }
-
-        if ($long_axis > $size)
-            {
-            $img->scaleByLength($size);
-            $img->save($destSpec, 'jpeg');
-            }
-        else
-            {
-            $img->save($destSpec, 'jpeg');
-            }
-        $img->free();
-    }
 
 
 	function PopulateParams(&$params)
@@ -1647,7 +1675,7 @@ class CatalogSection extends CMSModuleContentType
 		$pf = new Cataloger();
 
 		@ob_start();
-		$pf->DoAction('defaultsection', 'catalogmodule', $params);
+		$pf->DoAction('defaultcategory', 'catalogmodule', $params);
 		$text = @ob_get_contents();
 		@ob_end_clean();
 		return '{literal}'.$text.'{/literal}';
@@ -1655,7 +1683,7 @@ class CatalogSection extends CMSModuleContentType
 
     function FriendlyName()
 	{
-		return 'Catalog Section';
+		return 'Catalog Category';
 	}
 }
 

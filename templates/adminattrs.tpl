@@ -1,6 +1,6 @@
 {$innernav}
 <br />
-<h3>{$section}</h3>
+<h3>{$category}</h3>
 {if $message != ''}<h4>{$message}</h4>{/if}
 {$startform}
 {$tab_headers}
@@ -17,10 +17,10 @@
         </p>
 	</div>
 {$end_tab}
-{$start_section_tab}
-<p>{$title_section_attributes_help}</p>
+{$start_category_tab}
+<p>{$title_category_attributes_help}</p>
 	<div class="pageoverflow">
-        <p class="pagetext">{$title_section_attributes}</p>
+        <p class="pagetext">{$title_category_attributes}</p>
         <p class="pageinput">
 	   {foreach from=$attribute_inputs item=entry}
 			{if $entry->type == 2}

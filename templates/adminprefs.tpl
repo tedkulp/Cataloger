@@ -1,6 +1,6 @@
 {$innernav}
 <br />
-<h3>{$section}</h3>
+<h3>{$category}</h3>
 {if $message!=''}<h4>{$message}</h4>{/if}
 {$startform}
 {$tab_headers}
@@ -18,30 +18,30 @@
         <p class="pageinput">{$input_item_image_size_thumbnail}</p>
 	</div>
 	<div class="pageoverflow">
-        <p class="pagetext">{$title_item_image_size_section}</p>
-        <p class="pageinput">{$input_item_image_size_section}</p>
+        <p class="pagetext">{$title_item_image_size_category}</p>
+        <p class="pageinput">{$input_item_image_size_category}</p>
 	</div>
 	<div class="pageoverflow">
         <p class="pagetext">{$title_item_image_size_catalog}</p>
         <p class="pageinput">{$input_item_image_size_catalog}</p>
 	</div>
 {$end_tab}
-{$start_section_image_tab}
+{$start_category_image_tab}
 	<div class="pageoverflow">
-        <p class="pagetext">{$title_section_image_count}</p>
-        <p class="pageinput">{$input_section_image_count}</p>
+        <p class="pagetext">{$title_category_image_count}</p>
+        <p class="pageinput">{$input_category_image_count}</p>
 	</div>
 	<div class="pageoverflow">
-        <p class="pagetext">{$title_section_image_size_hero}</p>
-        <p class="pageinput">{$input_section_image_size_hero}</p>
+        <p class="pagetext">{$title_category_image_size_hero}</p>
+        <p class="pageinput">{$input_category_image_size_hero}</p>
 	</div>
 	<div class="pageoverflow">
-        <p class="pagetext">{$title_section_image_size_thumbnail}</p>
-        <p class="pageinput">{$input_section_image_size_thumbnail}</p>
+        <p class="pagetext">{$title_category_image_size_thumbnail}</p>
+        <p class="pageinput">{$input_category_image_size_thumbnail}</p>
 	</div>
 	<div class="pageoverflow">
-        <p class="pagetext">{$title_section_recurse}</p>
-        <p class="pageinput">{$input_section_recurse}</p>
+        <p class="pagetext">{$title_category_recurse}</p>
+        <p class="pageinput">{$input_category_recurse}</p>
 	</div>
 	<div class="pageoverflow">
         <p class="pagetext">{$title_items_per_page}</p>
