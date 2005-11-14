@@ -578,6 +578,18 @@ class Cataloger extends CMSModule
 			$thisItem['link'] = $thisPage->GetUrl();
 			$thisItem['title'] = $thisPage->MenuText();
 			$thisItem['cat'] = $lastCat;
+			$theseAttrs = $thisPage->getAttrs();
+			foreach ($theseAttrs as $thisAttr)
+				{
+error_log($thisAttr);
+				if (! in_array($thisAttr,$showAttrs))
+					{
+					continue;
+					}
+error_log('!');
+				$safeattr = strtolower(preg_replace('/\W/','',$thisAttr));
+				$thisItem[$safeattr] = $thisPage->GetPropertyValue($thisAttr);
+				}
 			array_push($printableItems,$thisItem);
 			}
             
