@@ -5,51 +5,49 @@
 	$spec = preg_replace('/(\.\.|\/)/','',$spec);
 	if (! preg_match('/\.jpg$/i',$spec))
 		{
-		header("Status: 404 Not Found");
+		// not found, but instead of a 404, we'll return a "no-image" image
+		header("Location: ".$config['root_url'].
+			'/modules/Cataloger/images/no-image.gif');
 		return;
 		}
-	if (file_exists($config['uploads_path'].'/images/catalog/'.$spec))
+	$sized = @stat($config['uploads_path'].'/images/catalog/'.$spec);
+	$spec = substr($spec, 0, strrpos($spec,'.'));
+	$parts = explode('_',$spec);
+	$parts = array_reverse($parts);
+		
+	$size = $parts[0];
+	$imgno = $parts[1];
+	$type = $parts[2];
+	$name = '';
+	for ($j=count($parts)-1;$j>2;$j--)
 		{
-		header("Location: ".$config['uploads_url'].'/images/catalog/'.$spec);
+		$name .= $parts[$j].'_';
 		}
-	else
+	$srcSpec = $config['uploads_path'].'/images/catalog_src/'.$name;
+	$srcSpec .= 'src_'.$imgno.'.jpg';
+	$orig = @stat($srcSpec);
+	if ($orig === false)
 		{
-		$spec = substr($spec, 0, strrpos($spec,'.'));
-		$parts = explode('_',$spec);
-		$parts = array_reverse($parts);
-		
-		$size = $parts[0];
-		$imgno = $parts[1];
-		$type = $parts[2];
-		$name = '';
-		for ($j=count($parts)-1;$j>2;$j--)
-			{
-			$name .= $parts[$j].'_';
-			}
-		$srcSpec = $config['uploads_path'].'/images/catalog_src/'.$name;
-		if (strlen($type) > 1)
-			{
-			$srcSpec .= 'cat_';
-			}
-		$srcSpec .= 'src_'.$imgno.'.jpg';
-		if (!file_exists($srcSpec))
-			{
-			header("Status: 404 Not Found");
-			return;
-			}
-		
-
+		// once again, 404 is subverted
+		header("Location: ".$config['root_url'].
+			'/modules/Cataloger/images/no-image.gif');
+		return;
+		}
+	if (!$sized || $sized['mtime'] < $orig['mtime'])
+		{
+		// we don't have a cached version we can use
 		$destSpec = $config['uploads_path'].'/images/catalog/'.$spec.'.jpg';
-		
+		// so we make one
 		imageTransform($srcSpec, $destSpec, $size, $config);
-		header("Location: ".$config['uploads_url'].
-			'/images/catalog/'.$spec.'.jpg');
 		}
+
+	header("Location: ".$config['uploads_url'].
+		'/images/catalog/'.$spec.'.jpg');
+	return;
 
 
     function imageTransform($srcSpec, $destSpec, $size, &$config, $aspect_ratio='')
     {
-        // skip the require until we need it
         require_once(dirname(__FILE__).'/../../lib/filemanager/ImageManager/Classes/Transform.php');
 
         $it = new Image_Transform;

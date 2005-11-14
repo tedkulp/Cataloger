@@ -8,17 +8,25 @@ $lang['templatelist']='Sub-templates';
 $lang['listtempl']='Manage Sub-templates';
 $lang['title_item_tab']='Item Attributes';
 $lang['title_category_tab']='Category Attributes';
-$lang['title_catalog_tab']='Catalog Attributes';
+$lang['title_printable_tab']='Printable Catalog Attributes';
 $lang['title_item_image_tab']='Item Image Sizes';
 $lang['title_category_image_tab']='Category Page Settings';
+$lang['title_printable_tab']='Printable Catalog Settings';
 $lang['title_aspect_tab']='Image Aspect Ratios';
+$lang['title_item_template_vars'] = 'Item Template Variables';
+$lang['title_cat_template_vars'] = 'Category Template Variables';
 
 $lang['item_page'] = 'Item Page';
 $lang['category_page'] = 'Category Page';
-$lang['catalog_page'] = 'Catalog Page';
+$lang['catalog_printable'] = 'Printable Catalog';
 $lang['catalog_datasheet'] = 'Catalog Datasheet';
 
+$lang['title_global_item_sort_order'] = 'Set item sort order to';
+$lang['title_global_items_per_page']= 'Set number of items per page to';
+$lang['title_global_category_recurse'] = 'Set Category Display Behavior to';
+
 $lang['title_item_sort_order'] = 'Default item sort order';
+$lang['title_printable_sort_order'] = 'Default printable catalog sort order';
 $lang['title_items_per_page']= 'Default number of items per page';
 $lang['title_avail_attrs'] = 'Item attributes available for the template';
 $lang['title_avail_imattrs'] = 'Item images available for the template';
@@ -35,7 +43,7 @@ $lang['title_item_image_count']='Maximum number of views for each Item';
 $lang['title_category_image_count']='Maximum number of Banner images for each Category Page';
 $lang['title_item_attributes_help']='Each attribute you enter here will be the title of a field that you can use to describe an individual item, and will be displayed with that item. You may have to update your template to reflect these attributes. Blank out or type over an existing attribute to remove or replace it.';
 $lang['title_category_attributes_help']='Each attribute you enter here will be the title of a field that you can use to describe an item category, and will be displayed on that category page. You may have to update your template to reflect these attributes. Blank out or type over an existing attribute to remove or replace it.';
-$lang['title_catalog_attributes_help']='Each attribute you enter here will be the title of a field that you can use to describe the entire catalog, and will be displayed on the catalog page. You may have to update your template to reflect these attributes. Blank out or type over an existing attribute to remove or replace it.';
+$lang['title_catalog_attributes_help']='Each attribute you enter here will be the title of a field that you can use to describe the entire catalog, and will be displayed on the printable catalog page. You may have to update your template to reflect these attributes. Blank out or type over an existing attribute to remove or replace it.';
 $lang['title_force_aspect_ratio'] = 'Force images to a specified Aspect ratio?';
 $lang['title_force_aspect_ratio_label'] = 'Force aspect ratio (not yet implemented)';
 $lang['title_image_aspect_ratio'] = 'Aspect ratio (specify as "4:3" or "1:2.5")';
@@ -53,14 +61,19 @@ $lang['alpha_order'] = 'Alphabetical Order';
 
 $lang['manageprefs']='Manage Preferences';
 $lang['manageattrs']='Manage User-Defined Attributes';
+$lang['globalops']='Global Catalog Operations';
 $lang['addtemplate']='Add a new Sub-template';
+$lang['reimporttemplates']='Re-import example sub-templates';
+$lang['reimported'] = 'Sample sub-templates have been imported.';
 $lang['templateupdated']='Template added/updated.';
+$lang['templatedeleted']='Template deleted.';
 $lang['prefsupdated']='Preferences updated.';
 $lang['installed'] = 'Module version %s installed.';
 $lang['upgraded'] = 'Module upgraded to version %s.';
 $lang['uninstalled'] = 'Module Uninstalled.';
 $lang['attrsupdated'] = 'Attributes updated.';
-
+$lang['noglobalchange'] = 'Do not change';
+$lang['globallyupdated'] = 'Changes propagated globally.';
 $lang['next'] = ':&#187;';
 $lang['prev'] = '&#171;:';
 

@@ -52,6 +52,13 @@
         <p class="pageinput">{$input_item_sort_order}</p>
 	</div>
 {$end_tab}
+{$start_printable_tab}
+	<div class="pageoverflow">
+        <p class="pagetext">{$title_printable_sort_order}</p>
+        <p class="pageinput">{$input_printable_sort_order}</p>
+	</div>
+{$end_tab}
+
 {$start_aspect_tab}
 	<div class="pageoverflow">
         <p class="pagetext">&nbsp;</p>
