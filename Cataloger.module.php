@@ -1,7 +1,7 @@
 <?php
 #-------------------------------------------------------------------------
-# Module: Cataloger
-# Version: 0.1
+# Module: Cataloger - build a catalog or portfolio of stuff
+# Version: 0.1.5
 #
 # Copyright (c) 2005, Samuel Goldstein <sjg@cmsmodules.com>
 # For Information, Support, Bug Reports, etc, please visit SjG's
@@ -56,7 +56,7 @@ class Cataloger extends CMSModule
 
 	function GetVersion()
 	{
-		return '0.1.3';
+		return '0.1.5';
 	}
 
 	function GetAdminDescription()

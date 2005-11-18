@@ -81,9 +81,11 @@ $lang['notemplates']='No Sub-templates are installed!';
 $lang['helptext']='
 <h3>What Does This Do?</h3>
 <p>This module lets you create online catalogs or portfolios. Catalogs consist of "Catalog Items" which could be products, works of art, or the like, and "Catalog Categories" which could be item categories or other natural divisions of the catalog.</p>
+<p>Categories may be defined hierarchically (using the standard CMS Made Simple content list). Category pages can display items in the category and/or subcategories, optionally recursing through sub-categories. This behavior can be configured on a per-category basis.</P>
+<p>There is also a Printable Catalog, which represents the whole collection of Catalog Items on a single page.</p>
 <p>The module has built-in support for "Content Aliases" (a module available at <a href="http://www.cmsmodules.com/ContentAliases.html">CMSModules.com</a>), which allows you to place a Catalog Item into multiple Catalog Categories.</p>
 <h3>How Do I Use It</h3>
-<p>When you install this module, it creates two new Content Types: Catalog Item and Catalog Category. When you\'re in your site administration category, you add Catalog Items and Catalog Categories just as you would any other kind of page. Select Content &gt; Pages &gt; Add Content, and then select "Catalog Item" or "Catalog Category" from the Content Type pulldown.</p>
+<p>When you install this module, it creates three new Content Types: Catalog Item, Catalog Category, and Printable Catalog. When you\'re in your site administration category, you add Catalog Items and Catalog Categories just as you would any other kind of page. Select Content &gt; Pages &gt; Add Content, and then select "Catalog Item" or "Catalog Category" from the Content Type pulldown.</p>
 <h4>Catalog Items</h4>
 <p>Adding a Catalog Item is similar to adding an ordinary page to your site. The data fields for the Item are not exactly the same, however. Also note that in the "Images" tab, you can select multiple images to upload for the item. When you upload images, the system will size them appropriately for the catalog, create thumbnails for use in the Item\'s page, create thumbnails for any Category pages, and so on. This requires that you have GD or a similar image library installed. Currently, only jpeg format images are supported.</p>
 <h4>Catalog Categories</h4>
@@ -91,7 +93,7 @@ $lang['helptext']='
 <p>Catalog Categories have a number of settings to determine how they should display the Items and Categories they contain: if you look at the "Options" tab, you can choose how many items and/or categories to show, what order to show them in, whether to display only items or only categories or both, and how many levels of the hierarchy to display below the category page.</p>
 <h3>Customization and Advanced Topics</h3>
 <h4>Catalog Item Attributes</h4>
-<p>The default item attributes are typical for a catalog of products or artworks, but by going into Extensions &gt; Cataloger &gt; Manage User-Defined Attributes. 
+<p>The default item attributes are typical for a catalog of products or artworks, but by going into Extensions &gt; Cataloger &gt; Manage User-Defined Attributes, you can change the attributes. It\'s best to define the attributes
 <h4>Catalog Category Attributes</h4>
 <h4>Custom Templates</h4>
 <p></p>
@@ -110,7 +112,8 @@ of the license for the full disclaimer.</p>
 <p>Copyright &copy; 2005, Samuel Goldstein <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>. All Rights Are Reserved.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
-<li>Version 0.1 - 19 March 2005. Initial release.</li>
+<li>Version 0.1.5 - 17 November 2005. Initial Release. Jesus, that took a long time.</li>
+<li>Version 0.1 - 19 March 2005. Project Initiation.</li>
 </ul>';
 $lang['postinstall']='Make sure to set the "Modify Catalog Settings" permission on users who will be administering the catalog.';
 ?>
