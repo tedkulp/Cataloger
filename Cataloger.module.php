@@ -966,9 +966,9 @@ error_log('!');
             $this->CreateLink($id, 'edittempl', $returnid,
                 $this->Lang('addtemplate'), array(), '', false, false, 'class="pageoptions"').
                 '&nbsp;&nbsp;'.
-            $this->CreateLink($id, 'reimporttemplates', $returnid,
+            $this->CreateLink($id, 'reimport', $returnid,
                 '<img src="'.$gCms->config['root_url'].'/modules/Cataloger/images/reload.gif" class="systemicon" alt="'.$this->Lang('reimporttemplates').'"  title="'.$this->Lang('reimporttemplates').'" />', array(), '', false, false, '') .' '.
-            $this->CreateLink($id, 'reimporttemplates', $returnid,
+            $this->CreateLink($id, 'reimport', $returnid,
                 $this->Lang('reimporttemplates'), array(), '', false, false, 'class="pageoptions"')             
                 );
 
@@ -1029,8 +1029,8 @@ error_log('!');
         $image_count = $this->GetPreference('item_image_count', '1');
         for ($i=1;$i<=$image_count;$i++)
         	{
-        	$attrs .= '{$image_'.$i.'_url}, {$image_'.$i;
-        	$attrs .= '_thumb_url}, ';
+        	$attrs .= '{$image_'.$i.'_url}, {$image_thumb_'.$i;
+        	$attrs .= '_url}, ';
         	}
         $attrs .= '{$image_url_array}, ';
         $attrs .= '{$image_thumb_url_array}';
@@ -1039,8 +1039,8 @@ error_log('!');
         $image_count = $this->GetPreference('category_image_count', '1');
         for ($i=1;$i<=$image_count;$i++)
         	{
-        	$cattrs .= '{$image_'.$i.'_url}, {$image_'.$i;
-        	$cattrs .= '_thumb_url}, ';
+        	$cattrs .= '{$image_'.$i.'_url}, {$image_thumb_'.$i;
+        	$cattrs .= '_url}, ';
         	}
         $cattrs .= '{$image_url_array}, ';
         $cattrs .= '{$image_thumb_url_array}';
