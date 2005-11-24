@@ -82,21 +82,51 @@ $lang['helptext']='
 <h3>What Does This Do?</h3>
 <p>This module lets you create online catalogs or portfolios. Catalogs consist of "Catalog Items" which could be products, works of art, or the like, and "Catalog Categories" which could be item categories or other natural divisions of the catalog.</p>
 <p>Categories may be defined hierarchically (using the standard CMS Made Simple content list). Category pages can display items in the category and/or subcategories, optionally recursing through sub-categories. This behavior can be configured on a per-category basis.</P>
-<p>There is also a Printable Catalog, which represents the whole collection of Catalog Items on a single page.</p>
-<p>The module has built-in support for "Content Aliases" (a module available at <a href="http://www.cmsmodules.com/ContentAliases.html">CMSModules.com</a>), which allows you to place a Catalog Item into multiple Catalog Categories.</p>
+<p>There is also a Printable Catalog, which represents the whole collection of Catalog Items on a single page (this is currently implemented badly, and will load slowly).</p>
+<p>The module has built-in support for "Content Aliases" (a module available at <a href="http://www.cmsmodules.com/ContentAliases.html">CMSModules.com</a>), which allows you to place any Catalog Item into multiple Catalog Categories.</p>
 <h3>How Do I Use It</h3>
 <p>When you install this module, it creates three new Content Types: Catalog Item, Catalog Category, and Printable Catalog. When you\'re in your site administration category, you add Catalog Items and Catalog Categories just as you would any other kind of page. Select Content &gt; Pages &gt; Add Content, and then select "Catalog Item" or "Catalog Category" from the Content Type pulldown.</p>
 <h4>Catalog Items</h4>
 <p>Adding a Catalog Item is similar to adding an ordinary page to your site. The data fields for the Item are not exactly the same, however. Also note that in the "Images" tab, you can select multiple images to upload for the item. When you upload images, the system will size them appropriately for the catalog, create thumbnails for use in the Item\'s page, create thumbnails for any Category pages, and so on. This requires that you have GD or a similar image library installed. Currently, only jpeg format images are supported.</p>
 <h4>Catalog Categories</h4>
-<p>A Catalog Category is used for organizing your catalog items into categories. It provides a page that lists the Catalog Items that are contained by it. A Catalog Item is considered to be part of a Catalog Category if it is below that Category in the Site Hierarchy. Categories can similarly include other Categories.</p>
+<p>A Catalog Category is used for organizing your catalog items. It provides a page that lists Cataloger content that is contained by it. A Catalog Item is considered to be part of a Catalog Category if it is below that Category in the Site Hierarchy. Categories can similarly include other Categories.</p>
 <p>Catalog Categories have a number of settings to determine how they should display the Items and Categories they contain: if you look at the "Options" tab, you can choose how many items and/or categories to show, what order to show them in, whether to display only items or only categories or both, and how many levels of the hierarchy to display below the category page.</p>
+<p>For example, consider the following structure:</p>
+<ol>
+	<li><b>Hats</b>
+		<ol>
+			<li><b>Fashion</b>
+			 	<ol>
+			 		<li>Feathered Hat</li><li>Fedora </li><li>Baseball Hat</li>
+			 	</ol>
+			 </li>
+		 	<li><b>Work Hats</b>
+		    	<ol>
+		    		<li>Hard Hat</li><li>Diving Helmet</li>
+		    	</ol>
+		    </li>
+		</ol>
+	</li>
+</ol>
+<p>In this diagram, bolded items are Catalog Categories, and non-bolded items are Catalog Items. Depending upon how you set your options, the Hats Category Page can show only entries for the Fashion and Work Hats Category Pages, or it can show entries for Fashion, Work Hats, and all the hats listed below them.</p>
+<p>You can opt to show the items in "natural" order (i.e., the order the Items show up in the CMS Content Hierarchy), or in alphabetical order.</P>
+<p>If you have large numbers of items in a Category, you can set the maximum number to be displayed in a Category Page, and the page will automatically create links to navigate through the list.</p>
+<p>Each Category page can have different settings for sort order, levels to display, and number of items. You can set the default for these values in Extensions &gt; Cataloger &gt; Manage Preferences. If, at a later date, you wish to change some setting on all of your Category pages, you can go into Extensions &gt; Cataloger &gt; Global Catalog Options, and make those changes.</p>
+<h4>Images</h4>
+<p>Cataloger allows you to select different size images for Item pages, Category pages, and the Printable Catalog. You can set these defaults in Extensions &gt; Cataloger &gt; Manage Preferences.</p>
+<p>When you upload images, the original is stored. When someone visits a page, the reduced size images are requested using a special URL, which will redirect the user\'s browser to the scaled image if it exists, and creating the scaled image if it doesn\'t. This allows you to change the size of images, without having to re-upload all the images, or rescaling them all at once.</p>
+<p>This image rescaling code requires that you have either ImageMagick or GD lib installed, and configured in your CMS Made Simple config.php.</p>
 <h3>Customization and Advanced Topics</h3>
 <h4>Catalog Item Attributes</h4>
-<p>The default item attributes are typical for a catalog of products or artworks, but by going into Extensions &gt; Cataloger &gt; Manage User-Defined Attributes, you can change the attributes. It\'s best to define the attributes
+<p>The default item attributes are typical for a catalog of products or artworks, but by going into Extensions &gt; Cataloger &gt; Manage User-Defined Attributes, you can change the attributes. It\'s best to define the attributes before you start entering Catalog Items.</p>
+<p>Note that the attributes you define may need to be added to the template that you\'re using to display Catalog Items -- see Custom Templates below.</p>
 <h4>Catalog Category Attributes</h4>
+<p>Similarly, you can set attributes for Categories. Again, the attributes you define may need to be added to the template that you\'re using to display Catalog Categories -- see Custom Templates below.</p>
+<h4>Printable Catalog Attributes</h4>
+<p>Likewise, you can set attributes for Printable Catalogs. Again, the attributes you define may need to be added to the template that you\'re using to display your Printable Catalog -- see Custom Templates below.</p>
 <h4>Custom Templates</h4>
-<p></p>
+<p>If you\'re willing to mess around with Smarty Templates, you can change the layout of any of the pages generated by Cataloger. This should make certain developers very happy, even if the inefficiency of the rest of the code will note. There are three kinds of templates: one kind for Catalog Items, one kind for Catalog Categories, and one kind for Printable Catalogs.</p>
+<p>When editing a Template, the admin screen will display a list of Smarty tags available to you for that kind of template. This will only happen once the module knows what kind of template you\'re editing, so when you first create the template, it displays all the Smarty tags it knows about, only some of which being applicable.</p>
 <h3>Support</h3>
 <p>This module does not include commercial support. However, there are a number of resources available to help you with it:</p>
 <ul>
