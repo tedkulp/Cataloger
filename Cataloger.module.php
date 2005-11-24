@@ -1292,12 +1292,12 @@ class CatalogItem extends CMSModuleContentType
 			'<input type="text" name="title" value="'.$this->mName.'">'));
 		array_push($ret,array(lang('menutext'),
 			'<input type="text" name="menutext" value="'.
-			htmlentities($this->mMenuText).'">'));
+			htmlspecialchars($this->mMenuText, ENT_QUOTES).'">'));
 		if (!($config['auto_alias_content'] == true && $adding))
 		{
 			array_push($ret,array(lang('pagealias'),
 				'<input type="text" name="alias" value="'.
-				htmlentities($this->mAlias).'">'));
+				htmlspecialchars($this->mAlias, ENT_QUOTES).'">'));
 		}
 		array_push($ret,array(lang('parent').
 			'/Category',
@@ -1318,7 +1318,7 @@ class CatalogItem extends CMSModuleContentType
             $safeattr = strtolower(preg_replace('/\W/','', $thisAttr));
         	array_push($ret,array($thisAttr,
         		'<input type="text" name="'.$safeattr.'" value="'.
-        		htmlentities($this->GetPropertyValue($thisAttr)).
+        		htmlspecialchars($this->GetPropertyValue($thisAttr),ENT_QUOTES).
         		'" />'));
 			}
 
@@ -1618,10 +1618,10 @@ class CatalogCategory extends CMSModuleContentType
         	}		
 
 		array_push($ret,array(lang('title'),'<input type="text" name="title" value="'.$this->mName.'">'));
-		array_push($ret,array(lang('menutext'),'<input type="text" name="menutext" value="'.htmlentities($this->mMenuText).'">'));
+		array_push($ret,array(lang('menutext'),'<input type="text" name="menutext" value="'.htmlspecialchars($this->mMenuText,ENT_QUOTES).'">'));
 		if (!($config['auto_alias_content'] == true && $adding))
 		{
-			array_push($ret,array(lang('pagealias'),'<input type="text" name="alias" value="'.htmlentities($this->mAlias).'">'));
+			array_push($ret,array(lang('pagealias'),'<input type="text" name="alias" value="'.htmlspecialchars($this->mAlias,ENT_QUOTES).'">'));
 		}
 		array_push($ret,array(lang('parent').'/Category',ContentManager::CreateHierarchyDropdown($this->mId, $this->mParentId)));
 		array_push($ret,array('Page '.lang('template'),TemplateOperations::TemplateDropdown('template_id', $this->mTemplateId)));
@@ -1633,7 +1633,7 @@ class CatalogCategory extends CMSModuleContentType
             $safeattr = strtolower(preg_replace('/\W/','', $thisAttr));
         	array_push($ret,array($thisAttr,
         		'<input type="text" name="'.$safeattr.'" value="'.
-        		htmlentities($this->GetPropertyValue($thisAttr)).
+        		htmlspecialchars($this->GetPropertyValue($thisAttr),ENT_QUOTES).
         		'" />'));
 			}
 
@@ -1959,10 +1959,10 @@ class CatalogPrintable extends CMSModuleContentType
         	}		
 
 		array_push($ret,array(lang('title'),'<input type="text" name="title" value="'.$this->mName.'" />'));
-		array_push($ret,array(lang('menutext'),'<input type="text" name="menutext" value="'.htmlentities($this->mMenuText).'" />'));
+		array_push($ret,array(lang('menutext'),'<input type="text" name="menutext" value="'.htmlspecialchars($this->mMenuText,ENT_QUOTES).'" />'));
 		if (!($config['auto_alias_content'] == true && $adding))
 		{
-			array_push($ret,array(lang('pagealias'),'<input type="text" name="alias" value="'.htmlentities($this->mAlias).'" />'));
+			array_push($ret,array(lang('pagealias'),'<input type="text" name="alias" value="'.htmlspecialchars($this->mAlias,ENT_QUOTES).'" />'));
 		}
 		array_push($ret,array(lang('parent').'/Category',ContentManager::CreateHierarchyDropdown($this->mId, $this->mParentId)));
 		array_push($ret,array('Page '.lang('template'),TemplateOperations::TemplateDropdown('template_id', $this->mTemplateId)));
@@ -1974,7 +1974,7 @@ class CatalogPrintable extends CMSModuleContentType
             $safeattr = strtolower(preg_replace('/\W/','', $thisAttr));
         	array_push($ret,array($thisAttr,
         		'<input type="text" name="'.$safeattr.'" value="'.
-        		htmlentities($this->GetPropertyValue($thisAttr)).
+        		htmlspecialchars($this->GetPropertyValue($thisAttr),ENT_QUOTES).
         		'" />'));
 			}
 
