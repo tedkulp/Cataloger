@@ -186,7 +186,6 @@ class Cataloger extends CMSModule
 
 		foreach ($temps as $filespec)
 			{
-       		//$template = file_get_contents(dirname(__FILE__).'/includes/'.$filespec);
        		$file = file(dirname(__FILE__).'/includes/'.$filespec);
        		$template = implode('', $file);
        		$temp_name = preg_replace('/\.tpl$/i','',$filespec);
@@ -198,6 +197,10 @@ class Cataloger extends CMSModule
        		else if (substr($temp_name,0,9) == 'Category-')
        			{
        			$type_id = 2;
+       			}
+       		else if (substr($temp_name,0,10) == 'Printable-')
+       			{
+       			$type_id = 3;
        			}
        		
     		$temp_id = $db->GenID(cms_db_prefix().
