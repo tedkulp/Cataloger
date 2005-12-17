@@ -1,7 +1,7 @@
 <?php
 #-------------------------------------------------------------------------
 # Module: Cataloger - build a catalog or portfolio of stuff
-# Version: 0.1.6
+# Version: 0.1.7
 #
 # Copyright (c) 2005, Samuel Goldstein <sjg@cmsmodules.com>
 # For Information, Support, Bug Reports, etc, please visit SjG's
@@ -56,7 +56,7 @@ class Cataloger extends CMSModule
 
 	function GetVersion()
 	{
-		return '0.1.6';
+		return '0.1.7';
 	}
 
 	function GetAdminDescription()
@@ -489,15 +489,25 @@ class Cataloger extends CMSModule
         	{
         	$this->smarty->assign('prev','<a href="'.$thisUrl.$delim.'start='.
         		max(0,$start-$end).'">'.$this->Lang('prev').'</a>');
+        	$this->smarty->assign('prevurl',$thisUrl.$delim.'start='.
+        		max(0,$start-$end));
         	}
         else
         	{
         	$this->smarty->assign('prev','');
+        	$this->smarty->assign('prevurl','');
         	}
         if ($start + $end < $count)
         	{
         	$this->smarty->assign('next','<a href="'.$thisUrl.$delim.'start='.
         		($start + $end).'">'.$this->Lang('next').'</a>');
+        	$this->smarty->assign('nexturl',$thisUrl.$delim.'start='.
+        		($start + $end));
+        	}
+        else
+        	{
+        	$this->smarty->assign('next','');
+        	$this->smarty->assign('nexturl','');
         	}
         $navstr = '';
         $pageInd = 1;
@@ -1017,7 +1027,7 @@ error_log('!');
         $query = "SELECT attribute, type_id FROM ".cms_db_prefix()."module_catalog_attr";
         $dbresult = $db->Execute($query);
         $attrs = '<h3>'.$this->Lang('title_item_template_vars').'</h3>{$title}, {$notes}, ';
-        $cattrs = '<h3>'.$this->Lang('title_cat_template_vars').'</h3>{$title}, {$notes}, {$prev}, {$navstr}, {$next}, {$items}, ';
+        $cattrs = '<h3>'.$this->Lang('title_cat_template_vars').'</h3>{$title}, {$notes}, {$prev}, {$prevurl}, {$navstr}, {$next}, {$nexturl}, {$items}, ';
 
         while ($dbresult !== false && $row = $dbresult->FetchRow())
         	{
