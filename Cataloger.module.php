@@ -542,6 +542,7 @@ class Cataloger extends CMSModule
         $imgcount = $this->GetPreference('category_image_count', '1');
         $fullSize = $this->GetPreference('category_image_size_hero', '400');
         $thumbSize = $this->GetPreference('category_image_size_thumbnail', '90');
+        $imageArray = array();
         for ($i=1;$i<=$imgcount;$i++)
             {
             array_push($imageArray, $this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_cf_'.$i.'_'.$fullSize.'.jpg');
