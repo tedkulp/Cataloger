@@ -43,6 +43,6 @@ if (! $this->CheckAccess()) exit;
        		}
 	
 		$params['message'] = $this->Lang('reimported');
-		$this->DoAction('defaultadmin', 'catalogmodule', $params);
+		$this->DoAction('defaultadmin', $id, $params);
 
 ?>

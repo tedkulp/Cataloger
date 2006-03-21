@@ -17,6 +17,6 @@ if (! $this->CheckAccess()) exit;
 		$this->SetPreference('category_items_per_page', isset($params['items_per_page'])?$params['items_per_page']:'10');
 
 		$params['message'] = $this->Lang('prefsupdated');
-        $this->DoAction('adminprefs', 'catalogmodule', $params);
+        $this->DoAction('adminprefs', $id, $params);
 
 ?>

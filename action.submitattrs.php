@@ -36,6 +36,6 @@ if (! $this->CheckAccess()) exit;
                 }
             }
 		$params['message'] = $this->Lang('attrsupdated');
-        $this->DoAction('adminattrs', 'catalogmodule', $params);
+        $this->DoAction('adminattrs', $id, $params);
 
 ?>

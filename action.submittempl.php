@@ -22,6 +22,6 @@ if (! $this->CheckAccess()) exit;
 		$this->SetTemplate('catalog_'.$template_id,$params['templ']);
 		
 		$params['message'] = $this->Lang('templateupdated');
-		$this->DoAction('defaultadmin', 'catalogmodule', $params);
+		$this->DoAction('defaultadmin', $id, $params);
 
 ?>

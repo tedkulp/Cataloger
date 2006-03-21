@@ -11,6 +11,6 @@ if (! $this->CheckAccess()) exit;
 		$this->DeleteTemplate('glossary_'.$params['template_id']);
 
 		$params['message'] = $this->Lang('templatedeleted');
-		$this->DoAction('defaultadmin', 'catalogmodule', $params);
+		$this->DoAction('defaultadmin', $id, $params);
 
 ?>

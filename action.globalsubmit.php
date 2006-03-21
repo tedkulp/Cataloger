@@ -37,6 +37,6 @@ if (! $this->CheckAccess()) exit;
 			}
 
 		$params['message'] = $this->Lang('globallyupdated');
-        $this->DoAction('globalops', 'catalogmodule', $params);
+        $this->DoAction('globalops', $id, $params);
 
 ?>
