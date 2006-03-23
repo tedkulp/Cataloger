@@ -6,6 +6,12 @@
 			}
 			
 		$hm =& $gCms->GetHierarchyManager();
+		
+/*		foreach ($gCms->variables as $key=>$val)
+			{
+			error_log("$key = $val");
+			}
+*/		
 		$curPageID = $gCms->variables['content_id'];
 		$curPage = $hm->sureGetNodeById($curPageID)->GetContent();
 

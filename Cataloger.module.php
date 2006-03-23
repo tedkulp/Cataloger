@@ -216,9 +216,14 @@ class Cataloger extends CMSModule
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('uninstalled'));
 	}
 
-    function contentalpha($a, $b)
+    function contentalphaold($a, $b)
     {
       return strcasecmp($a->MenuText(), $b->MenuText());
+    }
+    
+    function contentalpha($a, $b)
+    {
+      return strcasecmp($a->title, $b->title);
     }
 
     function initAdminNav($id, &$params, $returnid)

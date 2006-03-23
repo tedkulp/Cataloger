@@ -13,9 +13,9 @@
 	</div>
 	<div class="pageoverflow">
 		<p class="pagetext">*{$title_template}:</p>
-		<p class="pageinput">{$input_template}<br />
-		<div id="available">{$avail_attrs}</div></p>
+		<p class="pageinput">{$input_template}</p>
 	</div>
+	<div id="available">{$avail_attrs}</div>
 	<div class="pageoverflow">
 		<p class="pagetext">&nbsp;</p>
 		<p class="pageinput">{$hidden}{$submit}</p>

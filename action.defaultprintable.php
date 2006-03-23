@@ -16,6 +16,7 @@ if (!isset($gCms)) exit;
 
         $printableItems = array();
         $showAttrs = explode(',',$params['fieldlist']);
+    	$this->smarty->assign('attrlist',$showAttrs);
 		$lastCat = 'none';
 		foreach ($content as $thisPage)
 			{
@@ -50,11 +51,16 @@ if (!isset($gCms)) exit;
 					continue;
 					}
 				$safeattr = strtolower(preg_replace('/\W/','',$thisAttr));
-				$thisItem[$safeattr] = $thisPage->GetPropertyValue($thisAttr);
+				$thisItem[$thisAttr] = $thisPage->GetPropertyValue($thisAttr);
 				}
 			array_push($printableItems,$thisItem);
 			}
             
+        if (isset($params['sort_order']) && $params['sort_order'] == 'alpha')
+            {
+            usort($printableItems,array("Cataloger", "contentalpha"));
+            }
+         
         $this->smarty->assign('items',$printableItems);
 		echo $this->ProcessTemplateFromDatabase('catalog_'.$params['sub_template']);
 ?>
