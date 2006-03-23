@@ -7,10 +7,11 @@ if (! $this->CheckAccess()) exit;
 			{
 			// update all item sort order
 			$query = "update ".
-				cms_db_prefix()."content_props cp, ".cms_db_prefix().
-				"content c set cp.content=? where ".
-				"cp.content_id=c.content_id and c.type='catalogcategory' ".
-				"and cp.prop_name='sort_order'";
+				cms_db_prefix()."content_props set content=? where ".
+				cms_db_prefix()."content_props.content_id=".
+				cms_db_prefix()."content.content_id and ".
+				cms_db_prefix()."content.type='catalogcategory' and ".
+				cms_db_prefix()."content_props.prop_name='sort_order'";
 			$dbresult = $db->Execute($query,array($params['item_sort_order']));
 			}
 		if (isset($params['category_recurse']) &&
@@ -18,10 +19,11 @@ if (! $this->CheckAccess()) exit;
 			{
 			// update display rules
 			$query = "update ".
-				cms_db_prefix()."content_props cp, ".cms_db_prefix().
-				"content c set cp.content=? where ".
-				"cp.content_id=c.content_id and c.type='catalogcategory' ".
-				"and cp.prop_name='recurse'";
+				cms_db_prefix()."content_props  set content=? where ".
+				cms_db_prefix()."content_props.content_id=".
+				cms_db_prefix()."content.content_id and ".
+				cms_db_prefix()."content.type='catalogcategory' and ".
+				cms_db_prefix()."content_props.prop_name='recurse'";
 			$dbresult = $db->Execute($query,array($params['category_recurse']));
 			
 			}
@@ -30,15 +32,16 @@ if (! $this->CheckAccess()) exit;
 			{
 			// update display rules
 			$query = "update ".
-				cms_db_prefix()."content_props cp, ".cms_db_prefix().
-				"content c set cp.content=? where ".
-				"cp.content_id=c.content_id and c.type='catalogcategory' ".
-				"and cp.prop_name='items_per_page'";
+				cms_db_prefix()."content_props  set content=? where ".
+				cms_db_prefix()."content_props.content_id=".
+				cms_db_prefix()."content.content_id and ".
+				cms_db_prefix()."content.type='catalogcategory' and ".
+				cms_db_prefix()."content_props.prop_name='items_per_page'";
 			$dbresult = $db->Execute($query,array($params['items_per_page']));
 			}
 
-	//	$params['message'] = $this->Lang('globallyupdated');
-	$params['message'] = $query.' '.$params['category_recurse'];
+
+		$params['message'] = $this->Lang('globallyupdated');
         $this->DoAction('globalops', $id, $params);
 
 ?>

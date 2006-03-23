@@ -2,10 +2,18 @@
 if (!isset($gCms)) exit;
 		foreach ($params as $key=>$val)
 			{
-			$this->smarty->assign($key, $params[$key]);
+			if (isset($params[$key]))
+				{
+				$this->smarty->assign($key, $params[$key]);
+				}
+			else
+				{
+				$this->smarty->assign($key,'');
+				}
 			}
-		$content = ContentManager::GetAllContent(false);
-		$curPageID = $this->cms->variables['content_id'];
+
+		$content = $this->getAllContent();
+
         $printableItems = array();
         $showAttrs = explode(',',$params['fieldlist']);
 		$lastCat = 'none';
@@ -37,12 +45,10 @@ if (!isset($gCms)) exit;
 			$theseAttrs = $thisPage->getAttrs();
 			foreach ($theseAttrs as $thisAttr)
 				{
-error_log($thisAttr);
 				if (! in_array($thisAttr,$showAttrs))
 					{
 					continue;
 					}
-error_log('!');
 				$safeattr = strtolower(preg_replace('/\W/','',$thisAttr));
 				$thisItem[$safeattr] = $thisPage->GetPropertyValue($thisAttr);
 				}

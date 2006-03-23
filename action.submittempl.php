@@ -19,6 +19,10 @@ if (! $this->CheckAccess()) exit;
 			$template_id = $db->GenID(cms_db_prefix().'module_catalog_template_seq');
 			$dbresult = $db->Execute($query,array($template_id,$params['title'],$params['type_id'],$params['templ']));
 			}
+			
+		// force a cache clear?
+		$this->DeleteTemplate('catalog_'.$template_id);
+		// and recreate
 		$this->SetTemplate('catalog_'.$template_id,$params['templ']);
 		
 		$params['message'] = $this->Lang('templateupdated');

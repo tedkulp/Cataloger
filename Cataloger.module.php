@@ -149,6 +149,52 @@ class Cataloger extends CMSModule
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('upgraded',$this->GetVersion()));
 	}
 
+	function importSampleTemplates()
+	{
+		$db =& $this->cms->GetDb();
+		$dir=opendir(dirname(__FILE__).'/includes');
+   		$temps = array();
+   		while($filespec=readdir($dir))
+   			{
+       		if(! preg_match('/\.tpl$/i',$filespec))
+       			{
+       			continue;
+       			}
+       		array_push($temps, $filespec);
+			}        
+		sort($temps);
+		$query = 'INSERT INTO '. cms_db_prefix().
+				'module_catalog_template (id, type_id, title, template) '.
+				' VALUES (?,?,?,?)';
+
+		foreach ($temps as $filespec)
+			{
+       		$file = file(dirname(__FILE__).'/includes/'.$filespec);
+       		$template = implode('', $file);
+       		$temp_name = preg_replace('/\.tpl$/i','',$filespec);
+			$type_id = -1;
+       		if (substr($temp_name,0,5) == 'Item-')
+       			{
+       			$type_id = 1;
+       			}
+       		else if (substr($temp_name,0,9) == 'Category-')
+       			{
+       			$type_id = 2;
+       			}
+       		else if (substr($temp_name,0,10) == 'Printable-')
+       			{
+       			$type_id = 3;
+       			}
+       		
+    		$temp_id = $db->GenID(cms_db_prefix().
+    			'module_catalog_template_seq');
+			$dbresult = $db->Execute($query,
+				array($temp_id,$type_id, $temp_name,$template));
+       		$this->SetTemplate('catalog_'.$temp_id,$template);
+       		}
+	
+	}
+
 	function Uninstall()
 	{
 		$db =& $this->cms->GetDb();
@@ -255,6 +301,19 @@ class Cataloger extends CMSModule
 		$hm->getFlattenedChildren($rn, $content, $count);
 		return $content;
 	}
+
+	function & getAllContent()
+	{
+		global $gCms;
+		$content = array();
+		$hm =& $gCms->GetHierarchyManager();
+		
+		$rn = $hm->GetRootNode(); 
+		$count = 0;
+		$hm->getFlattenedChildren($rn, $content, $count);
+		return $content;
+	}
+
 
 
     function displayError($message)
@@ -1212,6 +1271,10 @@ class CatalogPrintable extends CMSModuleContentType
                 {
 				$params[$safeattr] = $tmp;
                 }
+            else
+            	{
+            	$params[$safeattr] = '';
+            	}
             }
 		$params['title'] = $this->mName;
 		$params['menutext'] = $this->mMenuText;
