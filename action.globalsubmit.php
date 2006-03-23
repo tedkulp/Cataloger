@@ -23,6 +23,7 @@ if (! $this->CheckAccess()) exit;
 				"cp.content_id=c.content_id and c.type='catalogcategory' ".
 				"and cp.prop_name='recurse'";
 			$dbresult = $db->Execute($query,array($params['category_recurse']));
+			
 			}
 		if (isset($params['items_per_page']) &&
 			$params['items_per_page'] != -1)
@@ -36,7 +37,8 @@ if (! $this->CheckAccess()) exit;
 			$dbresult = $db->Execute($query,array($params['items_per_page']));
 			}
 
-		$params['message'] = $this->Lang('globallyupdated');
+	//	$params['message'] = $this->Lang('globallyupdated');
+	$params['message'] = $query.' '.$params['category_recurse'];
         $this->DoAction('globalops', $id, $params);
 
 ?>

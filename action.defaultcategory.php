@@ -4,25 +4,18 @@
 			{
 			$this->smarty->assign($key, $params[$key]);
 			}
-		$content = ContentManager::GetAllContent(false);
-		$curPageID = $this->cms->variables['content_id'];
+			
+		$hm =& $gCms->GetHierarchyManager();
+		$curPageID = $gCms->variables['content_id'];
+		$curPage = $hm->sureGetNodeById($curPageID)->GetContent();
 
-		for ($i=0;$i<count($content);$i++)
-			{
-			if ($content[$i]->Id() == $curPageID)
-				{
-				$curPage = $content[$i];
-				}
-			}
 		$curHierarchy = $curPage->Hierarchy();
-
         $curHierLen = strlen($curHierarchy);
         $curHierDepth = substr_count($curHierarchy,'.');
+
+		$content = $this->getSubContent($curPageID);
+
         $categoryItems = array();
-        if (isset($params['sort_order']) && $params['sort_order'] == 'alpha')
-            {
-            usort($content,array("Cataloger", "contentalpha"));
-            }
 		foreach ($content as $thisPage)
 			{
             if (!$thisPage->Active())
@@ -95,6 +88,10 @@
 			$thisItem['title'] = $thisPage->MenuText();
 			array_push($categoryItems,$thisItem);
 			}
+        if (isset($params['sort_order']) && $params['sort_order'] == 'alpha')
+            {
+            usort($categoryItems,array("Cataloger", "contentalpha"));
+            }
             
         $count = count($categoryItems);
         if (isset($_REQUEST['start']))
@@ -192,5 +189,6 @@
             }
 		$this->smarty->assign_by_ref('image_url_array',$imageArray);
         $this->smarty->assign_by_ref('image_thumb_url_array',$thumbArray);
+ 
 		echo $this->ProcessTemplateFromDatabase('catalog_'.$params['sub_template']);
 ?>

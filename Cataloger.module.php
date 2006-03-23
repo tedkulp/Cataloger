@@ -243,6 +243,20 @@ class Cataloger extends CMSModule
 		return $this->Lang('changelog');
 	}
 
+
+	function & getSubContent($startNodeId)
+	{
+		global $gCms;
+		$content = array();
+		$hm =& $gCms->GetHierarchyManager();
+		
+		$rn = $hm->sureGetNodeById($startNodeId); 
+		$count = 0;
+		$hm->getFlattenedChildren($rn, $content, $count);
+		return $content;
+	}
+
+
     function displayError($message)
     {
         $this->smarty->assign_by_ref('error',$message);
