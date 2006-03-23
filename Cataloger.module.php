@@ -223,7 +223,7 @@ class Cataloger extends CMSModule
     
     function contentalpha($a, $b)
     {
-      return strcasecmp($a->title, $b->title);
+      return strcasecmp($a['title'], $b['title']);
     }
 
     function initAdminNav($id, &$params, $returnid)
