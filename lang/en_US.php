@@ -74,6 +74,9 @@ $lang['uninstalled'] = 'Module Uninstalled.';
 $lang['attrsupdated'] = 'Attributes updated.';
 $lang['noglobalchange'] = 'Do not change';
 $lang['globallyupdated'] = 'Changes propagated globally.';
+$lang['addtemplate'] = 'Add Template';
+$lang['edittemplate'] = 'Edit Template';
+$lang['subtemplates'] = 'Catalog Sub-templates';
 $lang['next'] = ':&#187;';
 $lang['prev'] = '&#171;:';
 

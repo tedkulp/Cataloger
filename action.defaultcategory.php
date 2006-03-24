@@ -7,14 +7,18 @@
 			
 		$hm =& $gCms->GetHierarchyManager();
 		
-/*		foreach ($gCms->variables as $key=>$val)
-			{
-			error_log("$key = $val");
-			}
-*/		
-		$curPageID = $gCms->variables['content_id'];
-		$curPage = $hm->sureGetNodeById($curPageID)->GetContent();
-
+		if (isset($gCms->variables['content_id']))
+		  {
+            $curPageID = $gCms->variables['content_id'];
+            $curPageNode = $hm->sureGetNodeById($curPageID);
+            $curPage = $curPageNode->GetContent();
+          }
+        else if (isset($params['alias']))
+          {
+            $curPageNode = $hm->sureGetNodeByAlias($params['alias']);
+            $curPage = $curPageNode->GetContent();
+            $curPageID = $curPage->Id();
+          }
 		$curHierarchy = $curPage->Hierarchy();
         $curHierLen = strlen($curHierarchy);
         $curHierDepth = substr_count($curHierarchy,'.');
@@ -84,10 +88,10 @@
 			switch ($thisPage->Type())
 				{
                 case 'catalogitem':
-				    $thisItem['image'] = $this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_s_1_'.$itemThumbSize.'.jpg';
+				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_s_1_'.$itemThumbSize.'.jpg';
 				    break;
 				case 'catalogcategory':
-				    $thisItem['image'] = $this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_ct_1_'.$catThumbSize.'.jpg';
+				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_ct_1_'.$catThumbSize.'.jpg';
 				    break;
 				}
 			$thisItem['link'] = $thisPage->GetUrl();
@@ -186,11 +190,12 @@
         $imageArray = array();
         for ($i=1;$i<=$imgcount;$i++)
             {
-            array_push($imageArray, $this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_cf_'.$i.'_'.$fullSize.'.jpg');
-            array_push($imageArray, $this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_ct_'.$i.'_'.$thumbSize.'.jpg');
+              // was $thisPage->Alias()
+            array_push($imageArray, $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$curPage->Alias().'_cf_'.$i.'_'.$fullSize.'.jpg');
+            array_push($imageArray, $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$curPage->Alias().'_ct_'.$i.'_'.$thumbSize.'.jpg');
 
-            $this->smarty->assign('image_'.$i.'_url',$this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_cf_'.$i.'_'.$fullSize.'.jpg');
-            $this->smarty->assign('image_thumb_'.$i.'_url',$this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_ct_'.$i.'_'.$thumbSize.'.jpg'
+            $this->smarty->assign('image_'.$i.'_url',$gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$curPage->Alias().'_cf_'.$i.'_'.$fullSize.'.jpg');
+            $this->smarty->assign('image_thumb_'.$i.'_url',$gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$curPage->Alias().'_ct_'.$i.'_'.$thumbSize.'.jpg'
             );
             }
 		$this->smarty->assign_by_ref('image_url_array',$imageArray);

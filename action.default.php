@@ -11,11 +11,11 @@
         $thumbSize = $this->GetPreference('item_image_size_thumbnail', '70');
         for ($i=1;$i<=$imgcount;$i++)
             {
-            array_push($imageArray, $this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$params['alias'].'_f_'.$i.'_'.$fullSize.'.jpg');
-            array_push($thumbArray, $this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$params['alias'].'_t_'.$i.'_'.$thumbSize.'.jpg');
+            array_push($imageArray, $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$params['alias'].'_f_'.$i.'_'.$fullSize.'.jpg');
+            array_push($thumbArray, $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$params['alias'].'_t_'.$i.'_'.$thumbSize.'.jpg');
 
-            $this->smarty->assign('image_'.$i.'_url',$this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$params['alias'].'_f_'.$i.'_'.$fullSize.'.jpg');
-            $this->smarty->assign('image_thumb_'.$i.'_url',$this->cms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$params['alias'].'_t_'.$i.'_'.$thumbSize.'.jpg'
+            $this->smarty->assign('image_'.$i.'_url',$gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$params['alias'].'_f_'.$i.'_'.$fullSize.'.jpg');
+            $this->smarty->assign('image_thumb_'.$i.'_url',$gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$params['alias'].'_t_'.$i.'_'.$thumbSize.'.jpg'
             );
             }
 		$this->smarty->assign_by_ref('attrlist',$params['attrlist']);

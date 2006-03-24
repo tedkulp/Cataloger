@@ -70,7 +70,8 @@ class Cataloger extends CMSModule
 
 	function Install()
 	{
-		$db =& $this->cms->GetDb();
+        global $gCms;
+		$db =& $gCms->GetDb();
 
 		$dict = NewDataDictionary($db);
 		$flds = "
@@ -125,7 +126,7 @@ class Cataloger extends CMSModule
 		$catalogdirs = array('catalog','catalog_src');
 		foreach ($catalogdirs as $thisDir)
 			{
-        	$fileDir = dirname($this->cms->config['uploads_path'].'/images/'.$thisDir.'/index.html');
+        	$fileDir = dirname($gCms->config['uploads_path'].'/images/'.$thisDir.'/index.html');
         	if (!is_dir($fileDir))
             	{
             	mkdir($fileDir);
@@ -151,7 +152,8 @@ class Cataloger extends CMSModule
 
 	function importSampleTemplates()
 	{
-		$db =& $this->cms->GetDb();
+        global $gCms;
+		$db =& $gCms->GetDb();
 		$dir=opendir(dirname(__FILE__).'/includes');
    		$temps = array();
    		while($filespec=readdir($dir))
@@ -197,7 +199,8 @@ class Cataloger extends CMSModule
 
 	function Uninstall()
 	{
-		$db =& $this->cms->GetDb();
+        global $gCms;
+		$db =& $gCms->GetDb();
 		$dict = NewDataDictionary( $db );
 
 		$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_catalog_template" );

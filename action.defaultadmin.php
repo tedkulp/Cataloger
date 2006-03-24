@@ -46,6 +46,7 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('title_template_type',$this->Lang('title_template_type'));
         $this->smarty->assign('notemplates',$this->Lang('notemplates'));
 		$this->smarty->assign('message',isset($params['message'])?$params['message']:'');
+		$this->smarty->assign('section',$this->Lang('subtemplates'));
 
         $this->smarty->assign('addlink',
             $this->CreateLink($id, 'edittempl', $returnid,

@@ -24,6 +24,7 @@ if (! $this->CheckAccess()) exit;
 			$title=$row['title'];
 			$template=$row['template'];
 			$type_id=$row['type_id'];
+			$this->smarty->assign('op', $this->Lang('edittemplate'));
 			}
 		else
 			{
@@ -31,7 +32,7 @@ if (! $this->CheckAccess()) exit;
 			$templateid = '';
 			$title='';
 			$template='';
-			$this->smarty->assign('op', 'Add Template');
+			$this->smarty->assign('op', $this->Lang('addtemplate'));
 			}
         $query = "SELECT attribute, type_id FROM ".cms_db_prefix()."module_catalog_attr";
         $dbresult = $db->Execute($query);
