@@ -39,8 +39,8 @@ if (! $this->CheckAccess()) exit;
         	{
         	$number[$i]=$i;
         	}
-        $this->smarty->assign('input_item_image_count', $this->CreateInputDropdown($id, 'item_image_count', $number, -1,  $this->GetPreference('image_count', '2')));
-        $this->smarty->assign('input_category_image_count', $this->CreateInputDropdown($id, 'category_image_count', $number, -1,  $this->GetPreference('category_count', '1')));
+        $this->smarty->assign('input_item_image_count', $this->CreateInputDropdown($id, 'item_image_count', $number, -1,  $this->GetPreference('item_image_count', '2')));
+        $this->smarty->assign('input_category_image_count', $this->CreateInputDropdown($id, 'category_image_count', $number, -1,  $this->GetPreference('category_image_count', '1')));
 
 		$recurse =  $this->GetPreference('category_recurse', 'mixed_one'); 
 		$this->smarty->assign('input_category_recurse',

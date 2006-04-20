@@ -55,7 +55,7 @@ class Cataloger extends CMSModule
 
 	function GetVersion()
 	{
-		return '0.2';
+		return '0.3';
 	}
 
 	function MinimumCMSVersion()
@@ -134,7 +134,7 @@ class Cataloger extends CMSModule
 			touch($fileDir.'/index.html');
             }
         $this->importSampleTemplates();           
-        $this->SetPreference('image_count', 2);
+        $this->SetPreference('item_image_count', 2);
 		$this->CreatePermission('Modify Catalog Settings', 'Modify Catalog Settings');
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('installed',$this->GetVersion()));
 	}
@@ -147,6 +147,15 @@ class Cataloger extends CMSModule
 	function Upgrade($oldversion, $newversion)
 	{
 		$current_version = $oldversion;
+
+		switch($current_version)
+		{
+			case "0.1":
+			case "0.2":
+			case "0.3":
+                $this->RemovePreference('image_count');
+        }
+
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('upgraded',$this->GetVersion()));
 	}
 
