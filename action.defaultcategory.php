@@ -96,6 +96,12 @@
 				}
 			$thisItem['link'] = $thisPage->GetUrl();
 			$thisItem['title'] = $thisPage->MenuText();
+			$theseAttrs = $thisPage->getAttrs();
+			foreach ($theseAttrs as $thisAttr)
+				{
+				$safeattr = strtolower(preg_replace('/\W/','',$thisAttr));
+				$thisItem[$thisAttr] = $thisPage->GetPropertyValue($thisAttr);
+				}
 			array_push($categoryItems,$thisItem);
 			}
         if (isset($params['sort_order']) && $params['sort_order'] == 'alpha')
