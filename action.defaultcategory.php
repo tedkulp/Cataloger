@@ -95,7 +95,8 @@
 				    break;
 				}
 			$thisItem['link'] = $thisPage->GetUrl();
-			$thisItem['title'] = $thisPage->MenuText();
+			$thisItem['title'] = $thisPage->Name();
+			$thisItem['menutitle'] = $thisPage->MenuText();
 			$theseAttrs = $thisPage->getAttrs();
 			foreach ($theseAttrs as $thisAttr)
 				{
