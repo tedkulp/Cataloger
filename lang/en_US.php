@@ -15,11 +15,14 @@ $lang['title_printable_tab']='Printable Catalog Settings';
 $lang['title_aspect_tab']='Image Aspect Ratios';
 $lang['title_item_template_vars'] = 'Item Template Variables';
 $lang['title_cat_template_vars'] = 'Category Template Variables';
+$lang['title_feature_template_vars']='Features Template Variables';
+$lang['cataloger']='Cataloger';
 
 $lang['item_page'] = 'Item Page';
 $lang['category_page'] = 'Category Page';
 $lang['catalog_printable'] = 'Printable Catalog';
 $lang['catalog_datasheet'] = 'Catalog Datasheet';
+$lang['catalog_short_list']='Feature List';
 
 $lang['title_global_item_sort_order'] = 'Set item sort order to';
 $lang['title_global_items_per_page']= 'Set number of items per page to';
@@ -79,6 +82,9 @@ $lang['edittemplate'] = 'Edit Template';
 $lang['subtemplates'] = 'Catalog Sub-templates';
 $lang['next'] = ':&#187;';
 $lang['prev'] = '&#171;:';
+$lang['edit'] = 'Edit';
+$lang['delete']='Delete';
+
 
 $lang['notemplates']='No Sub-templates are installed!';
 $lang['helptext']='
@@ -86,7 +92,7 @@ $lang['helptext']='
 <p>This module lets you create online catalogs or portfolios. Catalogs consist of "Catalog Items" which could be products, works of art, or the like, and "Catalog Categories" which could be item categories or other natural divisions of the catalog.</p>
 <p>Categories may be defined hierarchically (using the standard CMS Made Simple content list). Category pages can display items in the category and/or subcategories, optionally recursing through sub-categories. This behavior can be configured on a per-category basis.</P>
 <p>There is also a Printable Catalog, which represents the whole collection of Catalog Items on a single page (this is currently implemented badly, and will load slowly).</p>
-<p>The module has built-in support for "Content Aliases" (a module available at <a href="http://www.cmsmodules.com/ContentAliases.html">CMSModules.com</a>), which allows you to place any Catalog Item into multiple Catalog Categories.</p>
+<p>The module has built-in support for "Content Aliases" (a module available at <a href="http://dev.cmsmadesimple.org/projects/contentaliases/">the Developer Forge</a>), which allows you to place any Catalog Item into multiple Catalog Categories.</p>
 <h3>How Do I Use It</h3>
 <p>When you install this module, it creates three new Content Types: Catalog Item, Catalog Category, and Printable Catalog. When you\'re in your site administration category, you add Catalog Items and Catalog Categories just as you would any other kind of page. Select Content &gt; Pages &gt; Add Content, and then select "Catalog Item" or "Catalog Category" from the Content Type pulldown.</p>
 <h4>Catalog Items</h4>
@@ -119,6 +125,15 @@ $lang['helptext']='
 <p>Cataloger allows you to select different size images for Item pages, Category pages, and the Printable Catalog. You can set these defaults in Extensions &gt; Cataloger &gt; Manage Preferences.</p>
 <p>When you upload images, the original is stored. When someone visits a page, the reduced size images are requested using a special URL, which will redirect the user\'s browser to the scaled image if it exists, and creating the scaled image if it doesn\'t. This allows you to change the size of images, without having to re-upload all the images, or rescaling them all at once.</p>
 <p>This image rescaling code requires that you have either ImageMagick or GD lib installed, and configured in your CMS Made Simple config.php.</p>
+<h3>Feature Lists</h3>
+<p>You can, as of version 0.4, have "feature lists" which are the <i>n</i> most-recently added catalog items, or a collection of <i>k</i> random items from the catalog.</p>
+<h4>Recently Added Feature List</h4>
+<p>To use a "most-recently added" list, you will need to be running a cutting-edge version of CMS Made Simple -- the required code is post 0.13. <strong>You will get an ugly error/crash if you try this on an earlier version of CMS Made Simple!</strong></p>
+<p>The syntax for a "most recently added" list is like:</p>
+<p>&#123;cms_module module=\'Cataloger\' action=\'recent\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a category page) in which to look for new items.</p>
+<h4>Random Items Feature List</h4>
+<p>The syntax for a "random" list is like:</p>
+<p>&#123;cms_module module=\'Cataloger\' action=\'random\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a category page) in which to look for new items.</p>
 <h3>Customization and Advanced Topics</h3>
 <h4>Catalog Item Attributes</h4>
 <p>The default item attributes are typical for a catalog of products or artworks, but by going into Extensions &gt; Cataloger &gt; Manage User-Defined Attributes, you can change the attributes. It\'s best to define the attributes before you start entering Catalog Items.</p>
@@ -128,23 +143,26 @@ $lang['helptext']='
 <h4>Printable Catalog Attributes</h4>
 <p>Likewise, you can set attributes for Printable Catalogs. Again, the attributes you define may need to be added to the template that you\'re using to display your Printable Catalog -- see Custom Templates below.</p>
 <h4>Custom Templates</h4>
-<p>If you\'re willing to mess around with Smarty Templates, you can change the layout of any of the pages generated by Cataloger. This should make certain developers very happy, even if the inefficiency of the rest of the code will note. There are three kinds of templates: one kind for Catalog Items, one kind for Catalog Categories, and one kind for Printable Catalogs.</p>
+<p>If you\'re willing to mess around with Smarty Templates, you can change the layout of any of the pages generated by Cataloger. This should make certain developers very happy, even if the inefficiency of the rest of the code will not. There are four kinds of templates: one kind for Catalog Items, one kind for Catalog Categories, and one kind for Printable Catalogs, and one kind for "Feature" lists, such as recently added items or random selections.</p>
 <p>When editing a Template, the admin screen will display a list of Smarty tags available to you for that kind of template. This will only happen once the module knows what kind of template you\'re editing, so when you first create the template, it displays all the Smarty tags it knows about, only some of which being applicable.</p>
 <h3>Support</h3>
 <p>This module does not include commercial support. However, there are a number of resources available to help you with it:</p>
 <ul>
-<li>For the latest version of this module, FAQs, or to file a Bug Report or buy commercial support, please visit SjG\'s
-module homepage at <a href="http://www.cmsmodules.com">CMSModules.com</a>.</li>
+<li>For the latest version of this module, FAQs, or to file a Bug Report, please visit the CMS Made Simple  <a href="http://dev.cmsmadesimple.org">Developer Forge</a>.</li>
+<li>To obtain commercial support, please send an email to the author at <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>.</li>
 <li>Additional discussion of this module may also be found in the <a href="http://forum.cmsmadesimple.org">CMS Made Simple Forums</a>.</li>
-<li>The author, SjG, can often be found in the <a href="irc://irc.freenode.net/#cms">CMS IRC Channel</a>.</li>
-<li>Lastly, you may have some success emailing the author directly.</li>  
+<li>The author can often be found in the <a href="irc://irc.freenode.net/#cms">CMS IRC Channel</a>.</li>
+<li>Lastly, you may have some success emailing the author directly and grovelling for free support.</li>  
 </ul>
 <p>As per the GPL, this software is provided as-is. Please read the text
 of the license for the full disclaimer.</p>
 <h3>Copyright and License</h3>
-<p>Copyright &copy; 2005, Samuel Goldstein <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>. All Rights Are Reserved.</p>
+<p>Copyright &copy; 2006, Samuel Goldstein <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>. All Rights Are Reserved.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
+<li>Version 0.4 - 22 May 2006. Bug fixes, Feature Lists.</li>
+<li>Version 0.3 - (unreleased, published from svn)</li>
+<li>Version 0.2 - 23 March 2006. Numerous bug fixes. Performance improvements. Memory footprint optimizations. Now uses the CMS 0.12 Module API.</li>
 <li>Version 0.1.5 - 17 November 2005. Initial Release. Jesus, that took a long time.</li>
 <li>Version 0.1 - 19 March 2005. Project Initiation.</li>
 </ul>';

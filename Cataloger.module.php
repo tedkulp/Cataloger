@@ -1,7 +1,7 @@
 <?php
 #-------------------------------------------------------------------------
 # Module: Cataloger - build a catalog or portfolio of stuff
-# Version: 0.2
+# Version: 0.4
 #
 # Copyright (c) 2006, Samuel Goldstein <sjg@cmsmodules.com>
 # For Information, Support, Bug Reports, etc, please visit the
@@ -55,12 +55,12 @@ class Cataloger extends CMSModule
 
 	function GetVersion()
 	{
-		return '0.3';
+		return '0.4';
 	}
 
 	function MinimumCMSVersion()
 	{
-		return '0.12';
+		return '0.13';
 	}
 
 	function GetAdminDescription()
@@ -68,95 +68,22 @@ class Cataloger extends CMSModule
 		return $this->Lang('admindescription');
 	}
 
-	function Install()
-	{
-        global $gCms;
-		$db =& $gCms->GetDb();
-
-		$dict = NewDataDictionary($db);
-		$flds = "
-			id I KEY,
-			type_id I,
-			title C(255),
-			template X
-		";
-		$taboptarray = array('mysql' => 'TYPE=MyISAM');
-		$sqlarray = $dict->CreateTableSQL(cms_db_prefix()."module_catalog_template",
-				$flds, $taboptarray);
-		$dict->ExecuteSQLArray($sqlarray);
-		$db->CreateSequence(cms_db_prefix()."module_catalog_template_seq");
-
-		$flds = "
-			type_id I KEY,
-			name C(25)
-		";
-		$sqlarray = $dict->CreateTableSQL(cms_db_prefix()."module_catalog_template_type",
-				$flds, $taboptarray);
-		$dict->ExecuteSQLArray($sqlarray);
-		$query = 'INSERT INTO '. cms_db_prefix(). 'module_catalog_template_type VALUES (?,?)';
-		$dbresult = $db->Execute($query,array(1, $this->Lang('item_page')));
-		$dbresult = $db->Execute($query,array(2, $this->Lang('category_page')));
-		$dbresult = $db->Execute($query,array(3, $this->Lang('catalog_printable')));
-		$dbresult = $db->Execute($query,array(4, $this->Lang('catalog_datasheet')));
-
-		$flds = "
-			id I KEY,
-			type_id I,
-			attribute C(255)
-		";
-		$sqlarray = $dict->CreateTableSQL(cms_db_prefix()."module_catalog_attr",
-				$flds, $taboptarray);
-		$dict->ExecuteSQLArray($sqlarray);
-		$db->CreateSequence(cms_db_prefix()."module_catalog_attr_seq");
-
-		$query = 'INSERT INTO '. cms_db_prefix(). 'module_catalog_attr VALUES (?,?,?)';
-        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'Weight'));
-        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'Medium/Media'));
-        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'Dimensions'));
-        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'Price'));
-        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'In Stock?'));
-        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 3, 'Copyright'));
-
-		$catalogdirs = array('catalog','catalog_src');
-		foreach ($catalogdirs as $thisDir)
-			{
-        	$fileDir = dirname($gCms->config['uploads_path'].'/images/'.$thisDir.'/index.html');
-        	if (!is_dir($fileDir))
-            	{
-            	mkdir($fileDir);
-            	}
-			touch($fileDir.'/index.html');
-            }
-        $this->importSampleTemplates();           
-        $this->SetPreference('item_image_count', 2);
-		$this->CreatePermission('Modify Catalog Settings', 'Modify Catalog Settings');
-		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('installed',$this->GetVersion()));
-	}
-
 	function InstallPostMessage()
 	{
 		return $this->Lang('postinstall');
 	}
 
-	function Upgrade($oldversion, $newversion)
+	function getTemplateFromAlias($alias)
 	{
-		$current_version = $oldversion;
-
-		switch($current_version)
-		{
-			case "0.1":
-			case "0.2":
-			case "0.3":
-                $this->RemovePreference('image_count');
-        }
-
-		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('upgraded',$this->GetVersion()));
+        global $gCms;
+		$db =& $gCms->GetDb();
+       	$dbresult = $db->Execute('SELECT id from '.cms_db_prefix().
+       		'module_catalog_template where title=?',array($alias));
+        if ($dbresult !== false && $row = $dbresult->FetchRow())
+       		{
+			return 'catalog_'.$row['id'];
+       		}
+       	return '';	
 	}
 
 	function importSampleTemplates()
@@ -183,6 +110,14 @@ class Cataloger extends CMSModule
        		$file = file(dirname(__FILE__).'/includes/'.$filespec);
        		$template = implode('', $file);
        		$temp_name = preg_replace('/\.tpl$/i','',$filespec);
+       		// check if it already exists
+       		$excheck = 'SELECT id from '.cms_db_prefix().'module_catalog_template where title=?';
+       		$dbcount = $db->Execute($excheck,array($temp_name));
+       		while ($dbcount && $dbcount->RowCount() > 0)
+       			{
+       			$temp_name .='_new';
+       			$dbcount = $db->Execute($excheck,array($temp_name));
+       			}
 			$type_id = -1;
        		if (substr($temp_name,0,5) == 'Item-')
        			{
@@ -196,6 +131,10 @@ class Cataloger extends CMSModule
        			{
        			$type_id = 3;
        			}
+       		else if (substr($temp_name,0,8) == 'Feature-')
+       			{
+       			$type_id = 5;
+       			}
        		
     		$temp_id = $db->GenID(cms_db_prefix().
     			'module_catalog_template_seq');
@@ -206,36 +145,22 @@ class Cataloger extends CMSModule
 	
 	}
 
-	function Uninstall()
-	{
-        global $gCms;
-		$db =& $gCms->GetDb();
-		$dict = NewDataDictionary( $db );
-
-		$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_catalog_template" );
-		$dict->ExecuteSQLArray($sqlarray);
-
-		$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_catalog_template_type" );
-		$dict->ExecuteSQLArray($sqlarray);
-
-		$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_catalog_attr" );
-		$dict->ExecuteSQLArray($sqlarray);
-
-		$db->DropSequence( cms_db_prefix()."module_catalog_template_seq" );
-		$db->DropSequence( cms_db_prefix()."module_catalog_attr_seq" );
-
-		$this->RemovePermission('Modify Catalog Settings');
-		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('uninstalled'));
-	}
-
-    function contentalphaold($a, $b)
-    {
-      return strcasecmp($a->MenuText(), $b->MenuText());
-    }
-    
     function contentalpha($a, $b)
     {
       return strcasecmp($a['title'], $b['title']);
+    }
+
+    function chrono($a, $b)
+    {
+      if ($a['modifieddate'] > $b['modifieddate'])
+      	{
+      	return -1;
+      	}
+      if ($a['modifieddate'] < $b['modifieddate'])
+      	{
+      	return 1;
+      	}
+      return 0;
     }
 
     function initAdminNav($id, &$params, $returnid)
@@ -331,6 +256,119 @@ class Cataloger extends CMSModule
 		return $content;
 	}
 
+
+	function getCatalogItemsList(&$params)
+	{
+		global $gCms;
+		$hm =& $gCms->GetHierarchyManager();
+		
+		if (isset($params['content_id']))
+		  {
+            $curPageID = $gCms->variables[$params['content_id']];
+            $curPageNode = $hm->sureGetNodeById($curPageID);
+            $curPage = $curPageNode->GetContent();
+          }
+        else if (isset($params['alias']))
+          {
+            $curPageNode = $hm->sureGetNodeByAlias($params['alias']);
+            $curPage = $curPageNode->GetContent();
+            $curPageID = $curPage->Id();
+          }
+		else if (isset($gCms->variables['content_id']))
+		  {
+            $curPageID = $gCms->variables['content_id'];
+            $curPageNode = $hm->sureGetNodeById($curPageID);
+            $curPage = $curPageNode->GetContent();
+          }
+		$curHierarchy = $curPage->Hierarchy();
+        $curHierLen = strlen($curHierarchy);
+        $curHierDepth = substr_count($curHierarchy,'.');
+
+		$content = $this->getSubContent($curPageID);
+        $categoryItems = array();
+		foreach ($content as $thisPage)
+			{
+            if (!$thisPage->Active())
+                {
+                continue;
+                }
+            if ($thisPage->Id() == $curPage->Id())
+                {
+                continue;
+                }
+			$type_ok = false;
+			$depth_ok = false;
+			if ($thisPage->Type() == 'aliasmodule')
+				{
+				$thisPage = $thisPage->GetAliasContent();
+				}
+			if ($thisPage->Type() == 'catalogitem' &&
+                      ($params['recurse'] == 'items_one' ||
+                       $params['recurse'] == 'items_all' ||
+                       $params['recurse'] == 'mixed_one' ||
+                       $params['recurse'] == 'mixed_all'))
+                {
+                $type_ok = true;
+                }
+            else if ($thisPage->Type() == 'catalogcategory' &&
+                          ($params['recurse'] == 'categories_one' ||
+                           $params['recurse'] == 'categories_all' ||
+                           $params['recurse'] == 'mixed_one' ||
+                           $params['recurse'] == 'mixed_all'))
+                    {
+                    $type_ok = true;
+                    }
+            if (! $type_ok)
+                {
+                continue;
+                }
+            if (($params['recurse'] == 'items_one' ||
+                 $params['recurse'] == 'categories_one' ||
+                 $params['recurse'] == 'mixed_one') &&
+                 substr_count($thisPage->Hierarchy(),'.') ==
+                 	($curHierDepth + 1) &&
+                 substr($thisPage->Hierarchy(),0,$curHierLen) == $curHierarchy)
+                {
+                $depth_ok = true;
+                }
+            else if (($params['recurse'] == 'items_all' ||
+                 $params['recurse'] == 'categories_all' ||
+                 $params['recurse'] == 'mixed_all') &&
+                 substr($thisPage->Hierarchy(),0,$curHierLen) == $curHierarchy)
+                    {
+                    $depth_ok = true;
+                    }
+            if (! $depth_ok)
+                {
+                continue;
+                }
+			// in the category, and approved for addition
+			$catThumbSize = $this->GetPreference('category_image_size_thumbnail',90);
+			$itemThumbSize = $this->GetPreference('item_image_size_category',70);
+			switch ($thisPage->Type())
+				{
+                case 'catalogitem':
+				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_s_1_'.$itemThumbSize.'.jpg';
+				    break;
+				case 'catalogcategory':
+				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_ct_1_'.$catThumbSize.'.jpg';
+				    break;
+				}
+			$thisItem['link'] = $thisPage->GetUrl();
+			$thisItem['title'] = $thisPage->Name();
+			$thisItem['menutitle'] = $thisPage->MenuText();
+			$thisItem['modifieddate']=$thisPage->GetModifiedDate();
+			$thisItem['createdate']=$thisPage->GetCreationDate();
+			$theseAttrs = $thisPage->getAttrs();
+			foreach ($theseAttrs as $thisAttr)
+				{
+				$safeattr = strtolower(preg_replace('/\W/','',$thisAttr));
+				$thisItem[$thisAttr] = $thisPage->GetPropertyValue($thisAttr);
+				}
+			array_push($categoryItems,$thisItem);
+			}
+		return array($curPage,$categoryItems);
+	}
 
 
     function displayError($message)

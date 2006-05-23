@@ -38,6 +38,7 @@ if (! $this->CheckAccess()) exit;
         $dbresult = $db->Execute($query);
         $attrs = '<h3>'.$this->Lang('title_item_template_vars').'</h3>{$title}, {$notes}, ';
         $cattrs = '<h3>'.$this->Lang('title_cat_template_vars').'</h3>{$title}, {$notes}, {$prev}, {$prevurl}, {$navstr}, {$next}, {$nexturl}, {$items}, ';
+        $feattrs = '<h3>'.$this->Lang('title_feature_template_vars').'</h3>{$items},';
 
         while ($dbresult !== false && $row = $dbresult->FetchRow())
         	{
@@ -72,6 +73,8 @@ if (! $this->CheckAccess()) exit;
         $cattrs = rtrim($cattrs,', ');
         $cattrs .= '<h3>$items array contents:</h3>';
         $cattrs .= '$items[].title, $items[].link, $items[].image, $items[].<i>attrname</i>';
+        $feattrs .= '<h3>$items array contents:</h3>';
+        $feattrs .= '$items[].title, $items[].link, $items[].image, $items[].<i>attrname</i>';
 
         
 		$this->smarty->assign('startform', $this->CreateFormStart($id, 'submittempl', $returnid));
@@ -91,10 +94,14 @@ if (! $this->CheckAccess()) exit;
 				{
 				$this->smarty->assign_by_ref('avail_attrs',$cattrs);		
 				}
+			else if ($type_id == 5)
+				{
+				$this->smarty->assign_by_ref('avail_attrs',$feattrs);		
+				}
 			}
 		else
 			{
-			$this->smarty->assign('avail_attrs',$attrs.', '.$cattrs);
+			$this->smarty->assign('avail_attrs',$attrs.', '.$cattrs.', '.$feattrs);
 			}
 
 //		$this->smarty->assign('title_avail_imattrs',$this->Lang('title_avail_imattrs'));
