@@ -60,7 +60,7 @@ class Cataloger extends CMSModule
 
 	function MinimumCMSVersion()
 	{
-		return '0.12-beta1';
+		return '0.12';
 	}
 
 	function GetAdminDescription()
@@ -719,7 +719,11 @@ class CatalogCategory extends CMSModuleContentType
             }
     }
 
-
+    function &getAttrs()
+    {
+    	$this->getUserAttributes();
+    	return $this->attrs;
+    }
 
 	function TabNames()
 	{

@@ -71,7 +71,7 @@ if (! $this->CheckAccess()) exit;
         $cattrs .= '{$image_thumb_url_array}';
         $cattrs = rtrim($cattrs,', ');
         $cattrs .= '<h3>$items array contents:</h3>';
-        $cattrs .= '$items[].title, $items[].link, $items[].image';
+        $cattrs .= '$items[].title, $items[].link, $items[].image, $items[].<i>attrname</i>';
 
         
 		$this->smarty->assign('startform', $this->CreateFormStart($id, 'submittempl', $returnid));
