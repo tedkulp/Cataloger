@@ -8,14 +8,6 @@
  			{
  			$params['recurse'] = 'items_all';
  		 	}
- 		if (!isset($params['']))
- 			{
- 			$params['']='';
- 			}
- 		if (!isset($params['']))
- 			{
- 			$params['']='';
- 			}
 		
  		list($curPage,$categoryItems) = $this->getCatalogItemsList($params);
         usort($categoryItems,array("Cataloger", "chrono"));

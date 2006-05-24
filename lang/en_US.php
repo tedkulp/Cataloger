@@ -128,12 +128,12 @@ $lang['helptext']='
 <h3>Feature Lists</h3>
 <p>You can, as of version 0.4, have "feature lists" which are the <i>n</i> most-recently added catalog items, or a collection of <i>k</i> random items from the catalog.</p>
 <h4>Recently Added Feature List</h4>
-<p>To use a "most-recently added" list, you will need to be running a cutting-edge version of CMS Made Simple -- the required code is post 0.13. <strong>You will get an ugly error/crash if you try this on an earlier version of CMS Made Simple!</strong></p>
+<p>To use a "most-recently added" list will allow you to display the most recently-added catalog items under a specified part of your hierarchy.</p>
 <p>The syntax for a "most recently added" list is like:</p>
-<p>&#123;cms_module module=\'Cataloger\' action=\'recent\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a category page) in which to look for new items.</p>
+<p>&#123;cms_module module=\'Cataloger\' action=\'recent\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a place in your menu hierarchy, typically a category page) in which to look for new items.</p>
 <h4>Random Items Feature List</h4>
 <p>The syntax for a "random" list is like:</p>
-<p>&#123;cms_module module=\'Cataloger\' action=\'random\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a category page) in which to look for new items.</p>
+<p>&#123;cms_module module=\'Cataloger\' action=\'random\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a place in your menu hierarchy, typically a category page) in which to look for new items.</p>
 <h3>Customization and Advanced Topics</h3>
 <h4>Catalog Item Attributes</h4>
 <p>The default item attributes are typical for a catalog of products or artworks, but by going into Extensions &gt; Cataloger &gt; Manage User-Defined Attributes, you can change the attributes. It\'s best to define the attributes before you start entering Catalog Items.</p>
@@ -160,6 +160,7 @@ of the license for the full disclaimer.</p>
 <p>Copyright &copy; 2006, Samuel Goldstein <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>. All Rights Are Reserved.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
+<li>Version 0.4.1 - 23 May 2006. Bug fix to make work with older versions of CMS MS.</li>
 <li>Version 0.4 - 22 May 2006. Bug fixes, Feature Lists.</li>
 <li>Version 0.3 - (unreleased, published from svn)</li>
 <li>Version 0.2 - 23 March 2006. Numerous bug fixes. Performance improvements. Memory footprint optimizations. Now uses the CMS 0.12 Module API.</li>

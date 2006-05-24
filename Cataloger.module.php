@@ -55,7 +55,7 @@ class Cataloger extends CMSModule
 
 	function GetVersion()
 	{
-		return '0.4';
+		return '0.4.1';
 	}
 
 	function MinimumCMSVersion()
@@ -429,6 +429,16 @@ class CatalogItem extends CMSModuleContentType
     	return $this->attrs;
     }
 
+	function GetCreationDate()
+	{
+		return $this->mCreationDate;
+	}
+	
+	function GetModifiedDate()
+	{
+		return $this->mModifiedDate;
+	}
+
 	function TabNames()
 	{
 		return array(lang('main'), 'Images', lang('options'));
@@ -762,6 +772,16 @@ class CatalogCategory extends CMSModuleContentType
     	$this->getUserAttributes();
     	return $this->attrs;
     }
+
+	function GetCreationDate()
+	{
+		return $this->mCreationDate;
+	}
+	
+	function GetModifiedDate()
+	{
+		return $this->mModifiedDate;
+	}
 
 	function TabNames()
 	{
@@ -1102,7 +1122,15 @@ class CatalogPrintable extends CMSModuleContentType
             }
     }
 
-
+	function GetCreationDate()
+	{
+		return $this->mCreationDate;
+	}
+	
+	function GetModifiedDate()
+	{
+		return $this->mModifiedDate;
+	}
 
 	function TabNames()
 	{
