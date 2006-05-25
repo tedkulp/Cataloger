@@ -262,30 +262,41 @@ class Cataloger extends CMSModule
 		global $gCms;
 		$hm =& $gCms->GetHierarchyManager();
 		
-		if (isset($params['content_id']))
-		  {
-            $curPageID = $gCms->variables[$params['content_id']];
-            $curPageNode = $hm->sureGetNodeById($curPageID);
-            $curPage = $curPageNode->GetContent();
-          }
-        else if (isset($params['alias']))
-          {
-            $curPageNode = $hm->sureGetNodeByAlias($params['alias']);
-            $curPage = $curPageNode->GetContent();
-            $curPageID = $curPage->Id();
-          }
-		else if (isset($gCms->variables['content_id']))
-		  {
-            $curPageID = $gCms->variables['content_id'];
-            $curPageNode = $hm->sureGetNodeById($curPageID);
-            $curPage = $curPageNode->GetContent();
-          }
-		$curHierarchy = $curPage->Hierarchy();
-        $curHierLen = strlen($curHierarchy);
-        $curHierDepth = substr_count($curHierarchy,'.');
-
-		$content = $this->getSubContent($curPageID);
-        $categoryItems = array();
+		if (isset($params['alias']) && $params['alias'] == '/')
+			{
+			$content = $this->getAllContent();
+			$curHierDepth = 0;
+			$curHierarchy = '';
+			$curHierLen = 0;
+			$curPage = new ContentBase();
+			}
+		else
+			{
+			if (isset($params['content_id']))
+			  {
+				$curPageID = $gCms->variables[$params['content_id']];
+				$curPageNode = $hm->sureGetNodeById($curPageID);
+				$curPage = $curPageNode->GetContent();
+			  }
+			else if (isset($params['alias']))
+			  {
+				$curPageNode = $hm->sureGetNodeByAlias($params['alias']);
+				$curPage = $curPageNode->GetContent();
+				$curPageID = $curPage->Id();
+			  }
+			else if (isset($gCms->variables['content_id']))
+			  {
+				$curPageID = $gCms->variables['content_id'];
+				$curPageNode = $hm->sureGetNodeById($curPageID);
+				$curPage = $curPageNode->GetContent();
+			  }
+			$curHierarchy = $curPage->Hierarchy();
+			$curHierLen = strlen($curHierarchy);
+			$curHierDepth = substr_count($curHierarchy,'.');
+	
+			$content = $this->getSubContent($curPageID);
+			}
+		$categoryItems = array();
 		foreach ($content as $thisPage)
 			{
             if (!$thisPage->Active())
