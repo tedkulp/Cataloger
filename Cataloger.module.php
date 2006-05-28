@@ -55,7 +55,7 @@ class Cataloger extends CMSModule
 
 	function GetVersion()
 	{
-		return '0.4.1';
+		return '0.4.2';
 	}
 
 	function MinimumCMSVersion()
@@ -374,7 +374,7 @@ class Cataloger extends CMSModule
 			foreach ($theseAttrs as $thisAttr)
 				{
 				$safeattr = strtolower(preg_replace('/\W/','',$thisAttr));
-				$thisItem[$thisAttr] = $thisPage->GetPropertyValue($thisAttr);
+				$thisItem[$safeattr] = $thisPage->GetPropertyValue($thisAttr);
 				}
 			array_push($categoryItems,$thisItem);
 			}
