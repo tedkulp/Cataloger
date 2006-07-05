@@ -31,7 +31,7 @@ if (! $this->CheckAccess()) exit;
 			// update display rules
 			$query = "update ".
 				cms_db_prefix()."content_props cp, ".
-				cms_db_prefix()."c set cp.content=? where ".
+				cms_db_prefix()."content c set cp.content=? where ".
 				"cp.content_id=c.content_id and ".
 				"c.type='catalogcategory' and ".
 				"cp.prop_name='items_per_page'";
