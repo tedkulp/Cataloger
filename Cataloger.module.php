@@ -113,7 +113,7 @@ class Cataloger extends CMSModule
        		// check if it already exists
        		$excheck = 'SELECT id from '.cms_db_prefix().'module_catalog_template where title=?';
        		$dbcount = $db->Execute($excheck,array($temp_name));
-       		while ($dbcount && $dbcount->RowCount() > 0)
+       		while ($dbcount && $dbcount->RecordCount() > 0)
        			{
        			$temp_name .='_new';
        			$dbcount = $db->Execute($excheck,array($temp_name));
