@@ -348,7 +348,7 @@ class Cataloger extends CMSModule
             else if (($params['recurse'] == 'items_all' ||
                  $params['recurse'] == 'categories_all' ||
                  $params['recurse'] == 'mixed_all') &&
-                 substr($thisPage->Hierarchy(),0,$curHierLen) == $curHierarchy)
+                 substr($thispagecontent->Hierarchy(),0,$curHierLen) == $curHierarchy)
                     {
                     $depth_ok = true;
                     }
@@ -359,25 +359,25 @@ class Cataloger extends CMSModule
 			// in the category, and approved for addition
 			$catThumbSize = $this->GetPreference('category_image_size_thumbnail',90);
 			$itemThumbSize = $this->GetPreference('item_image_size_category',70);
-			switch ($thisPage->Type())
+			switch ($thispagecontent->Type())
 				{
                 case 'catalogitem':
-				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_s_1_'.$itemThumbSize.'.jpg';
+				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thispagecontent->Alias().'_s_1_'.$itemThumbSize.'.jpg';
 				    break;
 				case 'catalogcategory':
-				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_ct_1_'.$catThumbSize.'.jpg';
+				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thispagecontent->Alias().'_ct_1_'.$catThumbSize.'.jpg';
 				    break;
 				}
-			$thisItem['link'] = $thisPage->GetUrl();
-			$thisItem['title'] = $thisPage->Name();
-			$thisItem['menutitle'] = $thisPage->MenuText();
-			$thisItem['modifieddate']=$thisPage->GetModifiedDate();
-			$thisItem['createdate']=$thisPage->GetCreationDate();
-			$theseAttrs = $thisPage->getAttrs();
+			$thisItem['link'] = $thispagecontent->GetUrl();
+			$thisItem['title'] = $thispagecontent->Name();
+			$thisItem['menutitle'] = $thispagecontent->MenuText();
+			$thisItem['modifieddate']=$thispagecontent->GetModifiedDate();
+			$thisItem['createdate']=$thispagecontent->GetCreationDate();
+			$theseAttrs = $thispagecontent->getAttrs();
 			foreach ($theseAttrs as $thisAttr)
 				{
 				$safeattr = strtolower(preg_replace('/\W/','',$thisAttr));
-				$thisItem[$safeattr] = $thisPage->GetPropertyValue($thisAttr);
+				$thisItem[$safeattr] = $thispagecontent->GetPropertyValue($thisAttr);
 				}
 			array_push($categoryItems,$thisItem);
 			}
