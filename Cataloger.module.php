@@ -237,10 +237,12 @@ class Cataloger extends CMSModule
 		global $gCms;
 		$content = array();
 		$hm =& $gCms->GetHierarchyManager();
-		
+		/* Works with new addition to Tree, but getFlatList is default
 		$rn = $hm->sureGetNodeById($startNodeId); 
 		$count = 0;
 		$hm->getFlattenedChildren($rn, $content, $count);
+		*/
+		$content = $hm->getFlatList();
 		return $content;
 	}
 
@@ -299,21 +301,22 @@ class Cataloger extends CMSModule
 		$categoryItems = array();
 		foreach ($content as $thisPage)
 			{
-            if (!$thisPage->Active())
+			  $thispagecontent = $thisPage->GetContent();
+            if (!$thispagecontent->Active())
                 {
                 continue;
                 }
-            if ($thisPage->Id() == $curPage->Id())
+            if ($thispagecontent->Id() == $curPage->Id())
                 {
                 continue;
                 }
 			$type_ok = false;
 			$depth_ok = false;
-			if ($thisPage->Type() == 'aliasmodule')
+			if ($thispagecontent->Type() == 'aliasmodule')
 				{
-				$thisPage = $thisPage->GetAliasContent();
+				$thisPage = $thispagecontent->GetAliasContent();
 				}
-			if ($thisPage->Type() == 'catalogitem' &&
+			if ($thispagecontent->Type() == 'catalogitem' &&
                       ($params['recurse'] == 'items_one' ||
                        $params['recurse'] == 'items_all' ||
                        $params['recurse'] == 'mixed_one' ||
@@ -321,7 +324,7 @@ class Cataloger extends CMSModule
                 {
                 $type_ok = true;
                 }
-            else if ($thisPage->Type() == 'catalogcategory' &&
+            else if ($thispagecontent->Type() == 'catalogcategory' &&
                           ($params['recurse'] == 'categories_one' ||
                            $params['recurse'] == 'categories_all' ||
                            $params['recurse'] == 'mixed_one' ||
@@ -336,9 +339,9 @@ class Cataloger extends CMSModule
             if (($params['recurse'] == 'items_one' ||
                  $params['recurse'] == 'categories_one' ||
                  $params['recurse'] == 'mixed_one') &&
-                 substr_count($thisPage->Hierarchy(),'.') ==
+                 substr_count($thispagecontent->Hierarchy(),'.') ==
                  	($curHierDepth + 1) &&
-                 substr($thisPage->Hierarchy(),0,$curHierLen) == $curHierarchy)
+                 substr($thispagecontent->Hierarchy(),0,$curHierLen) == $curHierarchy)
                 {
                 $depth_ok = true;
                 }
