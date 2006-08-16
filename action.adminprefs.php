@@ -13,6 +13,7 @@ if (! $this->CheckAccess()) exit;
         $this->SetTabHeader('categoryimage',$this->Lang('title_category_image_tab')).
         $this->SetTabHeader('printable',$this->Lang('title_printable_tab')).
         $this->SetTabHeader('aspect',$this->Lang('title_aspect_tab')).
+        $this->SetTabHeader('image',$this->Lang('title_image_tab')).
         $this->EndTabHeaders().$this->StartTabContent());
         $this->smarty->assign('end_tab',$this->EndTab());
         $this->smarty->assign('tab_footers',$this->EndTabContent());
@@ -20,8 +21,11 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('start_category_image_tab',$this->StartTab('categoryimage'));
         $this->smarty->assign('start_printable_tab',$this->StartTab('printable'));
         $this->smarty->assign('start_aspect_tab',$this->StartTab('aspect'));
+	$this->smarty->assign('start_image_tab',$this->StartTab('image'));
 
         $this->smarty->assign('title_item_image_count', $this->Lang('title_item_image_count'));
+        $this->smarty->assign('title_show_missing_images',
+        	$this->Lang('title_show_missing_images'));
         $this->smarty->assign('title_category_image_count', $this->Lang('title_category_image_count'));
         $this->smarty->assign('title_item_image_size_hero', $this->Lang('title_item_image_size_hero'));
         $this->smarty->assign('title_item_image_size_thumbnail', $this->Lang('title_item_image_size_thumbnail'));
@@ -68,6 +72,9 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('input_category_image_size_thumbnail', $this->CreateInputText($id, 'category_image_size_thumbnail', $this->GetPreference('category_image_size_thumbnail', '90'), 10, 10));
         $this->smarty->assign('input_item_image_size_category', $this->CreateInputText($id, 'item_image_size_category', $this->GetPreference('item_image_size_category', '70'), 10, 10));
         $this->smarty->assign('input_item_image_size_catalog', $this->CreateInputText($id, 'item_image_size_catalog', $this->GetPreference('item_image_size_catalog', '100'), 10, 10));
+
+$this->smarty->assign('input_show_missing_images',$this->CreateInputCheckbox($id, 'show_missing', 1, $this->GetPreference('show_missing','1')). $this->Lang('title_show_missing_images_long'));		
+
 
 		$this->smarty->assign('input_force_aspect_ratio',$this->CreateInputCheckbox($id, 'force_aspect_ratio', 1, $this->GetPreference('force_aspect_ratio', 0)).'&nbsp;'.
 		$this->Lang('title_force_aspect_ratio_label'));

@@ -15,6 +15,10 @@ if (! $this->CheckAccess()) exit;
 		$this->SetPreference('category_recurse', isset($params['category_recurse'])?$params['category_recurse']:'mixed_one');
 		$this->SetPreference('category_sort_order', isset($params['item_sort_order'])?$params['item_sort_order']:'natural');
 		$this->SetPreference('category_items_per_page', isset($params['items_per_page'])?$params['items_per_page']:'10');
+	
+	$this->SetPreference('show_missing',
+isset($params['show_missing'])?$params['show_missing']:0);
+
 
 		$params['message'] = $this->Lang('prefsupdated');
         $this->DoAction('adminprefs', $id, $params);

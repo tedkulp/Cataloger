@@ -359,13 +359,14 @@ class Cataloger extends CMSModule
 			// in the category, and approved for addition
 			$catThumbSize = $this->GetPreference('category_image_size_thumbnail',90);
 			$itemThumbSize = $this->GetPreference('item_image_size_category',70);
+			$missingImage = $this->GetPreference('show_missing','1');
 			switch ($thispagecontent->Type())
 				{
                 case 'catalogitem':
-				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thispagecontent->Alias().'_s_1_'.$itemThumbSize.'.jpg';
+				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thispagecontent->Alias().'_s_1_'.$itemThumbSize.$showMissing.'.jpg';
 				    break;
 				case 'catalogcategory':
-				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thispagecontent->Alias().'_ct_1_'.$catThumbSize.'.jpg';
+				    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thispagecontent->Alias().'_ct_1_'.$catThumbSize.$showMissing.'.jpg';
 				    break;
 				}
 			$thisItem['link'] = $thispagecontent->GetUrl();
@@ -536,7 +537,7 @@ class CatalogItem extends CMSModuleContentType
             for ($i=1; $i<= $imgcount; $i++)
                 {
                 $imgsrc .= '<tr><td style="vertical-align:top">Image '.$i.':</td><td style="vertical-align:top">';
-				$imgsrc .= '<img src="'.$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_t_'.$i.'_'.$thumbsize.'.jpg" />';
+				$imgsrc .= '<img src="'.$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_t_'.$i.'_'.$thumbsize.'_1.jpg" />';
                 $imgsrc .= '</td><td style="vertical-align:top">&nbsp;<input type="file" name="image'.$i.'" />';
                 $imgsrc .= '</td></tr>';
                 }
@@ -865,7 +866,7 @@ class CatalogCategory extends CMSModuleContentType
             for ($i=1; $i<= $imgcount; $i++)
                 {
                 $imgsrc .= '<tr><td style="vertical-align:top">Image '.$i.':</td><td style="vertical-align:top">';
-				$imgsrc .= '<img src="'.$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_ct_'.$i.'_'.$thumbsize.'.jpg" />';
+				$imgsrc .= '<img src="'.$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_ct_'.$i.'_'.$thumbsize.'_1.jpg" />';
                 $imgsrc .= '</td><td style="vertical-align:top">&nbsp;<input type="file" name="image'.$i.'" />';
                 $imgsrc .= '</td></tr>';
                 }

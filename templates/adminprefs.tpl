@@ -73,6 +73,13 @@
         <p class="pageinput">{$input_image_aspect_ratio}</p>
 	</div>
 {$end_tab}
+{$start_image_tab}
+	<div class="pageoverflow">
+        <p class="pagetext">{$title_show_missing_images}</p>
+        <p class="pageinput">{$input_show_missing_images}</p>
+	</div>
+{$end_tab}
+
 {$tab_footers}
 	<div class="pageoverflow">
 		<p class="pagetext">&nbsp;</p>

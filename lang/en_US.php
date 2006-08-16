@@ -13,6 +13,7 @@ $lang['title_item_image_tab']='Item Image Sizes';
 $lang['title_category_image_tab']='Category Page Settings';
 $lang['title_printable_tab']='Printable Catalog Settings';
 $lang['title_aspect_tab']='Image Aspect Ratios';
+$lang['title_image_tab']='Other Image Settings';
 $lang['title_item_template_vars'] = 'Item Template Variables';
 $lang['title_cat_template_vars'] = 'Category Template Variables';
 $lang['title_feature_template_vars']='Features Template Variables';
@@ -59,6 +60,8 @@ $lang['title_category_recurse_categories_all'] = 'Include all Categories within 
 $lang['title_category_recurse_categories_one'] = 'Include all Categories immediately within this category, but not categories in sub-categories';
 $lang['title_category_recurse_mixed_all'] = 'Include all Items and Categories within this category, including items and categories in sub-categories';
 $lang['title_category_recurse_mixed_one'] = 'Include all Items and Categories immediately within this category, but not items or categories in sub-categories';
+$lang['title_show_missing_images'] = 'Show "No Image" image for missing images';
+$lang['title_show_missing_images_long'] = 'Show a special "No Image" image if there are missing images (otherwise will use a single pixel transparent image).';
 $lang['natural_order'] = 'Navigation Order';
 $lang['alpha_order'] = 'Alphabetical Order';
 
@@ -84,9 +87,8 @@ $lang['next'] = ':&#187;';
 $lang['prev'] = '&#171;:';
 $lang['edit'] = 'Edit';
 $lang['delete']='Delete';
-
-
 $lang['notemplates']='No Sub-templates are installed!';
+
 $lang['helptext']='
 <h3>What Does This Do?</h3>
 <p>This module lets you create online catalogs or portfolios. Catalogs consist of "Catalog Items" which could be products, works of art, or the like, and "Catalog Categories" which could be item categories or other natural divisions of the catalog.</p>

@@ -5,33 +5,30 @@
 	$spec = preg_replace('/(\.\.|\/)/','',$spec);
 	if (! preg_match('/\.jpg$/i',$spec))
 		{
-		// not found, but instead of a 404, we'll return a "no-image" image
-		header("Location: ".$config['root_url'].
-			'/modules/Cataloger/images/no-image.gif');
-		return;
+		return returnMissing($config['root_url'], true);
 		}
 	$sized = @stat($config['uploads_path'].'/images/catalog/'.$spec);
 	$spec = substr($spec, 0, strrpos($spec,'.'));
 	$parts = explode('_',$spec);
 	$parts = array_reverse($parts);
 		
-	$size = $parts[0];
-	$imgno = $parts[1];
-	$type = $parts[2];
+	$showMissing = $parts[0] == '1';
+	$size = $parts[1];
+	$imgno = $parts[2];
+	$type = $parts[3];
 	$name = '';
-	for ($j=count($parts)-1;$j>2;$j--)
+	for ($j=count($parts)-1;$j>3;$j--)
 		{
 		$name .= $parts[$j].'_';
 		}
 	$srcSpec = $config['uploads_path'].'/images/catalog_src/'.$name;
 	$srcSpec .= 'src_'.$imgno.'.jpg';
 	$orig = @stat($srcSpec);
+	$newImage = false;
 	if ($orig === false)
 		{
-		// once again, 404 is subverted
-		header("Location: ".$config['root_url'].
-			'/modules/Cataloger/images/no-image.gif');
-		return;
+		error_log($srcSpec);
+		return returnMissing($config['root_url'], $showMissing);
 		}
 	if (!$sized || $sized['mtime'] < $orig['mtime'])
 		{
@@ -39,12 +36,39 @@
 		$destSpec = $config['uploads_path'].'/images/catalog/'.$spec.'.jpg';
 		// so we make one
 		imageTransform($srcSpec, $destSpec, $size, $config);
+		$newImage = true;
 		}
 
-	header("Location: ".$config['uploads_url'].
-		'/images/catalog/'.$spec.'.jpg');
+	$dest = "Location: ".$config['uploads_url'].
+		'/images/catalog/'.$spec.'.jpg';
+	if ($newImage)
+		{
+		$dest += '?';
+		for ($i=0;$i<5;$i++)
+			{
+			$dest .= rand(0,9);
+			}
+		}
+	header($dest);
 	return;
 
+
+	function returnMissing($rootUrl, $showMissing)
+	{
+		// if so desired, don't 404, but send an image
+		if (! $showMissing)
+			{
+			header("Location: ".
+				'/modules/Cataloger/images/trans.gif');
+			}
+		else
+			{
+			header("Location: ".
+				'/modules/Cataloger/images/no-image.gif');			
+			}
+		return;
+	
+	}
 
     function imageTransform($srcSpec, $destSpec, $size, &$config, $aspect_ratio='')
     {
