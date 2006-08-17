@@ -266,7 +266,7 @@ class Cataloger extends CMSModule
 		
 		if (isset($params['alias']) && $params['alias'] == '/')
 			{
-			$content = $this->getAllContent();
+			$content = $hm->getFlatList();
 			$curHierDepth = 0;
 			$curHierarchy = '';
 			$curHierLen = 0;
@@ -301,7 +301,7 @@ class Cataloger extends CMSModule
 		$categoryItems = array();
 		foreach ($content as $thisPage)
 			{
-			  $thispagecontent = $thisPage->GetContent();
+			$thispagecontent = $thisPage->GetContent();
             if (!$thispagecontent->Active())
                 {
                 continue;
