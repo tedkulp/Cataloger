@@ -162,6 +162,7 @@ of the license for the full disclaimer.</p>
 <p>Copyright &copy; 2006, Samuel Goldstein <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>. All Rights Are Reserved.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
+<li>Version 0.5 - 16 August 2006. Assorted contributed bug fixes for CMS MS 1.0,  new options for images.</li>
 <li>Version 0.4.2 - 28 May 2006. Bug fix for attributes in category pages. Added "/" page_alias for feature lists.</li>
 <li>Version 0.4.1 - 23 May 2006. Bug fix to make work with older versions of CMS MS.</li>
 <li>Version 0.4 - 22 May 2006. Bug fixes, Feature Lists.</li>
