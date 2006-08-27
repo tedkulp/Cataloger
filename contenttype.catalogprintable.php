@@ -27,11 +27,17 @@
 # Or read it online: http://www.gnu.org/licenses/licenses.html#GPL
 #
 #-------------------------------------------------------------------------
+require_once(dirname(__FILE__).'/contenttype.catalogitem.php');
 
 class CatalogPrintable extends CMSModuleContentType
 {
   var $attrs;
 
+  function ModuleName()
+  {
+    return 'Cataloger';
+  }
+	
   function SetProperties()
   {
     global $gCms;
@@ -137,6 +143,7 @@ class CatalogPrintable extends CMSModuleContentType
 	array_push($ret,array(lang('parent').'/Category',$contentops->CreateHierarchyDropdown($this->mId, $this->mParentId)));
 	array_push($ret,array('Page '.lang('template'),$templateops->TemplateDropdown('template_id', $this->mTemplateId)));
 	$module =& $this->GetModuleInstance();
+	
 	array_push($ret,array('Sub '.lang('template'),$module->CreateInputDropdown('', 'sub_template', $subTemplates, -1, $this->GetPropertyValue('sub_template'))));
         
 	$this->getUserAttributes();
@@ -158,6 +165,8 @@ class CatalogPrintable extends CMSModuleContentType
 	  {
 	    $so = get_site_preference('Cataloger_mapi_pref_printable_sort_order', 'natural');
 	  }
+
+	$module =& $this->GetModuleInstance();
 	array_push($ret,array('Item Sort Order',$module->CreateInputDropdown('', 'sort_order',
 									   array("Navigation/Category Order"=>'natural', "Alphabetical Order"=>'alpha'), -1, $so)));
 	$item = new CatalogItem();
@@ -181,7 +190,7 @@ class CatalogPrintable extends CMSModuleContentType
 	array_push($ret,array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="true"':'').'>'));
 	if (!$adding && $showadmin)
 	  {
-	    $userops = $gcms->GetUserOperations();
+	    $userops = $gCms->GetUserOperations();
 	    array_push($ret, array('Owner:',@$userops->GenerateDropdown($this->Owner())));
 	  }
 	if ($adding || $showadmin)
