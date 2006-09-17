@@ -42,7 +42,9 @@ if (!isset($gCms)) exit;
                 }
 			// approved for viewing
 			$printThumbSize = $this->GetPreference('item_image_size_catalog',100);
-			$thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thisPage->Alias().'_p_1_'.$printThumbSize.$showMissing.'.jpg';
+			$thisItem['image'] = 
+			
+            	$this->imageSpec($curPage->Alias(), 'p', 1, $printThumbSize);
 			$thisItem['link'] = $thisPage->GetUrl();
 			$thisItem['title'] = $thisPage->MenuText();
 			$thisItem['cat'] = $lastCat;

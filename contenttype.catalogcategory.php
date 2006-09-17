@@ -174,7 +174,9 @@ class CatalogCategory extends CMSModuleContentType
 	for ($i=1; $i<= $imgcount; $i++)
 	  {
 	    $imgsrc .= '<tr><td style="vertical-align:top">Image '.$i.':</td><td style="vertical-align:top">';
-	    $imgsrc .= '<img src="'.$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_ct_'.$i.'_'.$thumbsize.'_1.jpg" />';
+	    $imgsrc .= '<img src="'.
+$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_ct_'.$i.'_'.$thumbsize.'_1.jpg&ac='.rand(0,9).'" />';
+	    
 	    $imgsrc .= '</td><td style="vertical-align:top">&nbsp;<input type="file" name="image'.$i.'" />';
 	    $imgsrc .= '</td></tr>';
 	  }
@@ -375,7 +377,6 @@ class CatalogCategory extends CMSModuleContentType
     $params['active'] = $this->mActive;
     $params['showinmenu']=$this->mShowInMenu;
 
-    print_r( $params );
   }
 
 

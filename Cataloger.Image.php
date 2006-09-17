@@ -2,10 +2,12 @@
 	require_once(dirname(__FILE__).'/../../config.php');
 	
 	$spec = $_GET['i'];
+	$debug = isset($_GET['debug']);
+	$anticache = isset($_GET['ac']);
 	$spec = preg_replace('/(\.\.|\/)/','',$spec);
 	if (! preg_match('/\.jpg$/i',$spec))
 		{
-		return returnMissing($config['root_url'], true);
+		return returnMissing($config['root_url'], true, $debug);
 		}
 	$sized = @stat($config['uploads_path'].'/images/catalog/'.$spec);
 	$spec = substr($spec, 0, strrpos($spec,'.'));
@@ -23,11 +25,15 @@
 		}
 	$srcSpec = $config['uploads_path'].'/images/catalog_src/'.$name;
 	$srcSpec .= 'src_'.$imgno.'.jpg';
+	if ($debug)
+		{
+		error_log("CatalogerImage: src image ".$srcSpec);
+		}
 	$orig = @stat($srcSpec);
 	$newImage = false;
 	if ($orig === false)
 		{
-		error_log($srcSpec);
+		if ($debug) error_log("Can't find ".$srcSpec);
 		return returnMissing($config['root_url'], $showMissing);
 		}
 	if (!$sized || $sized['mtime'] < $orig['mtime'])
@@ -41,9 +47,9 @@
 
 	$dest = "Location: ".$config['uploads_url'].
 		'/images/catalog/'.$spec.'.jpg';
-	if ($newImage)
+	if ($newImage && $anticache)
 		{
-		$dest += '?';
+		$dest += '?ac=';
 		for ($i=0;$i<5;$i++)
 			{
 			$dest .= rand(0,9);
@@ -53,9 +59,13 @@
 	return;
 
 
-	function returnMissing($rootUrl, $showMissing)
+	function returnMissing($rootUrl, $showMissing, $debug=false)
 	{
 		// if so desired, don't 404, but send an image
+		if ($debug)
+			{
+			error_log("CatalogerImage: no image at $rootUrl");
+			}
 		if (! $showMissing)
 			{
 			header("Location: ".

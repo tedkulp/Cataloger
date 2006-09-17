@@ -32,6 +32,7 @@ class Cataloger extends CMSModule
 
   var $attrs = array();
   var $fetched = false;
+  var $showMissing = '';
 
   function GetName()
   {
@@ -55,7 +56,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.5.1';
+    return '0.5.2';
   }
 
   function MinimumCMSVersion()
@@ -275,6 +276,7 @@ class Cataloger extends CMSModule
   function getCatalogItemsList(&$params)
   {
     global $gCms;
+
     $hm =& $gCms->GetHierarchyManager();
 		
     if (isset($params['alias']) && $params['alias'] == '/')
@@ -376,10 +378,12 @@ class Cataloger extends CMSModule
 	switch ($thispagecontent->Type())
 	  {
 	  case 'catalogitem':
-	    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thispagecontent->Alias().'_s_1_'.$itemThumbSize.$showMissing.'.jpg';
+	    $thisItem['image'] = $this->imageSpec($thispagecontent->Alias(),
+	    	's', 1, $itemThumbSize);
 	    break;
 	  case 'catalogcategory':
-	    $thisItem['image'] = $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$thispagecontent->Alias().'_ct_1_'.$catThumbSize.$showMissing.'.jpg';
+	    $thisItem['image'] = $this->imageSpec($thispagecontent->Alias(),
+	    	'ct', 1, $catThumbSize);
 	    break;
 	  }
 	$thisItem['link'] = $thispagecontent->GetUrl();
@@ -396,6 +400,35 @@ class Cataloger extends CMSModule
 	array_push($categoryItems,$thisItem);
       }
     return array($curPage,$categoryItems);
+  }
+
+
+  function imageSpec($alias, $type, $image_number, $size, $anticache=true, $forceshowmissing=false)
+  {
+    global $gCms;
+  	if ($this->showMissing == '')
+  		{
+  		$this->showMissing = '_'. $this->GetPreference('show_missing','1');
+  		}
+  	$extender = '';
+  	if ($anticache)
+  		{
+  		$extender = '&ac=';
+		for ($r = 0; $r < 5; $r++)
+			{
+			$extender .= rand(0,9);
+			}
+  		}
+
+	return $gCms->config['root_url'].
+			'/modules/Cataloger/Cataloger.Image.php?i='.
+			$alias.'_'.$type.'_'.$image_number.
+			'_'.$size.
+			($forceshowmissing?'_1':$this->showMissing).
+			'.jpg'.$extender;
+
+
+  	
   }
 
 

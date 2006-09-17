@@ -163,6 +163,7 @@ of the license for the full disclaimer.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
 <ul>
+<li>Version 0.5.2 - 17 September 2006. Removed debug output, revised image system (fixed bugs). Caching bug seems to remain.</li>
 <li>Version 0.5.1 - 24 August 2006. (calguy1000), Upped MinimumCMSVersion to 1.0-svn, and more 1.0 changes were added (removed static methods)</li>
 <li>Version 0.5 - 16 August 2006. Assorted contributed bug fixes for CMS MS 1.0,  new options for images.</li>
 <li>Version 0.4.2 - 28 May 2006. Bug fix for attributes in category pages. Added "/" page_alias for feature lists.</li>

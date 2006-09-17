@@ -1,7 +1,7 @@
 <?php
 		if (!isset($gCms)) exit;
 		$showMissing = '_'. $this->GetPreference('show_missing','1');
-
+		
 		foreach ($params as $key=>$val)
 			{
 			$this->smarty->assign($key, $params[$key]);
@@ -102,12 +102,15 @@
         for ($i=1;$i<=$imgcount;$i++)
             {
               // was $thisPage->Alias()
-            array_push($imageArray, $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$curPage->Alias().'_cf_'.$i.'_'.$fullSize.$showMissing.'.jpg');
-            array_push($imageArray, $gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$curPage->Alias().'_ct_'.$i.'_'.$thumbSize.$showMissing.'.jpg');
+            array_push($imageArray, 
+            	$this->imageSpec($curPage->Alias(), 'cf', $i, $fullSize));
+			array_push($imageArray, 
+            	$this->imageSpec($curPage->Alias(), 'ct', $i, $thumbSize));	
+            $this->smarty->assign('image_'.$i.'_url',
+            	$this->imageSpec($curPage->Alias(), 'cf', $i, $fullSize));
+			$this->smarty->assign('image_thumb_'.$i.'_url',
+            	$this->imageSpec($curPage->Alias(), 'ct', $i, $thumbSize));
 
-            $this->smarty->assign('image_'.$i.'_url',$gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$curPage->Alias().'_cf_'.$i.'_'.$fullSize.$showMissing.'.jpg');
-            $this->smarty->assign('image_thumb_'.$i.'_url',$gCms->config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$curPage->Alias().'_ct_'.$i.'_'.$thumbSize.$showMissing.'.jpg'
-            );
             }
 		$this->smarty->assign_by_ref('image_url_array',$imageArray);
         $this->smarty->assign_by_ref('image_thumb_url_array',$thumbArray);
