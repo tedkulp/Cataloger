@@ -56,7 +56,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.5.2';
+    return '0.5.3';
   }
 
   function MinimumCMSVersion()
@@ -408,7 +408,7 @@ class Cataloger extends CMSModule
     global $gCms;
   	if ($this->showMissing == '')
   		{
-  		$this->showMissing = '_'. $this->GetPreference('show_missing','1');
+  		$this->showMissing = $this->GetPreference('show_missing','1');
   		}
   	$extender = '';
   	if ($anticache)
@@ -424,11 +424,39 @@ class Cataloger extends CMSModule
 			'/modules/Cataloger/Cataloger.Image.php?i='.
 			$alias.'_'.$type.'_'.$image_number.
 			'_'.$size.
-			($forceshowmissing?'_1':$this->showMissing).
+			($forceshowmissing?'_1':'_'.$this->showMissing).
 			'.jpg'.$extender;
+  }
 
+  function srcImageSpec($alias, $image_number)
+  {
+  	global $gCms;
+  	if ($this->showMissing == '')
+  		{
+  		$this->showMissing = $this->GetPreference('show_missing','1');
+  		}
+	$srcSpec = $gCms->config['uploads_path'].'/images/catalog_src/'.$alias .
+			'_src_'.$image_number.'.jpg';
 
-  	
+	$orig = @stat($srcSpec);
+	if ($orig === false)
+		{
+		if ($this->showMissing != '1')
+			{
+			return $gCms->config['root_url'].
+				'/modules/Cataloger/images/trans.gif';
+			}
+		else
+			{
+			return $gCms->config['root_url'].
+				'/modules/Cataloger/images/no-image.gif';
+			}
+		}
+	else
+		{
+		return $gCms->config['uploads_url'].'/images/catalog_src/'.$alias .
+			'_src_'.$image_number.'.jpg';
+		}
   }
 
 

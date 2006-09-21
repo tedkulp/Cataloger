@@ -56,9 +56,10 @@ if (! $this->CheckAccess()) exit;
         for ($i=1;$i<=$image_count;$i++)
         	{
         	$attrs .= '{$image_'.$i.'_url}, {$image_thumb_'.$i;
-        	$attrs .= '_url}, ';
+        	$attrs .= '_url}, {$src_image_'.$i.'_url}, ';
         	}
         $attrs .= '{$image_url_array}, ';
+        $attrs .= '{$src_image_url_array}, ';
         $attrs .= '{$image_thumb_url_array}';
         $attrs = rtrim($attrs,', ');
 
@@ -66,9 +67,10 @@ if (! $this->CheckAccess()) exit;
         for ($i=1;$i<=$image_count;$i++)
         	{
         	$cattrs .= '{$image_'.$i.'_url}, {$image_thumb_'.$i;
-        	$cattrs .= '_url}, ';
+        	$cattrs .= '_url}, {$src_image_'.$i.'_url}, ';
         	}
         $cattrs .= '{$image_url_array}, ';
+        $cattrs .= '{$src_image_url_array}, ';
         $cattrs .= '{$image_thumb_url_array}';
         $cattrs = rtrim($cattrs,', ');
         $cattrs .= '<h3>$items array contents:</h3>';

@@ -68,12 +68,12 @@
 			}
 		if (! $showMissing)
 			{
-			header("Location: ".
+			header("Location: ".$rootUrl.
 				'/modules/Cataloger/images/trans.gif');
 			}
 		else
 			{
-			header("Location: ".
+			header("Location: ".$rootUrl.
 				'/modules/Cataloger/images/no-image.gif');			
 			}
 		return;

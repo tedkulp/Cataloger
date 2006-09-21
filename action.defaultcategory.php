@@ -99,6 +99,7 @@
         $fullSize = $this->GetPreference('category_image_size_hero', '400');
         $thumbSize = $this->GetPreference('category_image_size_thumbnail', '90');
         $imageArray = array();
+        $srcImgArray = array();
         for ($i=1;$i<=$imgcount;$i++)
             {
               // was $thisPage->Alias()
@@ -106,13 +107,19 @@
             	$this->imageSpec($curPage->Alias(), 'cf', $i, $fullSize));
 			array_push($imageArray, 
             	$this->imageSpec($curPage->Alias(), 'ct', $i, $thumbSize));	
+			array_push($srcImgArray,
+				$this->srcImageSpec($curPage->Alias(), $i));
+
             $this->smarty->assign('image_'.$i.'_url',
             	$this->imageSpec($curPage->Alias(), 'cf', $i, $fullSize));
+			$this->smarty->assign('arc_image_'.$i.'_url',
+				$this->srcImageSpec($params['alias'], $i));
 			$this->smarty->assign('image_thumb_'.$i.'_url',
             	$this->imageSpec($curPage->Alias(), 'ct', $i, $thumbSize));
 
             }
 		$this->smarty->assign_by_ref('image_url_array',$imageArray);
+		$this->smarty->assign_by_ref('src_image_url_array',$srcImgArray);
         $this->smarty->assign_by_ref('image_thumb_url_array',$thumbArray);
  
 		echo $this->ProcessTemplateFromDatabase('catalog_'.$params['sub_template']);
