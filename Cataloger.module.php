@@ -459,6 +459,42 @@ class Cataloger extends CMSModule
 		}
   }
 
+  function purgeAllImage($alias, $imageNumber)
+  {
+  	$this->purgeScaledImages($alias, $imageNumber);
+  	$this->purgeSourceImage($alias, $imageNumber);  	  	
+  }
+  
+  function purgeScaledImages($alias, $imageNumber)
+  {
+  	global $gCms;
+  	$srcDir = $gCms->config['uploads_path'].'/images/catalog';
+  	$toDel = array();
+   if ($dh = opendir($srcDir))
+   		{
+   		while (($file = readdir($dh)) !== false)
+   			{
+          	$fileParts = explode('_',$file);
+          	if ($fileParts[0]==$alias && $fileParts[2]==$imageNumber)
+          		{
+          		array_push($toDel,$srcDir.'/'.$file);
+          		}
+       		}
+       	closedir($dh);
+   		}
+   	foreach ($toDel as $thisDel)
+   		{
+   		unlink($thisDel);
+   		}
+  }
+
+  function purgeSourceImage($alias, $imageNumber)
+  {
+  	global $gCms;
+	$srcSpec = $gCms->config['uploads_path'].'/images/catalog_src/'.$alias .
+			'_src_'.$imageNumber.'.jpg';
+	unlink($srcSpec);
+  }
 
   function displayError($message)
   {

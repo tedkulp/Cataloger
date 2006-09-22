@@ -9,7 +9,9 @@
 		{
 		return returnMissing($config['root_url'], true, $debug);
 		}
+		
 	$sized = @stat($config['uploads_path'].'/images/catalog/'.$spec);
+
 	$spec = substr($spec, 0, strrpos($spec,'.'));
 	$parts = explode('_',$spec);
 	$parts = array_reverse($parts);
@@ -38,6 +40,7 @@
 		}
 	if (!$sized || $sized['mtime'] < $orig['mtime'])
 		{
+		if ($debug) error_log("newer than existant, transforming");
 		// we don't have a cached version we can use
 		$destSpec = $config['uploads_path'].'/images/catalog/'.$spec.'.jpg';
 		// so we make one
@@ -47,14 +50,20 @@
 
 	$dest = "Location: ".$config['uploads_url'].
 		'/images/catalog/'.$spec.'.jpg';
-	if ($newImage && $anticache)
+	if ($newImage || $anticache)
 		{
-		$dest += '?ac=';
+		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+		header("Cache-Control: no-cache, cachehack=".time());
+		header("Cache-Control: no-store, must-revalidate");
+		header("Cache-Control: post-check=-1, pre-check=-1", false);
+		$dest .= '?ac=';
 		for ($i=0;$i<5;$i++)
 			{
 			$dest .= rand(0,9);
 			}
 		}
+	if ($debug) error_log($dest);
 	header($dest);
 	return;
 

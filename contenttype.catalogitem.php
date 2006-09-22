@@ -181,8 +181,12 @@ class CatalogItem extends CMSModuleContentType
 	  {
 	    $imgsrc .= '<tr><td style="vertical-align:top">Image '.$i.':</td><td style="vertical-align:top">';
 	    $imgsrc .= '<img src="'.
-$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_t_'.$i.'_'.$thumbsize.'_1.jpg&ac='.rand(0,9).'" />';
+$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_t_'.$i.'_'.$thumbsize.'_1.jpg&ac='.rand(0,9).rand(0,9).rand(0,9).'" />';
 	    $imgsrc .= '</td><td style="vertical-align:top">&nbsp;<input type="file" name="image'.$i.'" />';
+	    $imgsrc .= '<input type="checkbox" name="rm_image_'.$this->mAlias.
+	    	'_'.$i.'" /><label for="rm_image_'.$this->mAlias.
+	    	'_'.$i.'">Delete This Image</label>';
+
 	    $imgsrc .= '</td></tr>';
 	  }
 	$imgsrc .= '</table>';
@@ -283,23 +287,35 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	    $this->mShowInMenu = false;
 	  }
 			
-	// Copy and resize the image files...
+	// Copy the image files...
 	$imgcount = get_site_preference('Cataloger_mapi_pref_item_image_count', '2');
 	$herosize = get_site_preference('Cataloger_mapi_pref_item_image_size_hero', '400');
 	$thumbsize = get_site_preference('Cataloger_mapi_pref_item_image_size_thumbnail', '70');
 	$catalogsize = get_site_preference('Cataloger_mapi_pref_item_image_size_catalog', '100');
 	$categorysize = get_site_preference('Cataloger_mapi_pref_item_image_size_category', '70');
+    $pf = new Cataloger();
+
 	for ($i=1; $i<= $imgcount; $i++)
 	  {
 	    if (isset($_FILES['image'.$i]['size']) && $_FILES['image'.$i]['size']>0)
 	      {
-		// keep original image, but purge old thumbnails
+		// keep original image
 		copy($_FILES['image'.$i]['tmp_name'],
 		     dirname($config['uploads_path'].
 			     '/images/catalog_src/index.html') .
 		     '/'.$this->mAlias.'_src_'.$i.'.jpg');
+	      
 	      }
 	  }
+	  foreach ($params as $thisParam=>$thisParamVal)
+	  {
+	  	if (substr($thisParam,0,9) == 'rm_image_')
+	  		{
+	  		$imageSpecParts = explode('_',$thisParam);
+	  		$pf->purgeAllImage($imageSpecParts[2],$imageSpecParts[3]);
+	  		}
+	  }
+	  
       }
   }
 
