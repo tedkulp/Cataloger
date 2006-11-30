@@ -298,7 +298,7 @@ class Cataloger extends CMSModule
 	else if (isset($params['alias']))
 	  {
 	    $curPageNode = $hm->sureGetNodeByAlias($params['alias']);
-	    $curPage = $curPageNode->GetContent();
+		 $curPage = $curPageNode->GetContent();
 	    $curPageID = $curPage->Id();
 	  }
 	else if (isset($gCms->variables['content_id']))
@@ -317,7 +317,11 @@ class Cataloger extends CMSModule
     foreach ($content as $thisPage)
       {
 	$thispagecontent = $thisPage->GetContent();
-	if (!$thispagecontent->Active())
+	if ($thispagecontent === false)
+		{
+		continue;
+		}
+	if (method_exists($thispagecontent,'Active') && !$thispagecontent->Active())
 	  {
 	    continue;
 	  }
