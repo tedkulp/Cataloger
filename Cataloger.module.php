@@ -384,6 +384,8 @@ class Cataloger extends CMSModule
 	  case 'catalogitem':
 	    $thisItem['image'] = $this->imageSpec($thispagecontent->Alias(),
 	    	's', 1, $itemThumbSize);
+	    $thisItem['image_src'] = $this->srcImageSpec($thispagecontent->Alias(),
+	    	1);
 	    break;
 	  case 'catalogcategory':
 	    $thisItem['image'] = $this->imageSpec($thispagecontent->Alias(),

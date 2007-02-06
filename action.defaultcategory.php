@@ -112,7 +112,7 @@
 
             $this->smarty->assign('image_'.$i.'_url',
             	$this->imageSpec($curPage->Alias(), 'cf', $i, $fullSize));
-			$this->smarty->assign('arc_image_'.$i.'_url',
+			$this->smarty->assign('src_image_'.$i.'_url',
 				$this->srcImageSpec($params['alias'], $i));
 			$this->smarty->assign('image_thumb_'.$i.'_url',
             	$this->imageSpec($curPage->Alias(), 'ct', $i, $thumbSize));
