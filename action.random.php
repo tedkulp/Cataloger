@@ -10,14 +10,15 @@
  		 	}
 		
  		list($curPage,$categoryItems) = $this->getCatalogItemsList($params);
-                        
         $count = min(count($categoryItems),$params['count']);
         $thisUrl = $_SERVER['REQUEST_URI'];
         $thisUrl = preg_replace('/(\?)*(\&)*start=\d+/','',$thisUrl);
         if ($count == 1)
         	{
-        	$categoryItems = $categoryItems[array_rand($categoryItems,1)];
-        	$this->smarty->assign('items',$categoryItems);
+        	$thisKey = array_rand($categoryItems,1);
+         $catTmp = array();
+       	array_push($catTmp,$categoryItems[$thisKey]);
+        	$this->smarty->assign('items',$catTmp);
         	}
         else if ($count == 0)
         	{

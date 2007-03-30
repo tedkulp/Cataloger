@@ -419,7 +419,7 @@ class Cataloger extends CMSModule
   	$extender = '';
   	if ($anticache)
   		{
-  		$extender = '&ac=';
+  		$extender = '&amp;ac=';
 		for ($r = 0; $r < 5; $r++)
 			{
 			$extender .= rand(0,9);
