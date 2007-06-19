@@ -282,7 +282,7 @@ class Cataloger extends CMSModule
     if (isset($params['alias']) && $params['alias'] == '/')
       {
 	$content = $hm->getFlatList();
-	$curHierDepth = 0;
+	$curHierDepth = isset($params['start_depth'])?$params['start_depth']:-1;
 	$curHierarchy = '';
 	$curHierLen = 0;
 	$curPage = new ContentBase();
