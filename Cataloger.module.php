@@ -56,12 +56,12 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.5.4';
+    return '0.5.5';
   }
 
   function MinimumCMSVersion()
   {
-    return '1.0-svn';
+    return '1.0';
   }
 
   function GetAdminDescription()
@@ -331,9 +331,12 @@ class Cataloger extends CMSModule
 	  }
 	$type_ok = false;
 	$depth_ok = false;
-	if ($thispagecontent->Type() == 'aliasmodule')
+	if ($thispagecontent->Type() == 'contentalias')
 	  {
-	    $thisPage = $thispagecontent->GetAliasContent();
+	     $curHierarchy = $thispagecontent->TargetHierarchy();
+        $thispagecontent = $thispagecontent->GetAliasContent();
+	     $curHierLen = strlen($curHierarchy);
+	     $curHierDepth = substr_count($curHierarchy,'.');
 	  }
 	if ($thispagecontent->Type() == 'catalogitem' &&
 	    ($params['recurse'] == 'items_one' ||
@@ -371,6 +374,7 @@ class Cataloger extends CMSModule
 	  {
 	    $depth_ok = true;
 	  }
+
 	if (! $depth_ok)
 	  {
 	    continue;

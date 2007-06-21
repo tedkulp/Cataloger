@@ -208,6 +208,7 @@ of the license for the full disclaimer.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
 <ul>
+<li>Version 0.5.5 - 20 June 2007. Fix for Content Alias support - requires Content Alias v. 0.6.1.</li>
 <li>Version 0.5.4 - 19 June 2007. Added "all" feature list.</li>
 <li>Version 0.5.3 - 21 September 2006. Added links to source (non-rescaled) images, and added image delete functionality.</li>
 <li>Version 0.5.2 - 17 September 2006. Removed debug output, revised image system (fixed bugs). Caching bug seems to remain.</li>
