@@ -56,7 +56,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.5.5';
+    return '0.5.6';
   }
 
   function MinimumCMSVersion()
@@ -363,14 +363,14 @@ class Cataloger extends CMSModule
 	     $params['recurse'] == 'mixed_one') &&
 	    substr_count($thispagecontent->Hierarchy(),'.') ==
 	    ($curHierDepth + 1) &&
-	    substr($thispagecontent->Hierarchy(),0,$curHierLen) == $curHierarchy)
+	    substr($thispagecontent->Hierarchy(),0,$curHierLen+1) == $curHierarchy.'.')
 	  {
 	    $depth_ok = true;
 	  }
 	else if (($params['recurse'] == 'items_all' ||
 		  $params['recurse'] == 'categories_all' ||
 		  $params['recurse'] == 'mixed_all') &&
-                 substr($thispagecontent->Hierarchy(),0,$curHierLen) == $curHierarchy)
+                 substr($thispagecontent->Hierarchy(),0,$curHierLen+1) == $curHierarchy.'.')
 	  {
 	    $depth_ok = true;
 	  }
