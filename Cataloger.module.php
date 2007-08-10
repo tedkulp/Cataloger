@@ -281,37 +281,37 @@ class Cataloger extends CMSModule
 		
     if (isset($params['alias']) && $params['alias'] == '/')
       {
-	$content = $hm->getFlatList();
-	$curHierDepth = isset($params['start_depth'])?$params['start_depth']:-1;
-	$curHierarchy = '';
-	$curHierLen = 0;
-	$curPage = new ContentBase();
+	  $content = $hm->getFlatList();
+	  $curHierDepth = isset($params['start_depth'])?$params['start_depth']:-1;
+	  $curHierarchy = '';
+	  $curHierLen = 0;
+	  $curPage = new ContentBase();
       }
     else
       {
-	if (isset($params['content_id']))
-	  {
-	    $curPageID = $gCms->variables[$params['content_id']];
-	    $curPageNode = $hm->sureGetNodeById($curPageID);
-	    $curPage = $curPageNode->GetContent();
-	  }
-	else if (isset($params['alias']))
-	  {
-	    $curPageNode = $hm->sureGetNodeByAlias($params['alias']);
-		 $curPage = $curPageNode->GetContent();
-	    $curPageID = $curPage->Id();
-	  }
-	else if (isset($gCms->variables['content_id']))
-	  {
-	    $curPageID = $gCms->variables['content_id'];
-	    $curPageNode = $hm->sureGetNodeById($curPageID);
-	    $curPage = $curPageNode->GetContent();
-	  }
-	$curHierarchy = $curPage->Hierarchy();
-	$curHierLen = strlen($curHierarchy);
-	$curHierDepth = substr_count($curHierarchy,'.');
-	
-	$content = $this->getSubContent($curPageID);
+   	if (isset($params['content_id']))
+   	  {
+   	    $curPageID = $gCms->variables[$params['content_id']];
+   	    $curPageNode = $hm->sureGetNodeById($curPageID);
+   	    $curPage = $curPageNode->GetContent();
+   	  }
+   	else if (isset($params['alias']))
+   	  {
+   	    $curPageNode = $hm->sureGetNodeByAlias($params['alias']);
+   		 $curPage = $curPageNode->GetContent();
+   	    $curPageID = $curPage->Id();
+   	  }
+   	else if (isset($gCms->variables['content_id']))
+   	  {
+   	    $curPageID = $gCms->variables['content_id'];
+   	    $curPageNode = $hm->sureGetNodeById($curPageID);
+   	    $curPage = $curPageNode->GetContent();
+   	  }
+   	$curHierarchy = $curPage->Hierarchy();
+   	$curHierLen = strlen($curHierarchy);
+   	$curHierDepth = substr_count($curHierarchy,'.');
+   	
+   	$content = $this->getSubContent($curPageID);
       }
     $categoryItems = array();
     foreach ($content as $thisPage)
@@ -367,10 +367,11 @@ class Cataloger extends CMSModule
 	  {
 	    $depth_ok = true;
 	  }
-	else if (($params['recurse'] == 'items_all' ||
+	else if ((isset($params['alias']) && $params['alias'] == '/') ||
+      (($params['recurse'] == 'items_all' ||
 		  $params['recurse'] == 'categories_all' ||
 		  $params['recurse'] == 'mixed_all') &&
-                 substr($thispagecontent->Hierarchy(),0,$curHierLen+1) == $curHierarchy.'.')
+                 substr($thispagecontent->Hierarchy(),0,$curHierLen+1) == $curHierarchy.'.'))
 	  {
 	    $depth_ok = true;
 	  }
