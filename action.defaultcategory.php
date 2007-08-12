@@ -100,6 +100,7 @@
         $thumbSize = $this->GetPreference('category_image_size_thumbnail', '90');
         $imageArray = array();
         $srcImgArray = array();
+        $thumbArray = array();
         for ($i=1;$i<=$imgcount;$i++)
             {
               // was $thisPage->Alias()
