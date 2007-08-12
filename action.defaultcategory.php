@@ -105,7 +105,7 @@
               // was $thisPage->Alias()
             array_push($imageArray, 
             	$this->imageSpec($curPage->Alias(), 'cf', $i, $fullSize));
-			array_push($imageArray, 
+			array_push($thumbArray, 
             	$this->imageSpec($curPage->Alias(), 'ct', $i, $thumbSize));	
 			array_push($srcImgArray,
 				$this->srcImageSpec($curPage->Alias(), $i));
