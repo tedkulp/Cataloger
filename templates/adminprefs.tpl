@@ -10,6 +10,10 @@
         <p class="pageinput">{$input_item_image_count}</p>
 	</div>
 	<div class="pageoverflow">
+        <p class="pagetext">{$title_show_only_existing_images}</p>
+        <p class="pageinput">{$input_show_only_existing_images}</p>
+	</div>
+	<div class="pageoverflow">
         <p class="pagetext">{$title_item_image_size_hero}</p>
         <p class="pageinput">{$input_item_image_size_hero}</p>
 	</div>
@@ -50,6 +54,10 @@
 	<div class="pageoverflow">
         <p class="pagetext">{$title_item_sort_order}</p>
         <p class="pageinput">{$input_item_sort_order}</p>
+	</div>
+	<div class="pageoverflow">
+        <p class="pagetext">{$title_flush_cats}</p>
+        <p class="pageinput">{$input_flush_cats}</p>
 	</div>
 {$end_tab}
 {$start_printable_tab}

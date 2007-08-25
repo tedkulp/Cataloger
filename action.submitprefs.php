@@ -15,6 +15,10 @@ if (! $this->CheckAccess()) exit;
 		$this->SetPreference('category_recurse', isset($params['category_recurse'])?$params['category_recurse']:'mixed_one');
 		$this->SetPreference('category_sort_order', isset($params['item_sort_order'])?$params['item_sort_order']:'natural');
 		$this->SetPreference('category_items_per_page', isset($params['items_per_page'])?$params['items_per_page']:'10');
+		$this->SetPreference('show_extant', isset($params['show_extant'])?$params['show_extant']:'1');
+		$this->SetPreference('flush_cats', isset($params['flush_cats'])?$params['flush_cats']:'0');
+		
+		
 	
 	$this->SetPreference('show_missing',
 isset($params['show_missing'])?$params['show_missing']:0);

@@ -1,7 +1,7 @@
 <?php
 #-------------------------------------------------------------------------
 # Module: Cataloger - build a catalog or portfolio of stuff
-# Version: 0.4
+# Version: 0.5
 #
 # Copyright (c) 2006, Samuel Goldstein <sjg@cmsmodules.com>
 # For Information, Support, Bug Reports, etc, please visit the

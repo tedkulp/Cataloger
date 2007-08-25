@@ -24,6 +24,9 @@ if (! $this->CheckAccess()) exit;
 	$this->smarty->assign('start_image_tab',$this->StartTab('image'));
 
         $this->smarty->assign('title_item_image_count', $this->Lang('title_item_image_count'));
+        $this->smarty->assign('title_flush_cats', $this->Lang('title_flush_cats'));
+        $this->smarty->assign('title_show_only_existing_images',
+        	$this->Lang('title_show_only_existing_images'));
         $this->smarty->assign('title_show_missing_images',
         	$this->Lang('title_show_missing_images'));
         $this->smarty->assign('title_category_image_count', $this->Lang('title_category_image_count'));
@@ -73,8 +76,11 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('input_item_image_size_category', $this->CreateInputText($id, 'item_image_size_category', $this->GetPreference('item_image_size_category', '70'), 10, 10));
         $this->smarty->assign('input_item_image_size_catalog', $this->CreateInputText($id, 'item_image_size_catalog', $this->GetPreference('item_image_size_catalog', '100'), 10, 10));
 
-$this->smarty->assign('input_show_missing_images',$this->CreateInputCheckbox($id, 'show_missing', 1, $this->GetPreference('show_missing','1')). $this->Lang('title_show_missing_images_long'));		
+$this->smarty->assign('input_show_missing_images',$this->CreateInputHidden($id,'show_missing','0').$this->CreateInputCheckbox($id, 'show_missing', 1, $this->GetPreference('show_missing','1')). $this->Lang('title_show_missing_images_long'));		
 
+$this->smarty->assign('input_show_only_existing_images',$this->CreateInputHidden($id,'show_extant','0').$this->CreateInputCheckbox($id, 'show_extant', 1, $this->GetPreference('show_extant','1')). $this->Lang('title_show_only_existing_images_help'));		
+
+$this->smarty->assign('input_flush_cats',$this->CreateInputHidden($id,'flush_cats','0').$this->CreateInputCheckbox($id, 'flush_cats', 1, $this->GetPreference('flush_cats','0')). $this->Lang('title_flush_cats_help'));		
 
 		$this->smarty->assign('input_force_aspect_ratio',$this->CreateInputCheckbox($id, 'force_aspect_ratio', 1, $this->GetPreference('force_aspect_ratio', 0)).'&nbsp;'.
 		$this->Lang('title_force_aspect_ratio_label'));

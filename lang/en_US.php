@@ -17,6 +17,11 @@ $lang['title_image_tab']='Other Image Settings';
 $lang['title_item_template_vars'] = 'Item Template Variables';
 $lang['title_cat_template_vars'] = 'Category Template Variables';
 $lang['title_feature_template_vars']='Features Template Variables';
+$lang['title_show_only_existing_images']='Don\'t include missing images';
+$lang['title_show_only_existing_images_help']='This will only put image references into lists if the image exists.<br />(Normally, this is fine, but if you are doing something clever with image<br />array indexes, this could cause you trouble.)';
+$lang['title_flush_cats']='Flush category page buffers';
+$lang['title_flush_cats_help']='If you have a huge number of items displayed<br />in a category, some PHP installs will fail to display the page<br />correctly. Check this box to solve this problem (test for side effects).';
+
 $lang['cataloger']='Cataloger';
 
 $lang['item_page'] = 'Item Page';
@@ -61,7 +66,7 @@ $lang['title_category_recurse_categories_one'] = 'Include all Categories immedia
 $lang['title_category_recurse_mixed_all'] = 'Include all Items and Categories within this category, including items and categories in sub-categories';
 $lang['title_category_recurse_mixed_one'] = 'Include all Items and Categories immediately within this category, but not items or categories in sub-categories';
 $lang['title_show_missing_images'] = 'Show "No Image" image for missing images';
-$lang['title_show_missing_images_long'] = 'Show a special "No Image" image if there are missing images (otherwise will use a single pixel transparent image).';
+$lang['title_show_missing_images_long'] = 'Show a special "No Image" image if there are missing images (useful for debugging. Otherwise will use a single pixel transparent image).';
 $lang['natural_order'] = 'Navigation Order';
 $lang['alpha_order'] = 'Alphabetical Order';
 

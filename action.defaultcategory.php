@@ -1,5 +1,14 @@
 <?php
 		if (!isset($gCms)) exit;
+
+		if ($this->GetPreferences('flush_cats','0') == '1')
+			{
+			while (ob_get_level() >0)
+    			{
+    			ob_end_flush();
+    			}
+			}
+
 		$showMissing = '_'. $this->GetPreference('show_missing','1');
 		
 		foreach ($params as $key=>$val)

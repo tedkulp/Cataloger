@@ -446,11 +446,13 @@ class Cataloger extends CMSModule
   		{
   		$this->showMissing = $this->GetPreference('show_missing','1');
   		}
-	$srcSpec = $gCms->config['uploads_path'].'/images/catalog_src/'.$alias .
+/*	$srcSpec = $gCms->config['uploads_path'].'/images/catalog_src/'.$alias .
 			'_src_'.$image_number.'.jpg';
 
 	$orig = @stat($srcSpec);
 	if ($orig === false)
+*/
+	if (! $this->srcExists($alias, $image_number))
 		{
 		if ($this->showMissing != '1')
 			{
@@ -468,6 +470,14 @@ class Cataloger extends CMSModule
 		return $gCms->config['uploads_url'].'/images/catalog_src/'.$alias .
 			'_src_'.$image_number.'.jpg';
 		}
+  }
+
+  function srcExists($alias, $image_number)
+  {
+  global $gCms;
+	$srcSpec = $gCms->config['uploads_path'].'/images/catalog_src/'.$alias .
+			'_src_'.$image_number.'.jpg';
+	return file_exists($srcSpec);
   }
 
   function purgeAllImage($alias, $imageNumber)
