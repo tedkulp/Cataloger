@@ -1,7 +1,7 @@
 <?php
 		if (!isset($gCms)) exit;
 
-		if ($this->GetPreferences('flush_cats','0') == '1')
+		if ($this->GetPreference('flush_cats','0') == '1')
 			{
 			while (ob_get_level() >0)
     			{
