@@ -197,6 +197,28 @@ update your template. For the attributes where you want smarty tags to be active
 &#123;eval var=$entry->input assign=thisAttr}&#123;eval var=$thisAttr}
 </pre>
 <p>Ugly? Yup. But it works.</p>
+<h3>Cataloger Image System</h3>
+<p>Cataloger has an image system that will allow you to dynamically change the image display size. If you do not like it, you can alter
+the templates and use any image system you want.</p>
+<p>When you upload an image using Cataloger, it gets put in a special set of directories to make the imaging easier. You will see more
+about this later.</p>
+<p>It works by calling a PHP program instead of directly referencing the image. The program uses the filename to see if the
+image already exists in the correct size. If so, it redirects to that image. Otherwise, it uses your GDLIB or ImageMagick to create
+the image in the correct size, and then redirects to it.
+</p>
+<h4>Cataloger Image Filespec Explanation</h4>
+<p>A cataloger image has a filespec like:
+<br />
+root_path/modules/Cataloger/Cataloger.Image.php?i=itemname_f_1_400_1.jpg&amp;ac=82888
+</p>
+<p>The interesting thing is "itemname_f_1_400_1.jpg" - the stuff before is just a call to the program, and the &amp;ac=82888 is a random thing that
+is designed to prevent browser caching. So examining the name piece by piece (separating at the underscores), we have:</p>
+<ul>
+<li>itemname - this is the
+</ul>
+<p>
+This will take an image in root_path/uploads/images/catalog_src/itemname_src_1
+</p>
 <h3>Support</h3>
 <p>This module does not include commercial support. However, there are a number of resources available to help you with it:</p>
 <ul>
