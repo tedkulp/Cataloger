@@ -31,6 +31,7 @@
 		$flds = "
 			id I KEY,
 			type_id I,
+			is_textarea I,
 			attribute C(255)
 		";
 		$sqlarray = $dict->CreateTableSQL(cms_db_prefix()."module_catalog_attr",
@@ -38,19 +39,25 @@
 		$dict->ExecuteSQLArray($sqlarray);
 		$db->CreateSequence(cms_db_prefix()."module_catalog_attr_seq");
 
-		$query = 'INSERT INTO '. cms_db_prefix(). 'module_catalog_attr VALUES (?,?,?)';
+		$query = 'INSERT INTO '. cms_db_prefix(). 'module_catalog_attr (id,type_id,is_textarea,attribute) VALUES (?,?,?,?)';
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'Weight'));
+		$dbresult = $db->Execute($query,array($new_id, 1, 1, 'notes'));
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'Medium/Media'));
+		$dbresult = $db->Execute($query,array($new_id, 2, 1, 'notes'));
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'Dimensions'));
+		$dbresult = $db->Execute($query,array($new_id, 3, 1, 'notes'));
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'Price'));
+		$dbresult = $db->Execute($query,array($new_id, 1, 0, 'Weight'));
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 'In Stock?'));
+		$dbresult = $db->Execute($query,array($new_id, 1, 0, 'Medium/Media'));
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 3, 'Copyright'));
+		$dbresult = $db->Execute($query,array($new_id, 1, 0, 'Dimensions'));
+        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
+		$dbresult = $db->Execute($query,array($new_id, 1, 0, 'Price'));
+        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
+		$dbresult = $db->Execute($query,array($new_id, 1, 0, 'In Stock?'));
+        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
+		$dbresult = $db->Execute($query,array($new_id, 3, 0, 'Copyright'));
 
 		$catalogdirs = array('catalog','catalog_src');
 		foreach ($catalogdirs as $thisDir)

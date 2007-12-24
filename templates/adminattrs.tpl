@@ -5,43 +5,43 @@
 {$startform}
 {$tab_headers}
 {$start_item_tab}
-<p>{$title_item_attributes_help}</p>
-	<div class="pageoverflow">
-        <p class="pagetext">{$title_item_attributes}</p>
-        <p class="pageinput">
+<div class="pageoverflow">
+	<p>{$title_item_attributes_help}</p>
+	<table>
+		<tr><th>{$title_item_attributes}</th><th>{$title_is_textfield}</th><th>{$title_delete}</th></tr>
 	   {foreach from=$attribute_inputs item=entry}
 			{if $entry->type == 1}
-            {$entry->input}<br /><br />
+            <tr><td>{$entry->input}</td><td>{$entry->istext}</td><td>{$entry->delete}</td></tr>
             {/if}
 	   {/foreach}
-        </p>
-	</div>
+	</table>
+</div>
 {$end_tab}
 {$start_category_tab}
-<p>{$title_category_attributes_help}</p>
-	<div class="pageoverflow">
-        <p class="pagetext">{$title_category_attributes}</p>
-        <p class="pageinput">
+<div class="pageoverflow">
+	<p>{$title_category_attributes_help}</p>
+	<table>
+		<tr><th>{$title_category_attributes}</th><th>{$title_is_textfield}</th><th>{$title_delete}</th></tr>
 	   {foreach from=$attribute_inputs item=entry}
 			{if $entry->type == 2}
-            {$entry->input}<br /><br />
-            {/if}
+	        <tr><td>{$entry->input}</td><td>{$entry->istext}</td><td>{$entry->delete}</td></tr>
+	        {/if}
 	   {/foreach}
-        </p>
-	</div>
+	</table>
+</div>
 {$end_tab}
 {$start_catalog_tab}
-<p>{$title_catalog_attributes_help}</p>
-	<div class="pageoverflow">
-        <p class="pagetext">{$title_catalog_attributes}</p>
-        <p class="pageinput">
+<div class="pageoverflow">
+	<p>{$title_catalog_attributes_help}</p>
+	<table>
+		<tr><th>{$title_catalog_attributes}</th><th>{$title_is_textfield}</th><th>{$title_delete}</th></tr>
 	   {foreach from=$attribute_inputs item=entry}
 			{if $entry->type == 3}
-            {$entry->input}<br /><br />
-            {/if}
+	        <tr><td>{$entry->input}</td><td>{$entry->istext}</td><td>{$entry->delete}</td></tr>
+	        {/if}
 	   {/foreach}
-        </p>
-	</div>
+	</table>
+</div>
 {$end_tab}
 {$tab_footers}
 	<div class="pageoverflow">

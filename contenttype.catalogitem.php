@@ -1,7 +1,7 @@
 <?php
 #-------------------------------------------------------------------------
 # Module: Cataloger - build a catalog or portfolio of stuff
-# Version: 0.4
+# Version: 0.6
 #
 # Copyright (c) 2006, Samuel Goldstein <sjg@cmsmodules.com>
 # For Information, Support, Bug Reports, etc, please visit the
@@ -42,9 +42,8 @@ class CatalogItem extends CMSModuleContentType
     $this->getUserAttributes();
     foreach ($this->attrs as $thisAttr)
       {
-	$this->mProperties->Add('string', $thisAttr, '');
+	$this->mProperties->Add('string', $thisAttr->attr, '');
       }
-    $this->mProperties->Add('string', 'notes', '');
     $this->mProperties->Add('string', 'sub_template', '');
 
 #Turn on preview
@@ -56,25 +55,11 @@ class CatalogItem extends CMSModuleContentType
 
   function getUserAttributes()
   {
-    global $gCms;
+s	global $gCms;
+	Cataloger::getUserAttributes('catalog_attrs');
     $vars = &$gCms->variables;
-    $db = &$gCms->db;
-    if (isset($vars['catalog_attrs']) && is_array($vars['catalog_attrs']))
-      {
 	$this->attrs = &$vars['catalog_attrs'];
-      }
-    else
-      {
-	$vars['catalog_attrs'] = array();
-	$query = "SELECT attribute FROM ".
-	  cms_db_prefix()."module_catalog_attr WHERE type_id=1";
-	$dbresult = $db->Execute($query);
-	while ($dbresult !== false && $row = $dbresult->FetchRow())
-	  {
-	    array_push($vars['catalog_attrs'],$row['attribute']);
-	  }
-	$this->attrs = &$vars['catalog_attrs'];
-      }
+	
   }
     
   function &getAttrs()
@@ -95,7 +80,7 @@ class CatalogItem extends CMSModuleContentType
 
   function TabNames()
   {
-    return array(lang('main'), 'Images', lang('options'));
+    return array(lang('main'), 'Images', lang('options'),'foo');
   }
 
   function EditAsArray($adding = false, $tab = 0, $showadmin=false)
@@ -104,6 +89,7 @@ class CatalogItem extends CMSModuleContentType
     $config = &$gCms->config;
     $module =& $this->GetModuleInstance();
     $db = &$gCms->db;
+    $wysiwyg = (strlen(get_preference(get_userid(), 'wysiwyg')) > 0);
     $ret = array();
     $stylesheet = '';
     if ($this->TemplateId() > 0)
@@ -163,14 +149,22 @@ class CatalogItem extends CMSModuleContentType
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
 	  {
-            $safeattr = strtolower(preg_replace('/\W/','', $thisAttr));
-	    $ret[] = array($thisAttr,
-			   '<input type="text" name="'.$safeattr.'" value="'.
-			   htmlspecialchars($this->GetPropertyValue($thisAttr),ENT_QUOTES).
-			   '" />');
+            $safeattr = strtolower(preg_replace('/\W/','', $thisAttr->attr));
+			if ($thisAttr->is_text)
+				{
+				$ret[] = array($thisAttr->attr,
+					create_textarea($wysiwyg, $this->GetPropertyValue($thisAttr->attr), $safeattr, '', $thisAttr->attr, '', $stylesheet, 80, 10));	
+				}
+			else
+				{
+	    		$ret[] = array($thisAttr->attr,
+			   		'<input type="text" name="'.$safeattr.'" value="'.
+			   		htmlspecialchars($this->GetPropertyValue($thisAttr->attr),ENT_QUOTES).
+			   		'" />');
+				}
 	  }
 
-	$ret[] = array('Notes',create_textarea(true, $this->GetPropertyValue('notes'), 'notes', '', 'notes', '', $stylesheet, 80, 10));
+//	
       }
     if ($tab == 1)
       {
@@ -205,6 +199,10 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  {
 	    $ret[] = $this->ShowAdditionalEditors();
 	  }
+	if ($tab == 3)
+	{
+		$ret[] = array('Hi','Foo');
+	}
       }
     return $ret;
   }
@@ -217,7 +215,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 
     if (isset($params))
       {
-	$parameters = array('notes', 'sub_template');
+	$parameters = array('sub_template');
 
 	foreach ($parameters as $oneparam)
 	  {
@@ -230,7 +228,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
 	  {
-	    array_push($parameters,$thisAttr);
+	    array_push($parameters,$thisAttr->attr);
 	  }
 	foreach ($parameters as $thisParam)
 	  {
@@ -325,7 +323,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
     $config = &$gCms->config;
     $db = &$gCms->db;
 
-    $parameters = array('notes', 'sub_template');
+    $parameters = array('sub_template');
     foreach ($parameters as $oneparam)
       {
 	$tmp = $this->GetPropertyValue($oneparam);
@@ -338,7 +336,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
     $this->getUserAttributes();
     foreach ($this->attrs as $thisAttr)
       {
-	array_push($parameters,$thisAttr);
+	array_push($parameters,$thisAttr->attr);
       }
     $safeattrlist = array();
     foreach ($parameters as $thisParam)

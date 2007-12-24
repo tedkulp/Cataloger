@@ -56,7 +56,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.5.6';
+    return '0.6';
   }
 
   function MinimumCMSVersion()
@@ -273,6 +273,38 @@ class Cataloger extends CMSModule
     }
 
 
+  function getUserAttributes($global_ref='catalog_attrs')
+  {
+    global $gCms;
+    $vars = &$gCms->variables;
+    $db = &$gCms->db;
+    if (! isset($vars[$global_ref]) || ! is_array($vars[$global_ref]))
+      {
+	$vars[$global_ref] = array();
+	$query = "SELECT attribute, is_textarea FROM ".
+	  cms_db_prefix()."module_catalog_attr WHERE type_id=?";
+	$type_id = 1;
+	if ($global_ref == 'catalog_cat_attrs')
+		{
+		$type_id = 2;
+		}
+	elseif ($global_ref == 'catalog_print_attrs')
+		{
+		$type_id = 3;
+		}
+	$dbresult = $db->Execute($query, array($type_id));
+	while ($dbresult !== false && $row = $dbresult->FetchRow())
+	  {
+		$thisAttr = new stdClass();
+		$thisAttr->attr = $row['attribute'];
+		$thisAttr->is_text = $row['is_textarea'];
+	    array_push($vars[$global_ref],$thisAttr);
+	  }
+      }
+  }
+
+
+
   function getCatalogItemsList(&$params)
   {
     global $gCms;
@@ -405,8 +437,8 @@ class Cataloger extends CMSModule
 	$theseAttrs = $thispagecontent->getAttrs();
 	foreach ($theseAttrs as $thisAttr)
 	  {
-	    $safeattr = strtolower(preg_replace('/\W/','',$thisAttr));
-	    $thisItem[$safeattr] = $thispagecontent->GetPropertyValue($thisAttr);
+	    $safeattr = strtolower(preg_replace('/\W/','',$thisAttr->attr));
+	    $thisItem[$safeattr] = $thispagecontent->GetPropertyValue($thisAttr->attr);
 	  }
 	array_push($categoryItems,$thisItem);
       }

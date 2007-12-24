@@ -9,31 +9,41 @@ if (! $this->CheckAccess()) exit;
 		$this->smarty->assign('submit', $this->CreateInputSubmit($id, 'submit', 'Submit'));
 
         $attributes = array();
-        $query = "SELECT attribute, type_id FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY attribute";
+        $query = "SELECT attribute, type_id, is_textarea FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY attribute";
         $dbresult = $db->Execute($query);
+		$countbytype = array();
+		$countbytype[1]=0;
+		$countbytype[2]=0;
+		$countbytype[3]=0;
         while ($dbresult !== false && $row = $dbresult->FetchRow())
         {
 	       $onerow = new stdClass();
-           $onerow->input = $this->CreateInputText($id, 'attr'.$row['type_id'].'[]', $row['attribute'], 25, 255);
+           $onerow->input = $this->CreateInputText($id, 'attr_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
+				$row['attribute'], 25, 255);
            $onerow->type = $row['type_id'];
+           $onerow->istext = $this->CreateInputCheckbox($id, 'istext_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
+				1, $row['is_textarea']);
+           $onerow->delete = $this->CreateInputCheckbox($id, 'delete_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
+				1, 0);
+		   $countbytype[$row['type_id']]++;
 	       array_push($attributes, $onerow);
         }
         for ($i=0;$i<3;$i++)
         {
-	       $onerow = new stdClass();
-           $onerow->input = $this->CreateInputText($id, 'attr1[]', '', 25, 255);
-           $onerow->type = 1;
-           array_push($attributes, $onerow);
-	       $onerow = new stdClass();
-           $onerow->input = $this->CreateInputText($id, 'attr2[]', '', 25, 255);
-           $onerow->type = 2;
-           array_push($attributes, $onerow);
-	       $onerow = new stdClass();
-           $onerow->input = $this->CreateInputText($id, 'attr3[]', '', 25, 255);
-           $onerow->type = 3;
-	       array_push($attributes, $onerow);
+		   for ($j=1;$j<4;$j++)
+				{
+	       		$onerow = new stdClass();
+           		$onerow->input = $this->CreateInputText($id, 'attr_'.$j.'_'.$countbytype[$j], '', 25, 255);
+	            $onerow->istext = $this->CreateInputCheckbox($id, 'istext_'.$j.'_'.$countbytype[$j],
+					1, 0);
+	           	$onerow->delete = $this->CreateInputCheckbox($id, 'delete_'.$j.'_'.$countbytype[$j],
+					1, 0);
+           		$onerow->type = $j;
+				$countbytype[$j]++;
+           		array_push($attributes, $onerow);
+				}
         }
-
+//debug_display($attributes);
         $this->smarty->assign('tab_headers',$this->StartTabHeaders().
             $this->SetTabHeader('item',$this->Lang('title_item_tab')).
             $this->SetTabHeader('category',$this->Lang('title_category_tab')).
@@ -53,7 +63,8 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('title_item_attributes_help', $this->Lang('title_item_attributes_help'));
         $this->smarty->assign('title_catalog_attributes_help', $this->Lang('title_catalog_attributes_help'));
         $this->smarty->assign('title_category_attributes_help', $this->Lang('title_category_attributes_help'));
-
+        $this->smarty->assign('title_is_textfield', $this->Lang('title_is_textfield'));
+        $this->smarty->assign('title_delete', $this->Lang('title_delete'));
         $this->smarty->assign('category', $this->Lang('manageattrs'));
 
         // Display template
