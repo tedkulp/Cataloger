@@ -310,6 +310,7 @@ class Cataloger extends CMSModule
     global $gCms;
 
     $hm =& $gCms->GetHierarchyManager();
+    $lastcat = "";
 		
     if (isset($params['alias']) && $params['alias'] == '/')
       {
@@ -365,10 +366,14 @@ class Cataloger extends CMSModule
 	$depth_ok = false;
 	if ($thispagecontent->Type() == 'contentalias')
 	  {
-	     $curHierarchy = $thispagecontent->TargetHierarchy();
-        $thispagecontent = $thispagecontent->GetAliasContent();
+	     //$curHierarchy = $thispagecontent->TargetHierarchy();
+         $thispagecontent = $thispagecontent->GetAliasContent();
 	     $curHierLen = strlen($curHierarchy);
 	     $curHierDepth = substr_count($curHierarchy,'.');
+	  }
+	if ($thispagecontent->Type() == 'catalogcategory')
+	  {
+	  $lastcat = $thispagecontent->Name();
 	  }
 	if ($thispagecontent->Type() == 'catalogitem' &&
 	    ($params['recurse'] == 'items_one' ||
@@ -433,6 +438,8 @@ class Cataloger extends CMSModule
 	$thisItem['title'] = $thispagecontent->Name();
 	$thisItem['menutitle'] = $thispagecontent->MenuText();
 	$thisItem['modifieddate']=$thispagecontent->GetModifiedDate();
+	$thisItem['category']=$lastcat;
+	$thisItem['cat']=$lastcat;
 	$thisItem['createdate']=$thispagecontent->GetCreationDate();
 	$theseAttrs = $thispagecontent->getAttrs();
 	foreach ($theseAttrs as $thisAttr)

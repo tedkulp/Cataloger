@@ -55,7 +55,7 @@ class CatalogItem extends CMSModuleContentType
 
   function getUserAttributes()
   {
-s	global $gCms;
+	global $gCms;
 	Cataloger::getUserAttributes('catalog_attrs');
     $vars = &$gCms->variables;
 	$this->attrs = &$vars['catalog_attrs'];

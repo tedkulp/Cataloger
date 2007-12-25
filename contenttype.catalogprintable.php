@@ -1,7 +1,7 @@
 <?php
 #-------------------------------------------------------------------------
 # Module: Cataloger - build a catalog or portfolio of stuff
-# Version: 0.5
+# Version: 0.6
 #
 # Copyright (c) 2006, Samuel Goldstein <sjg@cmsmodules.com>
 # For Information, Support, Bug Reports, etc, please visit the
@@ -45,12 +45,11 @@ class CatalogPrintable extends CMSModuleContentType
     $this->getUserAttributes();
     foreach($this->attrs as $thisAttr)
       {
-	$this->mProperties->Add('string', $thisAttr, '');
+	$this->mProperties->Add('string', $thisAttr->attr, '');
       }
 
     $this->mProperties->Add('string', 'sort_order', '');
     $this->mProperties->Add('string', 'sub_template', '');
-    $this->mProperties->Add('string', 'notes', '');
     $this->mProperties->Add('string', 'fieldlist','');
 		
 #Turn on preview
@@ -62,25 +61,11 @@ class CatalogPrintable extends CMSModuleContentType
 
   function getUserAttributes()
   {
-    global $gCms;
-    $vars = &$gCms->variables;
-    $db = &$gCms->db;
-    if (isset($vars['catalog_print_attrs']) && is_array($vars['catalog_print_attrs']))
-      {
+	global $gCms;
+	Cataloger::getUserAttributes('catalog_print_attrs');
+	$vars = &$gCms->variables;
 	$this->attrs = &$vars['catalog_print_attrs'];
-      }
-    else
-      {
-	$vars['catalog_print_attrs'] = array();
-	$query = "SELECT attribute FROM ".
-	  cms_db_prefix()."module_catalog_attr WHERE type_id=3";
-	$dbresult = $db->Execute($query);
-	while ($dbresult !== false && $row = $dbresult->FetchRow())
-	  {
-	    array_push($vars['catalog_print_attrs'],$row['attribute']);
-	  }
-	$this->attrs = &$vars['catalog_print_attrs'];
-      }
+
   }
 
   function GetCreationDate()
@@ -103,6 +88,7 @@ class CatalogPrintable extends CMSModuleContentType
     global $gCms;
     $config = &$gCms->config;
     $db = &$gCms->db;
+    $wysiwyg = (strlen(get_preference(get_userid(), 'wysiwyg')) > 0);
     $ret = array();
     $stylesheet = '';
     if ($this->TemplateId() > 0)
@@ -149,14 +135,21 @@ class CatalogPrintable extends CMSModuleContentType
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
 	  {
-            $safeattr = strtolower(preg_replace('/\W/','', $thisAttr));
-	    array_push($ret,array($thisAttr,
-				  '<input type="text" name="'.$safeattr.'" value="'.
-				  htmlspecialchars($this->GetPropertyValue($thisAttr),ENT_QUOTES).
-				  '" />'));
+            $safeattr = strtolower(preg_replace('/\W/','', $thisAttr->attr));
+			if ($thisAttr->is_text)
+				{
+				$ret[] = array($thisAttr->attr,
+					create_textarea($wysiwyg, $this->GetPropertyValue($thisAttr->attr), $safeattr, '', $thisAttr->attr, '', $stylesheet, 80, 10));	
+				}
+			else
+				{
+	    		$ret[] = array($thisAttr->attr,
+			   		'<input type="text" name="'.$safeattr.'" value="'.
+			   		htmlspecialchars($this->GetPropertyValue($thisAttr->attr),ENT_QUOTES).
+			   		'" />');
+				}
 	  }
 
-	array_push($ret,array('Notes',create_textarea(true, $this->GetPropertyValue('notes'), 'notes', '', 'notes', '', $stylesheet, 80, 10)));
       }
     if ($tab == 1)
       {
@@ -175,12 +168,12 @@ class CatalogPrintable extends CMSModuleContentType
 	$selAttrs = explode(',',$this->GetPropertyValue('fieldlist'));
 	foreach ($itemAttrs as $thisAttr)
 	  {
-	    $attrPick .= '<input type="checkbox" name="fieldlist[]" value="'.$thisAttr.'" ';
+	    $attrPick .= '<input type="checkbox" name="fieldlist[]" value="'.$thisAttr->attr.'" ';
 	    if (in_array($thisAttr,$selAttrs))
 	      {
 		$attrPick .= ' checked="checked"';
 	      }
-	    $attrPick .= ' />&nbsp;'.$thisAttr.'<br />';
+	    $attrPick .= ' />&nbsp;'.$thisAttr->attr.'<br />';
 	  }
 	array_push($ret,array('Which attributes should be shown in catalog',$attrPick));
       }
@@ -209,7 +202,7 @@ class CatalogPrintable extends CMSModuleContentType
 
     if (isset($params))
       {
-	$parameters = array('notes', 'sub_template', 'sort_order');
+	$parameters = array('sub_template', 'sort_order');
 
 	foreach ($parameters as $oneparam)
 	  {
@@ -222,7 +215,7 @@ class CatalogPrintable extends CMSModuleContentType
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
 	  {
-	    array_push($parameters,$thisAttr);
+	    array_push($parameters,$thisAttr->attr);
 	  }
 
 	foreach ($parameters as $thisParam)
@@ -303,7 +296,7 @@ class CatalogPrintable extends CMSModuleContentType
     $config = &$gCms->config;
     $db = &$gCms->db;
 
-    $parameters = array('notes', 'sub_template', 'sort_order','fieldlist');
+    $parameters = array('sub_template', 'sort_order','fieldlist');
     foreach ($parameters as $oneparam)
       {
 	$tmp = $this->GetPropertyValue($oneparam);
@@ -316,7 +309,7 @@ class CatalogPrintable extends CMSModuleContentType
     $this->getUserAttributes();
     foreach ($this->attrs as $thisAttr)
       {
-	array_push($parameters,$thisAttr);
+	array_push($parameters,$thisAttr->attr);
       }
 
     foreach ($parameters as $thisParam)

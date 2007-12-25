@@ -1,71 +1,52 @@
 <?php
-if (!isset($gCms)) exit;
+		if (!isset($gCms)) exit;
+
+		if ($this->GetPreference('flush_cats','0') == '1')
+			{
+			while (ob_get_level() >0)
+    			{
+    			ob_end_flush();
+    			}
+			}
 
 		$showMissing = '_'. $this->GetPreference('show_missing','1');
-
+		$params['alias']='/';
+		$params['recurse'] = 'items_all';
+		
 		foreach ($params as $key=>$val)
 			{
-			if (isset($params[$key]))
-				{
-				$this->smarty->assign($key, $params[$key]);
-				}
-			else
-				{
-				$this->smarty->assign($key,'');
-				}
+			$this->smarty->assign($key, $params[$key]);
 			}
-
-		$content = $this->getAllContent();
-
-        $printableItems = array();
-        $showAttrs = explode(',',$params['fieldlist']);
-    	$this->smarty->assign('attrlist',$showAttrs);
-		$lastCat = 'none';
-		foreach ($content as $thisPage)
-			{
-            if (!$thisPage->Active())
-                {
-                continue;
-                }
-			if ($thisPage->Type() == 'aliasmodule')
-				{
-				$thisPage = $thisPage->GetAliasContent();
-				}
-			if ($thisPage->Type() == 'catalogcategory')
-				{
-				$lastCat = $thisPage->MenuText();
-				continue;
-				}
-			if ($thisPage->Type() != 'catalogitem')
-                {
-                continue;
-                }
-			// approved for viewing
-			$printThumbSize = $this->GetPreference('item_image_size_catalog',100);
-			$thisItem['image'] = 
-			
-            	$this->imageSpec($curPage->Alias(), 'p', 1, $printThumbSize);
-			$thisItem['link'] = $thisPage->GetUrl();
-			$thisItem['title'] = $thisPage->MenuText();
-			$thisItem['cat'] = $lastCat;
-			$theseAttrs = $thisPage->getAttrs();
-			foreach ($theseAttrs as $thisAttr)
-				{
-				if (! in_array($thisAttr,$showAttrs))
-					{
-					continue;
-					}
-				$safeattr = strtolower(preg_replace('/\W/','',$thisAttr));
-				$thisItem[$thisAttr] = $thisPage->GetPropertyValue($thisAttr);
-				}
-			array_push($printableItems,$thisItem);
-			}
-            
+ 		
+ 		list($curPage,$pageItems) = $this->getCatalogItemsList($params);
+ 		
         if (isset($params['sort_order']) && $params['sort_order'] == 'alpha')
             {
-            usort($printableItems,array("Cataloger", "contentalpha"));
+            usort($pageItems,array("Cataloger", "contentalpha"));
             }
-         
-        $this->smarty->assign('items',$printableItems);
+            
+        $count = count($pageItems);
+
+        $this->smarty->assign('items',$pageItems);
+        $fullSize = $this->GetPreference('item_image_size_catalog', '100');
+        $imageArray = array();
+        $srcImgArray = array();
+        for ($i=1;$i<=$imgcount;$i++)
+            {
+            array_push($imageArray, 
+            	$this->imageSpec($curPage->Alias(), 'ctf', $i, $fullSize));
+			array_push($srcImgArray,
+				$this->srcImageSpec($curPage->Alias(), $i));
+
+            $this->smarty->assign('image_'.$i.'_url',
+            	$this->imageSpec($curPage->Alias(), 'ctf', $i, $fullSize));
+			$this->smarty->assign('src_image_'.$i.'_url',
+				$this->srcImageSpec($params['alias'], $i));
+
+            }
+		$this->smarty->assign_by_ref('image_url_array',$imageArray);
+		$this->smarty->assign_by_ref('src_image_url_array',$srcImgArray);
+        $this->smarty->assign_by_ref('image_thumb_url_array',$thumbArray);
+ 
 		echo $this->ProcessTemplateFromDatabase('catalog_'.$params['sub_template']);
 ?>
