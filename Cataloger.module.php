@@ -556,11 +556,52 @@ class Cataloger extends CMSModule
 	unlink($srcSpec);
   }
 
+
+  function renameImages($old, $newAlias)
+  {
+  	global $gCms;
+	if ($handle = opendir($gCms->config['uploads_path'].'/images/catalog_src/'))
+		{
+	    while (false !== ($file = readdir($handle)))
+			{
+	        if (substr($file,0,strlen($old)) == $old)
+				{
+				$newspec = $newAlias . substr($file,strlen($old));
+	            rename ($gCms->config['uploads_path'].'/images/catalog_src/'.$file,$gCms->config['uploads_path'].'/images/catalog_src/'.$newspec);
+	        	}
+	    	}
+	    closedir($handle);
+		}
+  }
+
+
   function displayError($message)
   {
     $this->smarty->assign_by_ref('error',$message);
     echo $this->ProcessTemplate('error.tpl');
   }
+
+	function HandlesEvents()
+	{
+		return true;
+	}
+
+  // handle alias name changes	
+	function DoEvent( $originator, $eventname, &$params )
+	{
+		if ($originator == 'Core' && $eventname=='ContentEditPost')
+			{
+			$content = &$params['content'];
+			if ( ($content->Type() == 'catalogitem' ||
+				  $content->Type() == 'catalogcategory' ||
+				  $content->Type() == 'catalogprintable'
+			     ) && $content->Alias() != $content->mOldAlias)
+					{
+					$this->renameImages($content->mOldAlias, $content->Alias());
+					}
+			}
+	}
+
 
 }
 

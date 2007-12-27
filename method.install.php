@@ -70,7 +70,9 @@
 			touch($fileDir.'/index.html');
             }
         $this->importSampleTemplates();           
+		$this->AddEventHandler( 'Core', 'ContentEditPost', false );
         $this->SetPreference('item_image_count', 2);
 		$this->CreatePermission('Modify Catalog Settings', 'Modify Catalog Settings');
+		
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('installed',$this->GetVersion()));
 ?>

@@ -23,6 +23,7 @@
 				$dbresult = $db->Execute($query,array($new_id, 2, 1, 'notes'));
 		        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
 				$dbresult = $db->Execute($query,array($new_id, 3, 1, 'notes'));
+				$this->AddEventHandler( 'Core', 'ContentEditPost', false );
         }
 
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('upgraded',$this->GetVersion()));
