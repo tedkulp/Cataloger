@@ -41,11 +41,11 @@
 
 		$query = 'INSERT INTO '. cms_db_prefix(). 'module_catalog_attr (id,type_id,is_textarea,attribute) VALUES (?,?,?,?)';
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 1, 1, 'notes'));
+		$dbresult = $db->Execute($query,array($new_id, 1, 1, 'Item Notes'));
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 2, 1, 'notes'));
+		$dbresult = $db->Execute($query,array($new_id, 2, 1, 'Category Notes'));
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
-		$dbresult = $db->Execute($query,array($new_id, 3, 1, 'notes'));
+		$dbresult = $db->Execute($query,array($new_id, 3, 1, 'Catalog Notes'));
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
 		$dbresult = $db->Execute($query,array($new_id, 1, 0, 'Weight'));
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');

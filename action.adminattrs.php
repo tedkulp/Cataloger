@@ -9,7 +9,7 @@ if (! $this->CheckAccess()) exit;
 		$this->smarty->assign('submit', $this->CreateInputSubmit($id, 'submit', 'Submit'));
 
         $attributes = array();
-        $query = "SELECT attribute, type_id, is_textarea FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY attribute";
+        $query = "SELECT id, attribute, type_id, is_textarea FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY attribute";
         $dbresult = $db->Execute($query);
 		$countbytype = array();
 		$countbytype[1]=0;
@@ -20,6 +20,7 @@ if (! $this->CheckAccess()) exit;
 	       $onerow = new stdClass();
            $onerow->input = $this->CreateInputText($id, 'attr_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				$row['attribute'], 25, 255);
+       	   $onerow->hidden = $this->CreateInputHidden($id, 'old_'.$row['type_id'].'_'.$countbytype[$row['type_id']],$row['id']);
            $onerow->type = $row['type_id'];
            $onerow->istext = $this->CreateInputCheckbox($id, 'istext_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				1, $row['is_textarea']);
@@ -36,8 +37,8 @@ if (! $this->CheckAccess()) exit;
            		$onerow->input = $this->CreateInputText($id, 'attr_'.$j.'_'.$countbytype[$j], '', 25, 255);
 	            $onerow->istext = $this->CreateInputCheckbox($id, 'istext_'.$j.'_'.$countbytype[$j],
 					1, 0);
-	           	$onerow->delete = $this->CreateInputCheckbox($id, 'delete_'.$j.'_'.$countbytype[$j],
-					1, 0);
+	           	$onerow->delete = '';
+				$onerow->hidden = '';
            		$onerow->type = $j;
 				$countbytype[$j]++;
            		array_push($attributes, $onerow);

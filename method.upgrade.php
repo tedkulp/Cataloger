@@ -17,6 +17,7 @@
 				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
    				 	"is_textarea I");
 				$dict->ExecuteSQLArray($sqlarray);
+				$query = 'INSERT INTO '. cms_db_prefix(). 'module_catalog_attr (id,type_id,is_textarea,attribute) VALUES (?,?,?,?)';
 		        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
 				$dbresult = $db->Execute($query,array($new_id, 1, 1, 'notes'));
 		        $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');

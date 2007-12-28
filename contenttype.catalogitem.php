@@ -80,7 +80,7 @@ class CatalogItem extends CMSModuleContentType
 
   function TabNames()
   {
-    return array(lang('main'), 'Images', lang('options'),'foo');
+    return array(lang('main'), 'Images', lang('options'));
   }
 
   function EditAsArray($adding = false, $tab = 0, $showadmin=false)
