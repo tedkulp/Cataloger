@@ -216,7 +216,18 @@ root_path/modules/Cataloger/Cataloger.Image.php?i=itemname_f_1_400_1.jpg&amp;ac=
 <p>The interesting thing is "itemname_f_1_400_1.jpg" - the stuff before is just a call to the program, and the &amp;ac=82888 is a random thing that
 is designed to prevent browser caching. So examining the name piece by piece (separating at the underscores), we have:</p>
 <ul>
-<li>itemname - this is the
+<li>item name - this is the alias of the item/category page containing the image.</li>
+<li>image type - this is a designation for image type:<ul>
+<li>f - item full-size image</li>
+<li>t - item thumbnail</li>
+<li>cf - category full-sized image</li>
+<li>ct - category thumbnail</li>
+<li>ctf - printable catalog full-sized image</li>
+</ul>
+</li>
+<li>image number - so a given item/catalog/etc can have multiple images</li>
+<li>long dimension - long dimension of the image, in pixels</li>
+<li>missing flag - 1 if you want to show an "image missing" image if this image doesn\'t exist, 0 otherwise</li>
 </ul>
 <p>
 This will take an image in root_path/uploads/images/catalog_src/itemname_src_1
@@ -233,10 +244,18 @@ This will take an image in root_path/uploads/images/catalog_src/itemname_src_1
 <p>As per the GPL, this software is provided as-is. Please read the text
 of the license for the full disclaimer.</p>
 <h3>Copyright and License</h3>
-<p>Copyright &copy; 2006, Samuel Goldstein <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>. All Rights Are Reserved.</p>
+<p>Copyright &copy; 2007, Samuel Goldstein <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>. All Rights Are Reserved.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
 <ul>
+<li>Version 0.6 - 29 December 2007. <ul>
+<li>Bug fix: Images don\'t get "lost" when page alias changes.</li>
+<li>Bug fix: Attribute content doesn\'t get "lost" when attributes are renamed.</li>
+<li>Bug fix: Fixed Printable Catalog. Works for first time since v.0.4 or thereabouts.</li>
+<li>Bug fix: Now honors system preference for WYSIWYG editing of text areas.</li>
+<li>Feature: Attributes may now be text areas.</li>
+</ul>
+</li>
 <li>Version 0.5.6 - 10 December 2007. Tardy rollout of fixes: <ul>
 <li>Added code to prevent showing of non-uploaded images, category page buffer flushing for extreme cases, minor bug fixes</li>
 <li>Fix for \'recent\' action when alias is /</li>
