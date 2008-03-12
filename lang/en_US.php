@@ -1,4 +1,18 @@
 <?php
+///////////////new by n.c.
+$lang['nameimages']='Images';
+$lang['deleteimage']='Delete Imagem';
+$lang['Owner']='Owner';
+$lang['CatalogItem']='Item Cataloger';
+$lang['namepage']='Page';
+$lang['Permissions']='Permissions';
+$lang['Sub']='Sub -';
+$lang['title_global_item_sort_order2'] = 'Item Sort Order';
+$lang['title_global_items_per_page2']= 'Items Per Page';
+$lang['title_global_category_recurse2'] = 'Display Behavior';
+
+
+//////////////end
 $lang['needpermission']='You need %s set to do that.';
 $lang['friendlyname']='Cataloger';
 $lang['admindescription']='Manage Catalog settings';
@@ -232,6 +246,9 @@ is designed to prevent browser caching. So examining the name piece by piece (se
 <p>
 This will take an image in root_path/uploads/images/catalog_src/itemname_src_1
 </p>
+<h3>Credits</h3>
+<p>Thanks to <a href="http://www.id-a.co.uk">Paul Cooper</a> for sponsoring the development of textarea attributes.</p>
+<p>Thanks to numerous patient users and bug testers (many of whom had no idea what they were getting into.)</p> 
 <h3>Support</h3>
 <p>This module does not include commercial support. However, there are a number of resources available to help you with it:</p>
 <ul>
@@ -248,6 +265,8 @@ of the license for the full disclaimer.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
 <ul>
+<li>Version 0.6.2 - 7 January 2007. Fixed nasty bug where upgrading makes it look like all your note fields are lost.</li>
+<li>Version 0.6.1 - 2 January 2007. Fixed nasty bug where changing content type from "content" to catalog content types renamed all catalog images.</li>
 <li>Version 0.6 - 29 December 2007. <ul>
 <li>Bug fix: Images don\'t get "lost" when page alias changes.</li>
 <li>Bug fix: Attribute content doesn\'t get "lost" when attributes are renamed.</li>

@@ -56,7 +56,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.6';
+    return '0.6.2';
   }
 
   function MinimumCMSVersion()
@@ -78,13 +78,13 @@ class Cataloger extends CMSModule
   {
     $this->RegisterContentType('CatalogItem',
 			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogitem.php',
-			       'Cataloger Item');
+			       $this->Lang('item_page'));
     $this->RegisterContentType('CatalogCategory',
 			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogcategory.php',
-			       'Cataloger Category');
+			       $this->Lang('category_page'));
     $this->RegisterContentType('CatalogPrintable',
 			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogprintable.php',
-			       'Cataloger Printable');
+			       $this->Lang('catalog_printable'));
   }
 
   function getTemplateFromAlias($alias)
@@ -597,7 +597,10 @@ class Cataloger extends CMSModule
 				  $content->Type() == 'catalogprintable'
 			     ) && $content->Alias() != $content->mOldAlias)
 					{
-					$this->renameImages($content->mOldAlias, $content->Alias());
+					if ($content->mOldAlias && $content->Alias())
+						{
+							$this->renameImages($content->mOldAlias, $content->Alias());
+						}
 					}
 			}
 	}

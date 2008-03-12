@@ -80,7 +80,7 @@ class CatalogItem extends CMSModuleContentType
 
   function TabNames()
   {
-    return array(lang('main'), 'Images', lang('options'));
+    return array(lang('main'), $this->lang('nameimages'), lang('options'));
   }
 
   function EditAsArray($adding = false, $tab = 0, $showadmin=false)
@@ -121,28 +121,28 @@ class CatalogItem extends CMSModuleContentType
 	  }		
 
 	$ret[] = array(lang('title'),
-			     '<input type="text" name="title" value="'.$this->mName.'">');
+			     '<input type="text" name="title" value="'.$this->mName.'" />');
 	$ret[] = array(lang('menutext'),
 			      '<input type="text" name="menutext" value="'.
-			      htmlspecialchars($this->mMenuText, ENT_QUOTES).'">');
+			      htmlspecialchars($this->mMenuText, ENT_QUOTES).'" />');
 	if (!($config['auto_alias_content'] == true && $adding))
 	  {
 	    $ret[] = array(lang('pagealias'),
 				  '<input type="text" name="alias" value="'.
-				  htmlspecialchars($this->mAlias, ENT_QUOTES).'">');
+				  htmlspecialchars($this->mAlias, ENT_QUOTES).'" />');
 	  }
 	$contentops = $gCms->GetContentOperations();
 	$ret[] = array(lang('parent').
-			      '/Category',
+			      '/'.$this->Lang('category_page'),
 			      $contentops->CreateHierarchyDropdown($this->mId,
 								      $this->mParentId));
 	$templateops = $gCms->GetTemplateOperations();
-	$ret[] = array('Page '.
+	$ret[] = array($this->Lang('namepage').' '.
 			      lang('template'),
 			      $templateops->TemplateDropdown('template_id',
 							     $this->mTemplateId));
 	$val = $this->GetPropertyValue('sub_template');
-	$ret[] = array('Sub '.
+	$ret[] = array($this->Lang('Sub').' '.
 			      lang('template'),
 			      $module->CreateInputDropdown('',
 							   'sub_template', $subTemplates, -1, $val));
@@ -173,27 +173,28 @@ class CatalogItem extends CMSModuleContentType
 	$imgsrc = '<table>';
 	for ($i=1; $i<= $imgcount; $i++)
 	  {
-	    $imgsrc .= '<tr><td style="vertical-align:top">Image '.$i.':</td><td style="vertical-align:top">';
-	    $imgsrc .= '<img src="'.
-$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_t_'.$i.'_'.$thumbsize.'_1.jpg&ac='.rand(0,9).rand(0,9).rand(0,9).'" />';
+	    $imgsrc .= '<tr><td style="vertical-align:top">'.$this->lang('nameimages').' '.$i.':</td><td style="vertical-align:top">';
+	    $imgsrc .= '<img alt="'.$this->lang('nameimages').'" title="'.$this->lang('nameimages').'" src="'.
+$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_t_'.$i.'_'.$thumbsize.'_1.jpg&amp;ac='.rand(0,9).rand(0,9).rand(0,9).'" />';
 	    $imgsrc .= '</td><td style="vertical-align:top">&nbsp;<input type="file" name="image'.$i.'" />';
-	    $imgsrc .= '<input type="checkbox" name="rm_image_'.$this->mAlias.
+	    $imgsrc .= '<input type="checkbox" id="rm_image_'.$this->mAlias.
+	    	'_'.$i.'" name="rm_image_'.$this->mAlias.
 	    	'_'.$i.'" /><label for="rm_image_'.$this->mAlias.
-	    	'_'.$i.'">Delete This Image</label>';
+	    	'_'.$i.'">'.$this->lang('deleteimage').'</label>';
 
 	    $imgsrc .= '</td></tr>';
 	  }
 	$imgsrc .= '</table>';
-	$ret[] = array('Images:', $imgsrc);
+	$ret[] = array($this->lang('nameimages').':', $imgsrc);
       }
     if ($tab == 2)
       {
-        $ret[] = array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="true"':'').'>');
-	$ret[] = array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="true"':'').'>');
+        $ret[] = array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="checked"':'').' />');
+	$ret[] = array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="checked"':'').' />');
 	if (!$adding && $showadmin)
 	  {
 	    $userops = $gCms->GetUserOperations();
-	    $ret[] = array('Owner:',@$userops->GenerateDropdown($this->Owner()));
+	    $ret[] = array($this->lang('Owner').':',@$userops->GenerateDropdown($this->Owner()));
 	  }
 	if ($adding || $showadmin)
 	  {
@@ -387,7 +388,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 
   function FriendlyName()
   {
-    return 'Catalog Item';
+    return $this->Lang('item_page');
   }
 }
 

@@ -355,7 +355,7 @@ class CatalogPrintable extends CMSModuleContentType
 
   function FriendlyName()
   {
-    return 'Catalog (Printable)';
+    return $this->Lang('catalog_printable');
   }
 }
 

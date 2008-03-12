@@ -86,7 +86,7 @@ class CatalogCategory extends CMSModuleContentType
 
   function TabNames()
   {
-    return array(lang('main'), 'Images', lang('options'), 'Permissions');
+    return array(lang('main'), $this->lang('nameimages'), lang('options'), $this->lang('Permissions'));
   }
 
   function EditAsArray($adding = false, $tab = 0, $showadmin=false)
@@ -126,17 +126,17 @@ class CatalogCategory extends CMSModuleContentType
 	    $subTemplates[$row['title']]=$row['id'];
 	  }		
 
-	array_push($ret,array(lang('title'),'<input type="text" name="title" value="'.$this->mName.'">'));
-	array_push($ret,array(lang('menutext'),'<input type="text" name="menutext" value="'.htmlspecialchars($this->mMenuText,ENT_QUOTES).'">'));
+	array_push($ret,array(lang('title'),'<input type="text" name="title" value="'.$this->mName.'" />'));
+	array_push($ret,array(lang('menutext'),'<input type="text" name="menutext" value="'.htmlspecialchars($this->mMenuText,ENT_QUOTES).'" />'));
 	if (!($config['auto_alias_content'] == true && $adding))
 	  {
-	    array_push($ret,array(lang('pagealias'),'<input type="text" name="alias" value="'.htmlspecialchars($this->mAlias,ENT_QUOTES).'">'));
+	    array_push($ret,array(lang('pagealias'),'<input type="text" name="alias" value="'.htmlspecialchars($this->mAlias,ENT_QUOTES).'" />'));
 	  }
 	$contentops = $gCms->GetContentOperations();
 	$templateops = $gCms->GetTemplateOperations();
-	array_push($ret,array(lang('parent').'/Category',$contentops->CreateHierarchyDropdown($this->mId, $this->mParentId)));
-	array_push($ret,array('Page '.lang('template'),$templateops->TemplateDropdown('template_id', $this->mTemplateId)));
-	array_push($ret,array('Sub '.lang('template'),$module->CreateInputDropdown('', 'sub_template', $subTemplates, -1, $this->GetPropertyValue('sub_template'))));
+	array_push($ret,array(lang('parent').'/'.$this->Lang('category_page'),$contentops->CreateHierarchyDropdown($this->mId, $this->mParentId)));
+	array_push($ret,array($this->Lang('namepage').' '.lang('template'),$templateops->TemplateDropdown('template_id', $this->mTemplateId)));
+	array_push($ret,array($this->Lang('Sub').' '.lang('template'),$module->CreateInputDropdown('', 'sub_template', $subTemplates, -1, $this->GetPropertyValue('sub_template'))));
         
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
@@ -168,18 +168,19 @@ class CatalogCategory extends CMSModuleContentType
 	$imgsrc = '<table>';
 	for ($i=1; $i<= $imgcount; $i++)
 	  {
-	    $imgsrc .= '<tr><td style="vertical-align:top">Image '.$i.':</td><td style="vertical-align:top">';
-	    $imgsrc .= '<img src="'.
-$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_ct_'.$i.'_'.$thumbsize.'_1.jpg&ac='.rand(0,9).rand(0,9).rand(0,9).'" />';	    
+	    $imgsrc .= '<tr><td style="vertical-align:top">'.$this->lang('nameimages').' '.$i.':</td><td style="vertical-align:top">';
+	    $imgsrc .= '<img alt="'.$this->lang('nameimages').'" title="'.$this->lang('nameimages').'" src="'.
+$config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_ct_'.$i.'_'.$thumbsize.'_1.jpg&amp;ac='.rand(0,9).rand(0,9).rand(0,9).'" />';	    
 	    $imgsrc .= '</td><td style="vertical-align:top">&nbsp;<input type="file" name="image'.$i.'" />';
-	    $imgsrc .= '<input type="checkbox" name="rm_image_'.$this->mAlias.
+	    $imgsrc .= '<input type="checkbox" id="rm_image_'.$this->mAlias.
+	    	'_'.$i.'" name="rm_image_'.$this->mAlias.
 	    	'_'.$i.'" /><label for="rm_image_'.$this->mAlias.
 	    	'_'.$i.'">Delete This Image</label>';
 	    
 	    $imgsrc .= '</td></tr>';
 	  }
 	$imgsrc .= '</table>';
-	array_push($ret,array('Images:', $imgsrc));
+	array_push($ret,array($this->lang('nameimages').':', $imgsrc));
       }
 
 
@@ -195,38 +196,38 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  {
 	    $so = get_site_preference('Cataloger_mapi_pref_category_sort_order', 'natural');
 	  }
-	array_push($ret,array('Items Per Page',$module->CreateInputDropdown('', 'items_per_page',
+	array_push($ret,array($this->Lang('title_global_items_per_page2'),$module->CreateInputDropdown('', 'items_per_page',
 									  array('1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6',
 										'7'=>'7','8'=>'8','9'=>'9','10'=>'10','11'=>'11','12'=>'12',
 										'13'=>'13','14'=>'14','15'=>'15','16'=>'16','17'=>'17','18'=>'18',
 										'19'=>'19','20'=>'20','24'=>'24','25'=>'25','30'=>'30','40'=>'40',
 										'50'=>'50', '1000'=>'1000'), -1, $ipp)));
 
-	array_push($ret,array('Item Sort Order',$module->CreateInputDropdown('', 'sort_order',
-									   array("Navigation Order"=>'natural', "Alphabetical Order"=>'alpha'), -1, $so)));
+	array_push($ret,array($this->Lang('title_global_item_sort_order2'),$module->CreateInputDropdown('', 'sort_order',
+									   array($this->Lang('natural_order')=>'natural', $this->Lang('alpha_order')=>'alpha'), -1, $so)));
 
 	$recurse = $this->GetPropertyValue('recurse');
 	if ($recurse == '')
 	  {
 	    $recurse = get_site_preference('Cataloger_mapi_pref_category_recurse', 'mixed_one');
 	  }
-	array_push($ret,array('Display Behavior',
-			      '<table><tr><td><input type="radio" name="recurse" value="items_all" '.(($recurse=='items_all')?'checked':'').'/>&nbsp;Include all Items within this category, including items in sub-categories</td></tr>'.
-			      '<tr><td><input type="radio" name="recurse" value="items_one" '.(($recurse=='items_one')?'checked':'').'/>&nbsp;Include all Items immediately within this category, but not items in sub-categories</td></tr>' .
-			      '<tr><td><input type="radio" name="recurse" value="categories_all" '.(($recurse=='categories_all')?'checked':'').'/>&nbsp;Include all Categories within this category, including Categories in sub-Categories</td></tr>' .
-			      '<tr><td><input type="radio" name="recurse" value="categories_one" '.(($recurse=='categories_one')?'checked':'').'/>&nbsp;Include all Categories immediately within this category, but not Categories in sub-Categories</td></tr>' .
-			      '<tr><td><input type="radio" name="recurse" value="mixed_all" '.(($recurse=='mixed_all')?'checked':'').'/>&nbsp;Include all Items and Categories within this category, including items and Categories in sub-Categories</td></tr>' .
-			      '<tr><td><input type="radio" name="recurse" value="mixed_one" '.(($recurse=='mixed_one')?'checked':'').'/>&nbsp;Include all Items and Categories immediately within this category, but not items or Categories in sub-Categories</td></tr></table>'));
+	array_push($ret,array($this->Lang('title_global_category_recurse2'),
+			      '<table><tr><td><input type="radio" name="recurse" value="items_all" '.(($recurse=='items_all')?'checked="checked"':'').'/>&nbsp;'.$this->Lang('title_category_recurse_items_all').'</td></tr>'.
+			      '<tr><td><input type="radio" name="recurse" value="items_one" '.(($recurse=='items_one')?'checked="checked"':'').'/>&nbsp;'.$this->Lang('title_category_recurse_items_one').'</td></tr>' .
+			      '<tr><td><input type="radio" name="recurse" value="categories_all" '.(($recurse=='categories_all')?'checked="checked"':'').'/>&nbsp;'.$this->Lang('title_category_recurse_categories_all').'</td></tr>' .
+			      '<tr><td><input type="radio" name="recurse" value="categories_one" '.(($recurse=='categories_one')?'checked="checked"':'').'/>&nbsp;'.$this->Lang('title_category_recurse_categories_one').'</td></tr>' .
+			      '<tr><td><input type="radio" name="recurse" value="mixed_all" '.(($recurse=='mixed_all')?'checked="checked"':'').'/>&nbsp;'.$this->Lang('title_category_recurse_mixed_all').'</td></tr>' .
+			      '<tr><td><input type="radio" name="recurse" value="mixed_one" '.(($recurse=='mixed_one')?'checked="checked"':'').'/>&nbsp;'.$this->Lang('title_category_recurse_mixed_one').'</td></tr></table>'));
       }
 
     if ($tab == 3)
       {        
-	array_push($ret,array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="true"':'').'>'));
-	array_push($ret,array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="true"':'').'>'));
+	array_push($ret,array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="checked"':'').'/>'));
+	array_push($ret,array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="checked"':'').' />'));
 	if (!$adding && $showadmin)
 	  {
 	    $userops = $gCms->GetUserOperations();
-	    array_push($ret, array('Owner:',@$userops->GenerateDropdown($this->Owner())));
+	    array_push($ret, array($this->lang('Owner').':',@$userops->GenerateDropdown($this->Owner())));
 	  }
 	if ($adding || $showadmin)
 	  {
@@ -407,7 +408,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 
   function FriendlyName()
   {
-    return 'Catalog Category';
+    return $this->Lang('category_page');
   }
 }
 
