@@ -191,6 +191,12 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
       {
         $ret[] = array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="checked"':'').' />');
 	$ret[] = array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="checked"':'').' />');
+
+			array_push($ret, array(lang('metadata').':',create_textarea(false, $this->Metadata(), 'metadata', 'pagesmalltextarea', 'metadata', '', '', '80', '6')));
+			array_push($ret, array(lang('titleattribute').':','<input type="text" name="titleattribute" maxlength="255" value="'.cms_htmlentities($this->mTitleAttribute).'" />'));
+			array_push($ret, array(lang('tabindex').':','<input type="text" name="tabindex" maxlength="10" value="'.cms_htmlentities($this->mTabIndex).'" />'));
+			array_push($ret, array(lang('accesskey').':','<input type="text" name="accesskey" maxlength="5" value="'.cms_htmlentities($this->mAccessKey).'" />'));
+
 	if (!$adding && $showadmin)
 	  {
 	    $userops = $gCms->GetUserOperations();
@@ -285,6 +291,16 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  {
 	    $this->mShowInMenu = false;
 	  }
+
+			if (isset($params['metadata']))
+				$this->mMetadata = $params['metadata'];
+			if (isset($params['accesskey']))
+				$this->mAccessKey = $params['accesskey'];
+			if (isset($params['titleattribute']))
+				$this->mTitleAttribute = $params['titleattribute'];
+			if (isset($params['tabindex']))
+				$this->mTabIndex = $params['tabindex'];
+
 			
 	// Copy the image files...
 	$imgcount = get_site_preference('Cataloger_mapi_pref_item_image_count', '2');
@@ -368,7 +384,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 
 
 
-  function Show()
+  function Show($param='')
   {
     global $gCms;
 

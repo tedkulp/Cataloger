@@ -13,18 +13,18 @@
 			case "0.2":
 			case "0.3":
                 $this->RemovePreference('image_count');
-            case "0.4":
+         case "0.4":
 				$query = 'INSERT INTO '. cms_db_prefix(). 'module_catalog_template_type VALUES (?,?)';
             	$dbresult = $db->Execute($query,array(5, $this->Lang('catalog_short_list'))); 
  			case "0.4.1":
 			case "0.4.2":
-	        case "0.5":
-			case "0.5.1":
-			case "0.5.2":
-			case "0.5.3":
-			case "0.5.4":
-			case "0.5.5":
-            case "0.5.6":
+         case "0.5":
+         case "0.5.1":
+         case "0.5.2":
+         case "0.5.3":
+         case "0.5.4":
+         case "0.5.5":
+         case "0.5.6":
 				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
    				 	"is_textarea I");
 				$dict->ExecuteSQLArray($sqlarray);
@@ -59,6 +59,7 @@
 							$this->AddEventHandler( 'Core', 'ContentEditPost', false );
 							}
 					}
+
         }
 
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('upgraded',$this->GetVersion()));

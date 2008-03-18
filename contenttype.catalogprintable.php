@@ -272,6 +272,16 @@ class CatalogPrintable extends CMSModuleContentType
 	  {
 	    $this->mShowInMenu = false;
 	  }
+	  
+			if (isset($params['metadata']))
+				$this->mMetadata = $params['metadata'];
+			if (isset($params['accesskey']))
+				$this->mAccessKey = $params['accesskey'];
+			if (isset($params['titleattribute']))
+				$this->mTitleAttribute = $params['titleattribute'];
+			if (isset($params['tabindex']))
+				$this->mTabIndex = $params['tabindex'];
+
 	if (isset($params['fieldlist']))
 	  {
 	    if (! is_array($params['fieldlist']))
