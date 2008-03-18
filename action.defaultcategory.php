@@ -87,11 +87,11 @@
        			$navstr .= '<a href="'.$thisUrl.$delim.'start='.$i.'">'.
        				$pageInd.'</a>';
        			}
-       		$navstr .= ':';
+       		$navstr .= $this->Lang('navTab');
        		$pageInd++;
        		}
 
-		$navstr = rtrim($navstr,':');
+		$navstr = rtrim($navstr,$this->Lang('navTab'));
         $categoryItems = array_splice($categoryItems, $start, $end);
         $this->smarty->assign('items',$categoryItems);
         if (strlen($navstr) > 1)

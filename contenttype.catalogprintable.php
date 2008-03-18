@@ -80,7 +80,7 @@ class CatalogPrintable extends CMSModuleContentType
 
   function TabNames()
   {
-    return array(lang('main'), lang('options'), 'Permissions');
+    return array(lang('main'), lang('options'), $this->lang('Owner'));
   }
 
   function EditAsArray($adding = false, $tab = 0, $showadmin=false)
@@ -126,11 +126,11 @@ class CatalogPrintable extends CMSModuleContentType
 	    array_push($ret,array(lang('pagealias'),'<input type="text" name="alias" value="'.htmlspecialchars($this->mAlias,ENT_QUOTES).'" />'));
 	  }
 	$contentops = $gCms->GetContentOperations();
-	array_push($ret,array(lang('parent').'/Category',$contentops->CreateHierarchyDropdown($this->mId, $this->mParentId)));
-	array_push($ret,array('Page '.lang('template'),$templateops->TemplateDropdown('template_id', $this->mTemplateId)));
+	array_push($ret,array(lang('parent').'/'.$this->Lang('category_page'),$contentops->CreateHierarchyDropdown($this->mId, $this->mParentId)));
+	array_push($ret,array($this->Lang('namepage').' '.lang('template'),$templateops->TemplateDropdown('template_id', $this->mTemplateId)));
 	$module =& $this->GetModuleInstance();
 	
-	array_push($ret,array('Sub '.lang('template'),$module->CreateInputDropdown('', 'sub_template', $subTemplates, -1, $this->GetPropertyValue('sub_template'))));
+	array_push($ret,array($this->Lang('Sub').' '.lang('template'),$module->CreateInputDropdown('', 'sub_template', $subTemplates, -1, $this->GetPropertyValue('sub_template'))));
         
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
@@ -160,9 +160,13 @@ class CatalogPrintable extends CMSModuleContentType
 	  }
 
 	$module =& $this->GetModuleInstance();
-	array_push($ret,array('Item Sort Order',$module->CreateInputDropdown('', 'sort_order',
-									   array("Navigation/Category Order"=>'natural', "Alphabetical Order"=>'alpha'), -1, $so)));
-	$item = new CatalogItem();
+	array_push($ret,array($this->Lang('title_global_item_sort_order2'),$module->CreateInputDropdown('', 'sort_order',
+									   array($this->Lang('natural_order')=>'natural', $this->Lang('alpha_order')=>'alpha'), -1, $so)));
+
+
+
+
+$item = new CatalogItem();
 	$itemAttrs = $item->getAttrs();
 	$attrPick = '';
 	$selAttrs = explode(',',$this->GetPropertyValue('fieldlist'));
@@ -175,16 +179,16 @@ class CatalogPrintable extends CMSModuleContentType
 	      }
 	    $attrPick .= ' />&nbsp;'.$thisAttr->attr.'<br />';
 	  }
-	array_push($ret,array('Which attributes should be shown in catalog',$attrPick));
+	array_push($ret,array($this->Lang('which_attributes'),$attrPick));
       }
     if ($tab == 2)
       {        
-	array_push($ret,array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="true"':'').'>'));
-	array_push($ret,array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="true"':'').'>'));
+	array_push($ret,array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="checked"':'').' />'));
+	array_push($ret,array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="checked"':'').' />'));
 	if (!$adding && $showadmin)
 	  {
 	    $userops = $gCms->GetUserOperations();
-	    array_push($ret, array('Owner:',@$userops->GenerateDropdown($this->Owner())));
+	    array_push($ret, array($this->lang('Owner'),@$userops->GenerateDropdown($this->Owner())));
 	  }
 	if ($adding || $showadmin)
 	  {

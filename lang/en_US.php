@@ -10,6 +10,11 @@ $lang['Sub']='Sub -';
 $lang['title_global_item_sort_order2'] = 'Item Sort Order';
 $lang['title_global_items_per_page2']= 'Items Per Page';
 $lang['title_global_category_recurse2'] = 'Display Behavior';
+$lang['which_attributes'] = 'Which attributes should be shown in catalog';
+
+//$lang['Navigation_Category_Order'] = 'Navigation/Category Order';
+$lang['navTab'] = ' | ';  
+
 //////////////end
 
 $lang['needpermission']='You need %s set to do that.';
@@ -264,7 +269,7 @@ of the license for the full disclaimer.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
 <ul>
-<li>Version 0.7 - 17 March 2008. <em>Finally</em> added per-page meta-data. And there was great celebration in the streets, and dancing in the town square.</li>
+<li>Version 0.7 - 17 March 2008. <em>Finally</em> added per-page meta-data. And there was great celebration in the streets, and dancing in the town square. Also added in many HTML and localization fixes contributed by Nuno Costa.</li>
 <li>Version 0.6.2 - 7 January 2007. Fixed nasty bug where upgrading makes it look like all your note fields are lost.</li>
 <li>Version 0.6.1 - 2 January 2007. Fixed nasty bug where changing content type from "content" to catalog content types renamed all catalog images.</li>
 <li>Version 0.6 - 29 December 2007. <ul>
