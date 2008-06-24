@@ -9,7 +9,7 @@ if (! $this->CheckAccess()) exit;
 		$this->smarty->assign('submit', $this->CreateInputSubmit($id, 'submit', 'Submit'));
 
         $attributes = array();
-        $query = "SELECT id, attribute, type_id, is_textarea FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY attribute";
+        $query = "SELECT id, attribute, type_id, is_textarea FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY id ASC";
         $dbresult = $db->Execute($query);
 		$countbytype = array();
 		$countbytype[1]=0;
