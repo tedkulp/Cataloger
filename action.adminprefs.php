@@ -42,7 +42,7 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('title_image_aspect_ratio', $this->Lang('title_image_aspect_ratio'));
         $this->smarty->assign('title_aspect_ratio_help', $this->Lang('title_aspect_ratio_help'));
         $number = array();
-        for ($i=1;$i<16;$i++)
+        for ($i=0;$i<16;$i++)
         	{
         	$number[$i]=$i;
         	}

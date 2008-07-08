@@ -161,27 +161,35 @@ class CatalogCategory extends CMSModuleContentType
       }
 
 
-    if ($tab == 1)
-      {
-	$imgcount = get_site_preference('Cataloger_mapi_pref_category_image_count', '1');
-	$thumbsize = get_site_preference('Cataloger_mapi_pref_category_image_size_thumbnail', '90');
-	$imgsrc = '<table>';
+    
+
+	   if ($tab == 1)
+       {
+		$imgcount = get_site_preference('Cataloger_mapi_pref_category_image_count', '1');
+		$thumbsize = get_site_preference('Cataloger_mapi_pref_category_image_size_thumbnail', '90');
+	if ($imgcount != 0){ // check if is not 0
+	  $imgsrc = '<table>';
 	for ($i=1; $i<= $imgcount; $i++)
 	  {
-	    $imgsrc .= '<tr><td style="vertical-align:top">'.$this->lang('nameimages').' '.$i.':</td><td style="vertical-align:top">';
+	    $imgsrc .= '<tr><td style="vertical-align:top;">'.$this->lang('nameimages').' '.$i.':</td><td style="vertical-align:top;">';
 	    $imgsrc .= '<img alt="'.$this->lang('nameimages').'" title="'.$this->lang('nameimages').'" src="'.
 $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_ct_'.$i.'_'.$thumbsize.'_1.jpg&amp;ac='.rand(0,9).rand(0,9).rand(0,9).'" />';	    
-	    $imgsrc .= '</td><td style="vertical-align:top">&nbsp;<input type="file" name="image'.$i.'" />';
+	    $imgsrc .= '</td><td style="vertical-align:top;">&nbsp;<input type="file" name="image'.$i.'" />';
 	    $imgsrc .= '<input type="checkbox" id="rm_image_'.$this->mAlias.
 	    	'_'.$i.'" name="rm_image_'.$this->mAlias.
 	    	'_'.$i.'" /><label for="rm_image_'.$this->mAlias.
-	    	'_'.$i.'">Delete This Image</label>';
+	    	'_'.$i.'">'.$this->lang('deleteimage').'</label>';
 	    
 	    $imgsrc .= '</td></tr>';
 	  }
 	$imgsrc .= '</table>';
 	array_push($ret,array($this->lang('nameimages').':', $imgsrc));
-      }
+   }// end  if ($imgcount != 0)  
+	 else{
+	echo '<div class="pagetext"><img alt="'.$this->lang('nameimages').'" title="'.$this->lang('nameimages').'" src="/modules/Cataloger/images/no-image.gif" /></div>'; 
+	  }// end else
+	  
+    }
 
 
     if ($tab == 2)
