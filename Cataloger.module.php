@@ -282,7 +282,7 @@ class Cataloger extends CMSModule
       {
 	$vars[$global_ref] = array();
 	$query = "SELECT attribute, is_textarea FROM ".
-	  cms_db_prefix()."module_catalog_attr WHERE type_id=?";
+	  cms_db_prefix()."module_catalog_attr WHERE type_id=? ORDER BY id ASC";
 	$type_id = 1;
 	if ($global_ref == 'catalog_cat_attrs')
 		{
