@@ -436,6 +436,7 @@ class Cataloger extends CMSModule
 	  }
 	$thisItem['link'] = $thispagecontent->GetUrl();
 	$thisItem['title'] = $thispagecontent->Name();
+	$thisItem['alias'] = $thispagecontent->Alias();
 	$thisItem['menutitle'] = $thispagecontent->MenuText();
 	$thisItem['modifieddate']=$thispagecontent->GetModifiedDate();
 	$thisItem['category']=$lastcat;
