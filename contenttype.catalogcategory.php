@@ -37,6 +37,11 @@ class CatalogCategory extends CMSModuleContentType
     return 'Cataloger';
   }
 
+  function IsCopyable()
+  {
+  return true;
+  }
+
   function SetProperties()
   {
     global $gCms;
