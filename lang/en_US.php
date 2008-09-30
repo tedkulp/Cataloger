@@ -193,6 +193,9 @@ recurse=\'categories_one\'. Or if you wanted it to be all catalog Items instead 
 <h4>Random Items Feature List</h4>
 <p>The syntax for a "random" list is like:</p>
 <p>&#123;cms_module module=\'Cataloger\' action=\'random\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a place in your menu hierarchy, typically a category page) in which to look for new items. A special value for "page_alias" is "/", which means to use <i>all</i> pages in the site.</p>
+<h4>Variable</h4>
+<p>You can grab variables (attributes) outside of your Cataloger templates, say in a global content block, using the variable method. The syntax looks like:</p>
+<p>&#123;cms_module module=\'Cataloger\' action=\'variable\' name=\'itemnotes\' default=\'no notes\'}, where name is the attribute to display (using the same all lower-case, punctuation-free representation like the smarty template variables), and default is the value to use if the attribute is not defined.</p>
 <h3>Customization and Advanced Topics</h3>
 <h4>Catalog Item Attributes</h4>
 <p>The default item attributes are typical for a catalog of products or artworks, but by going into Extensions &gt; Cataloger &gt; Manage User-Defined Attributes, you can change the attributes. It\'s best to define the attributes before you start entering Catalog Items.</p>
@@ -265,10 +268,11 @@ This will take an image in root_path/uploads/images/catalog_src/itemname_src_1
 <p>As per the GPL, this software is provided as-is. Please read the text
 of the license for the full disclaimer.</p>
 <h3>Copyright and License</h3>
-<p>Copyright &copy; 2007, Samuel Goldstein <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>. All Rights Are Reserved.</p>
+<p>Copyright &copy; 2008, Samuel Goldstein <a href="mailto:sjg@cmsmodules.com">&lt;sjg@cmsmodules.com&gt;</a>. All Rights Are Reserved.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
 <ul>
+<li>Version 0.7.1 - 29 Sept 2008. Added Variable method for Javier San Juan Costilas.</li>
 <li>Version 0.7 - 17 March 2008. <em>Finally</em> added per-page meta-data. And there was great celebration in the streets, and dancing in the town square. Also added in many HTML and localization fixes contributed by Nuno Costa.</li>
 <li>Version 0.6.2 - 7 January 2007. Fixed nasty bug where upgrading makes it look like all your note fields are lost.</li>
 <li>Version 0.6.1 - 2 January 2007. Fixed nasty bug where changing content type from "content" to catalog content types renamed all catalog images.</li>
