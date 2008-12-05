@@ -75,7 +75,8 @@ class Cataloger extends CMSModule
   }
 
   function SetParameters()
-  {
+  { 
+    $this->RestrictUnknownParams();
     $this->RegisterContentType('CatalogItem',
 			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogitem.php',
 			       $this->Lang('item_page'));
@@ -85,6 +86,16 @@ class Cataloger extends CMSModule
     $this->RegisterContentType('CatalogPrintable',
 			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogprintable.php',
 			       $this->Lang('catalog_printable'));
+			   			   
+			  $this->SetParameterType('sub_template',CLEAN_STRING); 
+			  $this->SetParameterType('recent',CLEAN_STRING);
+              $this->SetParameterType('count',CLEAN_INT);
+			  $this->SetParameterType('alias',CLEAN_STRING);
+			  $this->SetParameterType('random',CLEAN_STRING);
+			  $this->SetParameterType('action',CLEAN_STRING);
+			  $this->SetParameterType('recurse',CLEAN_STRING);
+			  
+			  
   }
 
   function getTemplateFromAlias($alias)
@@ -312,7 +323,7 @@ class Cataloger extends CMSModule
     $hm =& $gCms->GetHierarchyManager();
     $lastcat = "";
 		
-    if (isset($params['alias']) && $params['alias'] == '/')
+    if ( isset($params['alias'])&& $params['alias']=='/')
       {
 	  $content = $hm->getFlatList();
 	  $curHierDepth = isset($params['start_depth'])?$params['start_depth']:-1;
