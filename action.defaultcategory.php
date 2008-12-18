@@ -80,7 +80,7 @@
        		{
        		if ($i == $start)
        			{
-       			$navstr .= $pageInd;
+       			$navstr .= "<span class=\"p-".$pageInd."  nolink\">".$pageInd."</span>";
        			}
        		else
        			{
