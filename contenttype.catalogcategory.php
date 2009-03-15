@@ -131,7 +131,7 @@ class CatalogCategory extends CMSModuleContentType
 	    $subTemplates[$row['title']]=$row['id'];
 	  }		
 
-	array_push($ret,array(lang('title'),'<input type="text" name="title" value="'.$this->mName.'" />'));
+	array_push($ret,array(lang('title'),'<input type="text" name="title" value="'.htmlspecialchars($this->mName).'" />'));
 	array_push($ret,array(lang('menutext'),'<input type="text" name="menutext" value="'.htmlspecialchars($this->mMenuText,ENT_QUOTES).'" />'));
 	if (!($config['auto_alias_content'] == true && $adding))
 	  {

@@ -1,7 +1,7 @@
 <?php
 ///////////////new by n.c.
 $lang['nameimages']='Images';
-$lang['deleteimage']='Delete Imagem';
+$lang['deleteimage']='Delete Image';
 $lang['Owner']='Owner';
 $lang['CatalogItem']='Item Cataloger';
 $lang['namepage']='Page';

@@ -126,7 +126,7 @@ class CatalogItem extends CMSModuleContentType
 	  }		
 
 	$ret[] = array(lang('title'),
-			     '<input type="text" name="title" value="'.$this->mName.'" />');
+			     '<input type="text" name="title" value="'.htmlspecialchars($this->mName,ENT_QUOTES).'" />');
 	$ret[] = array(lang('menutext'),
 			      '<input type="text" name="menutext" value="'.
 			      htmlspecialchars($this->mMenuText, ENT_QUOTES).'" />');
