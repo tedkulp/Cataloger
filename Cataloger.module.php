@@ -34,6 +34,20 @@ class Cataloger extends CMSModule
   var $fetched = false;
   var $showMissing = '';
 
+  function Cataloger()
+  {
+    parent::CMSModule();
+    $this->RegisterContentType('CatalogItem',
+			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogitem.php',
+			       $this->Lang('item_page'));
+    $this->RegisterContentType('CatalogCategory',
+			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogcategory.php',
+			       $this->Lang('category_page'));
+    $this->RegisterContentType('CatalogPrintable',
+			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogprintable.php',
+			       $this->Lang('catalog_printable'));
+  }
+
   function GetName()
   {
     return 'Cataloger';
@@ -81,15 +95,6 @@ class Cataloger extends CMSModule
   function SetParameters()
   { 
     $this->RestrictUnknownParams();
-    $this->RegisterContentType('CatalogItem',
-			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogitem.php',
-			       $this->Lang('item_page'));
-    $this->RegisterContentType('CatalogCategory',
-			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogcategory.php',
-			       $this->Lang('category_page'));
-    $this->RegisterContentType('CatalogPrintable',
-			       dirname(__FILE__).DIRECTORY_SEPARATOR.'contenttype.catalogprintable.php',
-			       $this->Lang('catalog_printable'));
 			   			   
 			  $this->SetParameterType('sub_template',CLEAN_STRING); 
 			  $this->SetParameterType('recent',CLEAN_STRING);
@@ -365,10 +370,10 @@ class Cataloger extends CMSModule
     foreach ($content as $thisPage)
       {
 	$thispagecontent = $thisPage->GetContent();
-	if ($thispagecontent === false)
-		{
-		continue;
-		}
+	if (!$thispagecontent)
+	  {
+	    continue;
+	  }
 	if (method_exists($thispagecontent,'Active') && !$thispagecontent->Active())
 	  {
 	    continue;
