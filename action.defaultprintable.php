@@ -19,14 +19,18 @@
 			}
  		
  		list($curPage,$pageItems) = $this->getCatalogItemsList($params);
- 		
+
         if (isset($params['sort_order']) && $params['sort_order'] == 'alpha')
             {
             usort($pageItems,array("Cataloger", "contentalpha"));
             }
             
         $count = count($pageItems);
-
+        $fldlist = explode(',',$params['fieldlist']);
+        foreach($fldlist as $tk=>$tv)
+            {
+            $fldlist[$tk] = strtolower(preg_replace('/\W/','', $tv));
+            }
         $this->smarty->assign('items',$pageItems);
         $fullSize = $this->GetPreference('item_image_size_catalog', '100');
         $imageArray = array();
@@ -44,6 +48,8 @@
 				$this->srcImageSpec($params['alias'], $i));
 
             }
+		$this->smarty->assign('attrlist',$fldlist);
+
 		$this->smarty->assign_by_ref('image_url_array',$imageArray);
 		$this->smarty->assign_by_ref('src_image_url_array',$srcImgArray);
         $this->smarty->assign_by_ref('image_thumb_url_array',$thumbArray);

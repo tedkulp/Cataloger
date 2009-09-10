@@ -67,6 +67,14 @@ class CatalogItem extends CMSModuleContentType
 	
   }
     
+  function getItemAttr($name)
+  {
+      $this->getUserAttributes();
+      debug_display($this->attrs);
+      return $this->attrs[$name];
+
+  }
+    
   function &getAttrs()
     {
       $this->getUserAttributes();

@@ -70,7 +70,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.7.4';
+    return '0.7.5';
   }
 
   function MinimumCMSVersion()

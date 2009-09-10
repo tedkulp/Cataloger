@@ -51,7 +51,7 @@ class CatalogPrintable extends CMSModuleContentType
     $this->getUserAttributes();
     foreach($this->attrs as $thisAttr)
       {
-	$this->mProperties->Add('string', $thisAttr->attr, '');
+	     $this->mProperties->Add('string', $thisAttr->attr, '');
       }
 
     $this->mProperties->Add('string', 'sort_order', '');
@@ -73,6 +73,13 @@ class CatalogPrintable extends CMSModuleContentType
 	$this->attrs = &$vars['catalog_print_attrs'];
 
   }
+
+  function &getAttrs()
+    {
+      $this->getUserAttributes();
+      return $this->attrs;
+    }
+
 
   function GetCreationDate()
   {
@@ -172,14 +179,15 @@ class CatalogPrintable extends CMSModuleContentType
 
 
 
-$item = new CatalogItem();
+   $item = new CatalogItem();
 	$itemAttrs = $item->getAttrs();
 	$attrPick = '';
 	$selAttrs = explode(',',$this->GetPropertyValue('fieldlist'));
+
 	foreach ($itemAttrs as $thisAttr)
 	  {
 	    $attrPick .= '<input type="checkbox" name="fieldlist[]" value="'.$thisAttr->attr.'" ';
-	    if (in_array($thisAttr,$selAttrs))
+	    if (in_array($thisAttr->attr,$selAttrs))
 	      {
 		$attrPick .= ' checked="checked"';
 	      }
@@ -296,15 +304,10 @@ $item = new CatalogItem();
 	  {
 	    if (! is_array($params['fieldlist']))
 	      {
-		$params['fieldlist'] = array($params['fieldlist']);
+		    $params['fieldlist'] = array($params['fieldlist']);
 	      }
-	    $fl = '';
-	    foreach ($params['fieldlist'] as $thisField)
-	      {
-		$fl .= $thisField.',';
-	      }
-	    rtrim($fl,',');
-	    $this->SetPropertyValue('fieldlist', $fl);
+
+	    $this->SetPropertyValue('fieldlist', implode(',',$params['fieldlist']));
 	  }
       }
   }
