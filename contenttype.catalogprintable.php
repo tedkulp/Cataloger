@@ -310,7 +310,8 @@ class CatalogPrintable extends CMSModuleContentType
 	    $this->SetPropertyValue('fieldlist', implode(',',$params['fieldlist']));
 	  }
       }
-  }
+		parent::FillParams($params);
+	}
 
 
   function PopulateParams(&$params)

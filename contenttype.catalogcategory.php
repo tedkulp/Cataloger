@@ -374,7 +374,8 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  }
 
       }
-  }
+		parent::FillParams($params);
+	}
 
 
   function PopulateParams(&$params)
