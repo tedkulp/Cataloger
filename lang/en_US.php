@@ -272,6 +272,8 @@ of the license for the full disclaimer.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
 <ul>
+<li>Version 0.7.6 - 10 Sept 2009. Fix for that last fix. Doh!</li>
+<li>Version 0.7.5 - 10 Sept 2009. Fixed Printable Catalog... did that ever work??</li>
 <li>Version 0.7.4 - 22 June 2009. Incorporated Calguy\'s fixes for 1.6.</li>
 <li>Version 0.7.3 - 16 June 2009. Bug fixes by Nuno. Made max CMS version 1.5.4 in prep for CMS 1.6 release.</li>
 <li>Version 0.7.2 - 14 March 2009. Bug fixes by Nuno Costa.</li>
