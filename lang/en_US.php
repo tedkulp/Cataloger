@@ -1,7 +1,8 @@
 <?php
-///////////////new by n.c.
 $lang['nameimages']='Images';
+$lang['namefiles']='Files';
 $lang['deleteimage']='Delete Image';
+$lang['deletefile']='Delete File';
 $lang['Owner']='Owner';
 $lang['CatalogItem']='Item Cataloger';
 $lang['namepage']='Page';
@@ -11,11 +12,7 @@ $lang['title_global_item_sort_order2'] = 'Item Sort Order';
 $lang['title_global_items_per_page2']= 'Items Per Page';
 $lang['title_global_category_recurse2'] = 'Display Behavior';
 $lang['which_attributes'] = 'Which attributes should be shown in catalog';
-
-//$lang['Navigation_Category_Order'] = 'Navigation/Category Order';
 $lang['navTab'] = ' | ';  
-
-//////////////end
 
 $lang['needpermission']='You need %s set to do that.';
 $lang['friendlyname']='Cataloger';
@@ -32,7 +29,7 @@ $lang['title_category_image_tab']='Category Page Settings';
 $lang['title_printable_tab']='Printable Catalog Settings';
 $lang['title_is_textfield']='Text Area?';
 $lang['title_delete']='Delete?';
-$lang['title_aspect_tab']='Image Aspect Ratios';
+$lang['title_file_tab']='Other File Settings';
 $lang['title_image_tab']='Other Image Settings';
 $lang['title_item_template_vars'] = 'Item Template Variables';
 $lang['title_cat_template_vars'] = 'Category Template Variables';
@@ -69,14 +66,11 @@ $lang['title_template']='Template';
 $lang['title_template_type']='Template Type';
 $lang['title_title']='Title';
 $lang['title_item_image_count']='Maximum number of views for each Item';
+$lang['title_item_file_count']='Maximum number of other files associated with each item';
 $lang['title_category_image_count']='Maximum number of Banner images for each Category Page';
 $lang['title_item_attributes_help']='Each attribute you enter here will be the title of a field that you can use to describe an individual item, and will be displayed with that item. You may have to update your template to reflect these attributes.';
 $lang['title_category_attributes_help']='Each attribute you enter here will be the title of a field that you can use to describe an item category, and will be displayed on that category page. You may have to update your template to reflect these attributes.';
 $lang['title_catalog_attributes_help']='Each attribute you enter here will be the title of a field that you can use to describe the entire catalog, and will be displayed on the printable catalog page. You may have to update your template to reflect these attributes.';
-$lang['title_force_aspect_ratio'] = 'Force images to a specified Aspect ratio?';
-$lang['title_force_aspect_ratio_label'] = 'Force aspect ratio (not yet implemented)';
-$lang['title_image_aspect_ratio'] = 'Aspect ratio (specify as "4:3" or "1:2.5")';
-$lang['title_aspect_ratio_help'] = 'If you force an image to a specified aspect ratio, it will be scaled to fit exactly that aspect ratio (or its inverse, so you can have both portrait and landscape formats). Otherwise, images will preserve their aspect ratio, and be scaled so their long axis is the size specified. <b>this is not yet implemented!</b>';
 $lang['title_category_sort'] = 'Category Page Item-list sort order';
 $lang['title_category_recurse'] = 'Default Category Display Behavior';
 $lang['title_category_recurse_items_all'] = 'Include all Items within this category, including items in sub-categories';

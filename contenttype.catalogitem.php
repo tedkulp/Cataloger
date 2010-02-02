@@ -93,7 +93,11 @@ class CatalogItem extends CMSModuleContentType
 
   function TabNames()
   {
-    return array(lang('main'), $this->lang('nameimages'), lang('options'));
+    $ret = array(lang('main'));
+	if (get_site_preference('Cataloger_mapi_pref_item_image_count', 0)>0) array_push($ret, $this->lang('nameimages'));
+	if (get_site_preference('Cataloger_mapi_pref_item_file_count', 0)>0) array_push($ret, $this->lang('namefiles'));
+	array_push($ret, lang('options'));
+	return $ret;
   }
 
   function EditAsArray($adding = false, $tab = 0, $showadmin=false)
@@ -103,6 +107,20 @@ class CatalogItem extends CMSModuleContentType
     $module =& $this->GetModuleInstance();
     $db = &$gCms->db;
     $wysiwyg = (strlen(get_preference(get_userid(), 'wysiwyg')) > 0);
+    $has_images = (get_site_preference('Cataloger_mapi_pref_item_image_count', 0)>0);
+    $has_files = (get_site_preference('Cataloger_mapi_pref_item_file_count', 0)>0);
+    if ($tab == 1)
+ 		{
+		if (! $has_images && ! $has_files)
+			{
+			$tab = 3;
+			}
+		else if (!$has_images) $tab=2;
+		}
+	else if ($tab == 2)
+	 	{
+		if (!$has_images || !$has_files) $tab = 3;
+		}
     $ret = array();
     $stylesheet = '';
     if ($this->TemplateId() > 0)
@@ -206,7 +224,31 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  }// end else
 	
       }
-    if ($tab == 2)
+	if ($tab == 2)
+		{
+				$filecount = get_site_preference('Cataloger_mapi_pref_item_file_count', '0');
+				if ($filecount != 0){ // check if is not 0
+				$filesrc = '<table>';
+				for ($i=1; $i<= $filecount; $i++)
+				  {
+				    $filesrc .= '<tr><td style="vertical-align:top;">'.$this->lang('namefiles').' '.$i.':</td><td style="vertical-align:top;">';
+				    $filesrc .= '<td style="vertical-align:top;">&nbsp;<input type="file" name="file'.$i.'" />';
+				    $filesrc .= '<input type="checkbox" id="rm_file_'.$this->mAlias.
+				    	'_'.$i.'" name="rm_file_'.$this->mAlias.
+				    	'_'.$i.'" /><label for="rm_file_'.$this->mAlias.
+				    	'_'.$i.'">'.$this->lang('deletefile').'</label>';
+
+				    $filesrc .= '</td></tr>';
+				  }
+				$filesrc .= '</table>';
+				$ret[] = array($this->lang('namefiles').':', $filesrc);
+			}
+			 else{
+			echo '<div class="pagetext"><img alt="'.$this->lang('namefiles').'" title="'.$this->lang('namefiles').'" src="/modules/Cataloger/images/no-image.gif" /></div>'; 
+			  }
+				
+		}
+    if ($tab == 3)
       {
         $ret[] = array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="checked"':'').' />');
 	$ret[] = array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="checked"':'').' />');
@@ -225,10 +267,6 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  {
 	    $ret[] = $this->ShowAdditionalEditors();
 	  }
-	if ($tab == 3)
-	{
-		$ret[] = array('Hi','Foo');
-	}
       }
     return $ret;
   }

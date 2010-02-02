@@ -12,18 +12,19 @@ if (! $this->CheckAccess()) exit;
         $this->SetTabHeader('itemimage',$this->Lang('title_item_image_tab')).
         $this->SetTabHeader('categoryimage',$this->Lang('title_category_image_tab')).
         $this->SetTabHeader('printable',$this->Lang('title_printable_tab')).
-        $this->SetTabHeader('aspect',$this->Lang('title_aspect_tab')).
         $this->SetTabHeader('image',$this->Lang('title_image_tab')).
+        $this->SetTabHeader('file',$this->Lang('title_file_tab')).
         $this->EndTabHeaders().$this->StartTabContent());
         $this->smarty->assign('end_tab',$this->EndTab());
         $this->smarty->assign('tab_footers',$this->EndTabContent());
         $this->smarty->assign('start_item_image_tab',$this->StartTab('itemimage'));
         $this->smarty->assign('start_category_image_tab',$this->StartTab('categoryimage'));
         $this->smarty->assign('start_printable_tab',$this->StartTab('printable'));
-        $this->smarty->assign('start_aspect_tab',$this->StartTab('aspect'));
+        $this->smarty->assign('start_file_tab',$this->StartTab('file'));
 	$this->smarty->assign('start_image_tab',$this->StartTab('image'));
 
         $this->smarty->assign('title_item_image_count', $this->Lang('title_item_image_count'));
+        $this->smarty->assign('title_item_file_count', $this->Lang('title_item_file_count'));
         $this->smarty->assign('title_flush_cats', $this->Lang('title_flush_cats'));
         $this->smarty->assign('title_show_only_existing_images',
         	$this->Lang('title_show_only_existing_images'));
@@ -38,9 +39,6 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('title_item_image_size_catalog', $this->Lang('title_item_image_size_catalog'));
         $this->smarty->assign('title_category_recurse',$this->Lang('title_category_recurse'));
         $this->smarty->assign('title_printable_sort_order',$this->Lang('title_printable_sort_order'));
-        $this->smarty->assign('title_force_aspect_ratio', $this->Lang('title_force_aspect_ratio'));
-        $this->smarty->assign('title_image_aspect_ratio', $this->Lang('title_image_aspect_ratio'));
-        $this->smarty->assign('title_aspect_ratio_help', $this->Lang('title_aspect_ratio_help'));
         $number = array();
         for ($i=0;$i<16;$i++)
         	{
@@ -48,6 +46,8 @@ if (! $this->CheckAccess()) exit;
         	}
         $this->smarty->assign('input_item_image_count', $this->CreateInputDropdown($id, 'item_image_count', $number, -1,  $this->GetPreference('item_image_count', '2')));
         $this->smarty->assign('input_category_image_count', $this->CreateInputDropdown($id, 'category_image_count', $number, -1,  $this->GetPreference('category_image_count', '1')));
+        $this->smarty->assign('input_item_file_count', $this->CreateInputDropdown($id, 'item_file_count', $number, -1,  $this->GetPreference('item_file_count', '0')));
+
 
 		$recurse =  $this->GetPreference('category_recurse', 'mixed_one'); 
 		$this->smarty->assign('input_category_recurse',
@@ -81,10 +81,6 @@ $this->smarty->assign('input_show_missing_images',$this->CreateInputHidden($id,'
 $this->smarty->assign('input_show_only_existing_images',$this->CreateInputHidden($id,'show_extant','0').$this->CreateInputCheckbox($id, 'show_extant', 1, $this->GetPreference('show_extant','1')). $this->Lang('title_show_only_existing_images_help'));		
 
 $this->smarty->assign('input_flush_cats',$this->CreateInputHidden($id,'flush_cats','0').$this->CreateInputCheckbox($id, 'flush_cats', 1, $this->GetPreference('flush_cats','0')). $this->Lang('title_flush_cats_help'));		
-
-		$this->smarty->assign('input_force_aspect_ratio',$this->CreateInputCheckbox($id, 'force_aspect_ratio', 1, $this->GetPreference('force_aspect_ratio', 0)).'&nbsp;'.
-		$this->Lang('title_force_aspect_ratio_label'));
-        $this->smarty->assign('input_image_aspect_ratio', $this->CreateInputText($id, 'image_aspect_ratio', $this->GetPreference('image_aspect_ratio', '4:3'), 10, 10));
 
         $this->smarty->assign('title_items_per_page',$this->Lang('title_items_per_page'));
         $this->smarty->assign('input_items_per_page',$this->CreateInputDropdown($id,

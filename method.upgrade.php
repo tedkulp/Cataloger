@@ -59,7 +59,23 @@
 							$this->AddEventHandler( 'Core', 'ContentEditPost', false );
 							}
 					}
-
+			case "0.7":
+			case "0.7.2":
+			case "0.7.3":
+			case "0.7.4":
+			case "0.7.5":
+			case "0.7.6":
+			case "0.7.7":
+				$catalogdirs = array('/catalogerfiles');
+				foreach ($catalogdirs as $thisDir)
+					{
+	        		$fileDir = dirname($gCms->config['uploads_path'].$thisDir.'/index.html');
+	        		if (!is_dir($fileDir))
+	            		{
+	            		mkdir($fileDir);
+	            		}
+					touch($fileDir.'/index.html');
+	            	}
         }
 
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('upgraded',$this->GetVersion()));

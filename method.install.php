@@ -59,10 +59,10 @@
         $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
 		$dbresult = $db->Execute($query,array($new_id, 3, 0, 'Copyright'));
 
-		$catalogdirs = array('catalog','catalog_src');
+		$catalogdirs = array('/images/catalog','/images/catalog_src','/catalogerfiles');
 		foreach ($catalogdirs as $thisDir)
 			{
-        	$fileDir = dirname($gCms->config['uploads_path'].'/images/'.$thisDir.'/index.html');
+        	$fileDir = dirname($gCms->config['uploads_path'].$thisDir.'/index.html');
         	if (!is_dir($fileDir))
             	{
             	mkdir($fileDir);

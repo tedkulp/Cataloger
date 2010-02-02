@@ -10,6 +10,10 @@
         <p class="pageinput">{$input_item_image_count}</p>
 	</div>
 	<div class="pageoverflow">
+        <p class="pagetext">{$title_item_file_count}</p>
+        <p class="pageinput">{$input_item_file_count}</p>
+	</div>
+	<div class="pageoverflow">
         <p class="pagetext">{$title_show_only_existing_images}</p>
         <p class="pageinput">{$input_show_only_existing_images}</p>
 	</div>
@@ -66,28 +70,18 @@
         <p class="pageinput">{$input_printable_sort_order}</p>
 	</div>
 {$end_tab}
-
-{$start_aspect_tab}
-	<div class="pageoverflow">
-        <p class="pagetext">&nbsp;</p>
-        <p class="pageinput" style="width:450px">{$title_aspect_ratio_help}</p>
-	</div>
-	<div class="pageoverflow">
-        <p class="pagetext">{$title_force_aspect_ratio}</p>
-        <p class="pageinput">{$input_force_aspect_ratio}</p>
-	</div>
-	<div class="pageoverflow">
-        <p class="pagetext">{$title_image_aspect_ratio}</p>
-        <p class="pageinput">{$input_image_aspect_ratio}</p>
-	</div>
-{$end_tab}
 {$start_image_tab}
 	<div class="pageoverflow">
         <p class="pagetext">{$title_show_missing_images}</p>
         <p class="pageinput">{$input_show_missing_images}</p>
 	</div>
 {$end_tab}
-
+{$start_file_tab}
+	<div class="pageoverflow">
+        <p class="pagetext">{$title_image_aspect_ratio}</p>
+        <p class="pageinput">{$input_image_aspect_ratio}</p>
+	</div>
+{$end_tab}
 {$tab_footers}
 	<div class="pageoverflow">
 		<p class="pagetext">&nbsp;</p>

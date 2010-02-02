@@ -3,6 +3,7 @@ if (!isset($gCms)) exit;
 if (! $this->CheckAccess()) exit;
 
         $this->SetPreference('item_image_count', isset($params['item_image_count'])?$params['item_image_count']:2);
+        $this->SetPreference('item_file_count', isset($params['item_file_count'])?$params['item_file_count']:2);
         $this->SetPreference('category_image_count', isset($params['category_image_count'])?$params['category_image_count']:1);
 		$this->SetPreference('item_image_size_hero', isset($params['item_image_size_hero'])?$params['item_image_size_hero']:'400');
 		$this->SetPreference('item_image_size_thumbnail', isset($params['item_image_size_thumbnail'])?$params['item_image_size_thumbnail']:'70');
