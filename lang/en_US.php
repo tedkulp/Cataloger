@@ -38,7 +38,7 @@ $lang['title_show_only_existing_images']='Don\'t include missing images';
 $lang['title_show_only_existing_images_help']='This will only put image references into lists if the image exists.<br />(Normally, this is fine, but if you are doing something clever with image<br />array indexes, this could cause you trouble.)';
 $lang['title_flush_cats']='Flush category page buffers';
 $lang['title_flush_cats_help']='If you have a huge number of items displayed<br />in a category, some PHP installs will fail to display the page<br />correctly. Check this box to solve this problem (test for side effects).';
-
+$lang['title_item_file_types']='Permitted file types';
 $lang['cataloger']='Cataloger';
 
 $lang['item_page'] = 'Item Page';
@@ -95,6 +95,8 @@ $lang['templatedeleted']='Template deleted.';
 $lang['prefsupdated']='Preferences updated.';
 $lang['installed'] = 'Module version %s installed.';
 $lang['upgraded'] = 'Module upgraded to version %s.';
+$lang['badfile'] = 'Invalid upload "%s" not handled.';
+$lang['uploaded'] = 'File "%s" uploaded for item %s.';
 $lang['uninstalled'] = 'Module Uninstalled.';
 $lang['attrsupdated'] = 'Attributes updated.';
 $lang['noglobalchange'] = 'Do not change';
@@ -146,6 +148,10 @@ $lang['helptext']='
 <p>Cataloger allows you to select different size images for Item pages, Category pages, and the Printable Catalog. You can set these defaults in Extensions &gt; Cataloger &gt; Manage Preferences.</p>
 <p>When you upload images, the original is stored. When someone visits a page, the reduced size images are requested using a special URL, which will redirect the user\'s browser to the scaled image if it exists, and creating the scaled image if it doesn\'t. This allows you to change the size of images, without having to re-upload all the images, or rescaling them all at once.</p>
 <p>This image rescaling code requires that you have either ImageMagick or GD lib installed, and configured in your CMS Made Simple config.php.</p>
+<h4>Files</h4>
+<p>Cataloger allows you to associate arbitrary files with any Item page. These are uploaded via the admin, just like images. There
+have been rudimentary security considerations (e.g., file-extension-based restrictions), however, as with any file upload
+capability that puts files inside the web root, if you do not trust your uploaders, you are at some degree of risk. You have been warned.</p>
 <h3>Feature Lists</h3>
 <p>You can, as of version 0.4, have "feature lists" which are the <i>n</i> most-recently added catalog items, or a collection of <i>k</i> random items from the catalog.</p>
 <h4>"All" Feature List</h4>

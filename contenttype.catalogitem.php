@@ -70,7 +70,7 @@ class CatalogItem extends CMSModuleContentType
   function getItemAttr($name)
   {
       $this->getUserAttributes();
-      debug_display($this->attrs);
+      //debug_display($this->attrs);
       return $this->attrs[$name];
 
   }
@@ -376,7 +376,6 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 		     dirname($config['uploads_path'].
 			     '/images/catalog_src/index.html') .
 		     '/'.$this->mAlias.'_src_'.$i.'.jpg');
-	      
 	      }
 	  }
 	  foreach ($params as $thisParam=>$thisParamVal)
@@ -387,7 +386,49 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  		$pf->purgeAllImage($imageSpecParts[2],$imageSpecParts[3]);
 	  		}
 	  }
-	  
+	
+	// and uploaded files  
+	$filecount = get_site_preference('Cataloger_mapi_pref_item_file_count', 0);
+	$typelist = get_site_preference('Cataloger_mapi_pref_item_file_types', 'pdf,swf,flv,doc,odt,ods,xls');
+	$types = explode(',',$typelist);
+	if ($filecount > 0)
+		{
+		$dirspec = $config['uploads_path'].'/catalogerfiles/'.$this->mAlias;
+		if (!is_dir($dirspec))
+           	{
+           	mkdir($dirspec);
+           	}
+		for ($i=1; $i<= $filecount; $i++)
+	  		{
+	    	if (isset($_FILES['file'.$i]['size']) && $_FILES['file'.$i]['size']>0)
+	      		{
+				$tspec = preg_replace('/[^\w\d\.\-_]+/','_',$_FILES['file'.$i]['name']);
+				// keep original image
+				$extension = substr($tspec,strrpos($tspec,'.')+1);
+				if (!empty($extension) && in_array($extension,$types))
+					{
+					$pf->Audit( 0, $pf->Lang('friendlyname'), $pf->Lang('uploaded',array($tspec,$this->mAlias)));
+					copy($_FILES['file'.$i]['tmp_name'],
+		     			$dirspec.'/'.$tspec);
+					}
+				else
+					{
+					$pf->Audit( 0, $pf->Lang('friendlyname'), $pf->Lang('badfile',$tspec));
+					}
+	      		}
+			}
+	  }
+	  foreach ($params as $thisParam=>$thisParamVal)
+	  {
+	  	if (substr($thisParam,0,8) == 'rm_file_')
+	  		{
+	  		error_log('delete '.$thisParamVal);
+	  		}
+	  }
+	
+	
+	
+	
       }
 		parent::FillParams($params);
 	}

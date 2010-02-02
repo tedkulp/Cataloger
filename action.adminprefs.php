@@ -25,6 +25,7 @@ if (! $this->CheckAccess()) exit;
 
         $this->smarty->assign('title_item_image_count', $this->Lang('title_item_image_count'));
         $this->smarty->assign('title_item_file_count', $this->Lang('title_item_file_count'));
+       $this->smarty->assign('title_item_file_types', $this->Lang('title_item_file_types'));
         $this->smarty->assign('title_flush_cats', $this->Lang('title_flush_cats'));
         $this->smarty->assign('title_show_only_existing_images',
         	$this->Lang('title_show_only_existing_images'));
@@ -47,6 +48,7 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('input_item_image_count', $this->CreateInputDropdown($id, 'item_image_count', $number, -1,  $this->GetPreference('item_image_count', '2')));
         $this->smarty->assign('input_category_image_count', $this->CreateInputDropdown($id, 'category_image_count', $number, -1,  $this->GetPreference('category_image_count', '1')));
         $this->smarty->assign('input_item_file_count', $this->CreateInputDropdown($id, 'item_file_count', $number, -1,  $this->GetPreference('item_file_count', '0')));
+        $this->smarty->assign('input_item_file_types', $this->CreateInputText($id, 'item_file_types',$this->GetPreference('item_file_types', 'pdf,swf,flv,doc,odt,ods,xls')));
 
 
 		$recurse =  $this->GetPreference('category_recurse', 'mixed_one'); 
