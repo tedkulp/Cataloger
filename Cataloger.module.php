@@ -92,15 +92,14 @@ class Cataloger extends CMSModule
   { 
     $this->RestrictUnknownParams();
 			   			   
-			  $this->SetParameterType('sub_template',CLEAN_STRING); 
-			  $this->SetParameterType('recent',CLEAN_STRING);
-              $this->SetParameterType('count',CLEAN_INT);
-			  $this->SetParameterType('alias',CLEAN_STRING);
-			  $this->SetParameterType('random',CLEAN_STRING);
-			  $this->SetParameterType('action',CLEAN_STRING);
-			  $this->SetParameterType('recurse',CLEAN_STRING);
-			  
-			  
+  $this->SetParameterType('sub_template',CLEAN_STRING); 
+  $this->SetParameterType('recent',CLEAN_STRING);
+  $this->SetParameterType('count',CLEAN_INT);
+  $this->SetParameterType('alias',CLEAN_STRING);
+  $this->SetParameterType('random',CLEAN_STRING);
+  $this->SetParameterType('action',CLEAN_STRING);
+  $this->SetParameterType('recurse',CLEAN_STRING);
+			  			  
   }
 
   function getTemplateFromAlias($alias)
@@ -534,6 +533,35 @@ class Cataloger extends CMSModule
 	$srcSpec = $gCms->config['uploads_path'].'/images/catalog_src/'.$alias .
 			'_src_'.$image_number.'.jpg';
 	return file_exists($srcSpec);
+  }
+
+
+  function getFiles($alias)
+  {
+	global $gCms;
+	$dirspec = $gCms->config['uploads_path'].'/catalogerfiles/'.$alias;
+	$files = array();
+	$types = array();
+	if (is_dir($dirspec))
+	{	
+	$dh  = opendir($dirspec);
+	while (false !== ($filename = readdir($dh)))
+		{
+		if ($filename != '.' && $filename != '..')
+			{
+	    	$files[] = $filename;
+			if (strpos($filename,'.') !== false)
+				{
+				$types[] = substr($filename, strrpos($filename,'.')+1);
+				}
+			else
+				{
+				$types[] = '?';
+				}
+			}
+		}
+	}
+	return array($files,$types);
   }
 
   function purgeAllImage($alias, $imageNumber)

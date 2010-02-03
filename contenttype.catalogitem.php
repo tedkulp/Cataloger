@@ -228,16 +228,30 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 		{
 				$filecount = get_site_preference('Cataloger_mapi_pref_item_file_count', '0');
 				if ($filecount != 0){ // check if is not 0
+				list($filelist,$filetype) = $module->getFiles($this->mAlias);
 				$filesrc = '<table>';
-				for ($i=1; $i<= $filecount; $i++)
+				for ($i=0; $i< $filecount; $i++)
 				  {
-				    $filesrc .= '<tr><td style="vertical-align:top;">'.$this->lang('namefiles').' '.$i.':</td><td style="vertical-align:top;">';
+				    $filesrc .= '<tr><td style="vertical-align:top;">';
+					if (isset($filelist[$i]))
+						{
+						$filesrc .= '<img src="'.$gCms->config['root_url'].'/modules/FileManager/icons/themes/default/extensions/16px/'.
+							$filetype[$i].'.png" />';
+						$filesrc .= $filelist[$i];
+						}
+					else
+						{
+						$filesrc .= $this->lang('namefiles').' '.($i+1).':';
+						}
+				
+					$filesrc .='</td><td style="vertical-align:top;">';
 				    $filesrc .= '<td style="vertical-align:top;">&nbsp;<input type="file" name="file'.$i.'" />';
-				    $filesrc .= '<input type="checkbox" id="rm_file_'.$this->mAlias.
-				    	'_'.$i.'" name="rm_file_'.$this->mAlias.
-				    	'_'.$i.'" /><label for="rm_file_'.$this->mAlias.
+					if (isset($filelist[$i]))
+						{
+				    	$filesrc .= '<input type="checkbox" id="rm_file_'.$this->mAlias.
+				    	'_'.$i.'" name="rm_file_'.$filelist[$i].'" value="'.$filelist[$i].'"/><label for="rm_file_'.$this->mAlias.
 				    	'_'.$i.'">'.$this->lang('deletefile').'</label>';
-
+						}
 				    $filesrc .= '</td></tr>';
 				  }
 				$filesrc .= '</table>';
@@ -398,7 +412,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
            	{
            	mkdir($dirspec);
            	}
-		for ($i=1; $i<= $filecount; $i++)
+		for ($i=0; $i< $filecount; $i++)
 	  		{
 	    	if (isset($_FILES['file'.$i]['size']) && $_FILES['file'.$i]['size']>0)
 	      		{
@@ -422,13 +436,11 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  {
 	  	if (substr($thisParam,0,8) == 'rm_file_')
 	  		{
-	  		error_log('delete '.$thisParamVal);
+			$pSpec = preg_replace('/\.\.|\//','',$thisParamVal);
+			$spec = $config['uploads_path'].'/catalogerfiles/'.$this->mAlias.'/'.$pSpec;
+	  		unlink($spec);
 	  		}
 	  }
-	
-	
-	
-	
       }
 		parent::FillParams($params);
 	}

@@ -78,8 +78,8 @@
 {$end_tab}
 {$start_file_tab}
 	<div class="pageoverflow">
-        <p class="pagetext">{$title_image_aspect_ratio}</p>
-        <p class="pageinput">{$input_image_aspect_ratio}</p>
+        <p class="pagetext">{$title_item_file_types}</p>
+        <p class="pageinput">{$input_item_file_types}</p>
 	</div>
 {$end_tab}
 {$tab_footers}
