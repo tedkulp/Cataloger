@@ -61,6 +61,14 @@ if (! $this->CheckAccess()) exit;
         $attrs .= '{$image_url_array}, ';
         $attrs .= '{$src_image_url_array}, ';
         $attrs .= '{$image_thumb_url_array}';
+        $file_count = $this->GetPreference('item_file_count', 0);
+        for ($i=1;$i<=$file_count;$i++)
+        	{
+        	$attrs .= '{$file_count}, {$file_'.$i.'_name}, {$file_'.$i.'_url}, {$file_'.$i;
+        	$attrs .= '_ext}, ';
+        	}
+        $attrs .= '{$file_url_array}, {$file_name_array}, ';
+        $attrs .= '{$file_ext_array}';
         $attrs = rtrim($attrs,', ');
 
         $image_count = $this->GetPreference('category_image_count', '1');
