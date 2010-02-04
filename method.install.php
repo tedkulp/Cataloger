@@ -23,10 +23,10 @@
 				$flds, $taboptarray);
 		$dict->ExecuteSQLArray($sqlarray);
 		$query = 'INSERT INTO '. cms_db_prefix(). 'module_catalog_template_type VALUES (?,?)';
-		$dbresult = $db->Execute($query,array(1, $this->Lang('item_page')));
-		$dbresult = $db->Execute($query,array(2, $this->Lang('category_page')));
-		$dbresult = $db->Execute($query,array(3, $this->Lang('catalog_printable')));
-		$dbresult = $db->Execute($query,array(4, $this->Lang('catalog_datasheet')));
+		$dbresult = $db->Execute($query,array(CTEMPLATE_ITEM, $this->Lang('item_page')));
+		$dbresult = $db->Execute($query,array(CTEMPLATE_CATEGORY, $this->Lang('category_page')));
+		$dbresult = $db->Execute($query,array(CTEMPLATE_CATALOG, $this->Lang('catalog_printable')));
+		$dbresult = $db->Execute($query,array(CTEMPLATE_COMPARISON, $this->Lang('item_comparison')));
 
 		$flds = "
 			id I KEY,

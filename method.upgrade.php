@@ -76,6 +76,11 @@
 	            		}
 					touch($fileDir.'/index.html');
 	            	}
+				$query = 'UPDATE '. cms_db_prefix(). 'module_catalog_template_type set name=? where type_id=?';
+				$dbresult = $db->Execute($query,array($this->Lang('item_comparison'),CTEMPLATE_COMPARISON));
+				
+			        
+				
         }
 
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('upgraded',$this->GetVersion()));

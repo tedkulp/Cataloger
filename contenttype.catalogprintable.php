@@ -46,17 +46,16 @@ class CatalogPrintable extends CMSModuleContentType
 	
   function SetProperties()
   {
-    global $gCms;
-    $config = &$gCms->config;
-    $this->getUserAttributes();
-    foreach($this->attrs as $thisAttr)
+ 	 parent::SetProperties();
+  	$this->getUserAttributes();
+    foreach ($this->attrs as $thisAttr)
       {
-	     $this->mProperties->Add('string', $thisAttr->attr, '');
+	  $this->AddExtraProperty($thisAttr->attr);
       }
 
-    $this->mProperties->Add('string', 'sort_order', '');
-    $this->mProperties->Add('string', 'sub_template', '');
-    $this->mProperties->Add('string', 'fieldlist','');
+    $this->AddExtraProperty('sort_order');
+    $this->AddExtraProperty('sub_template');
+    $this->AddExtraProperty('fieldlist');
 		
 #Turn on preview
     $this->mPreview = true;
@@ -100,7 +99,7 @@ class CatalogPrintable extends CMSModuleContentType
   {
     global $gCms;
     $config = &$gCms->config;
-    $db = &$gCms->db;
+    $db = $gCms->GetDb();
     $wysiwyg = (strlen(get_preference(get_userid(), 'wysiwyg')) > 0);
     $ret = array();
     $stylesheet = '';
@@ -216,7 +215,7 @@ class CatalogPrintable extends CMSModuleContentType
   {
     global $gCms;
     $config = &$gCms->config;
-    $db = &$gCms->db;
+    $db = $gCms->GetDb();
 
     if (isset($params))
       {
@@ -318,7 +317,7 @@ class CatalogPrintable extends CMSModuleContentType
   {
     global $gCms;
     $config = &$gCms->config;
-    $db = &$gCms->db;
+    $db = $gCms->GetDb();
 
     $parameters = array('sub_template', 'sort_order','fieldlist');
     foreach ($parameters as $oneparam)

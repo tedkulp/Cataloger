@@ -27,9 +27,13 @@
 # Or read it online: http://www.gnu.org/licenses/licenses.html#GPL
 #
 #-------------------------------------------------------------------------
+define('CTEMPLATE_ITEM',1);
+define('CTEMPLATE_CATEGORY',2);
+define('CTEMPLATE_CATALOG',3);
+define('CTEMPLATE_COMPARISON',4);
+
 class Cataloger extends CMSModule
 {
-
   var $attrs = array();
   var $fetched = false;
   var $showMissing = '';
@@ -90,7 +94,8 @@ class Cataloger extends CMSModule
 
   function SetParameters()
   { 
-    $this->RestrictUnknownParams();
+   $this->RegisterModulePlugin();
+   $this->RestrictUnknownParams();
 			   			   
   $this->SetParameterType('sub_template',CLEAN_STRING); 
   $this->SetParameterType('recent',CLEAN_STRING);
@@ -99,6 +104,7 @@ class Cataloger extends CMSModule
   $this->SetParameterType('random',CLEAN_STRING);
   $this->SetParameterType('action',CLEAN_STRING);
   $this->SetParameterType('recurse',CLEAN_STRING);
+  $this->SetParameterType('items',CLEAN_STRING);
 			  			  
   }
 
@@ -148,21 +154,22 @@ class Cataloger extends CMSModule
 	    $dbcount = $db->Execute($excheck,array($temp_name));
 	  }
 	$type_id = -1;
-	if (substr($temp_name,0,5) == 'Item-')
+	$type = substr($temp_name,0,strpos($temp_name,'-'));
+	if ($type == 'Item')
 	  {
-	    $type_id = 1;
+	    $type_id = CTEMPLATE_ITEM;
 	  }
-	else if (substr($temp_name,0,9) == 'Category-')
+	else if ($type == 'Category')
 	  {
-	    $type_id = 2;
+	    $type_id = CTEMPLATE_CATEGORY;
 	  }
-	else if (substr($temp_name,0,10) == 'Printable-')
+	else if ($type == 'Printable')
 	  {
-	    $type_id = 3;
+	    $type_id = CTEMPLATE_CATALOG;
 	  }
-	else if (substr($temp_name,0,8) == 'Feature-')
+	else if ($type == 'Comparison')
 	  {
-	    $type_id = 5;
+	    $type_id = CTEMPLATE_COMPARISON;
 	  }
        		
 	$temp_id = $db->GenID(cms_db_prefix().
@@ -318,6 +325,16 @@ class Cataloger extends CMSModule
       }
   }
 
+
+  function &getCatalogItem($alias)
+	{
+	    global $gCms;
+
+	    $hm =& $gCms->GetHierarchyManager();
+   	    $pageNode = $hm->sureGetNodeByAlias($alias);
+   		$page = $pageNode->GetContent();
+   	    return $page;
+	}
 
 
   function getCatalogItemsList(&$params)

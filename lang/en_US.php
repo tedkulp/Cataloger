@@ -1,6 +1,7 @@
 <?php
 $lang['nameimages']='Images';
 $lang['namefiles']='Files';
+$lang['namefile']='File';
 $lang['deleteimage']='Delete Image';
 $lang['deletefile']='Delete File';
 $lang['Owner']='Owner';
@@ -46,6 +47,7 @@ $lang['category_page'] = 'Category Page';
 $lang['catalog_printable'] = 'Printable Catalog';
 $lang['catalog_datasheet'] = 'Catalog Datasheet';
 $lang['catalog_short_list']='Feature List';
+$lang['item_comparison'] = 'Item Comparison';
 
 $lang['title_global_item_sort_order'] = 'Set item sort order to';
 $lang['title_global_items_per_page']= 'Set number of items per page to';
@@ -158,12 +160,12 @@ capability that puts files inside the web root, if you do not trust your uploade
 <p>To get a list of all catalog items (optionally under a specified part of your hierarchy) for processing via a template, you can use
 the "all" feature list.</p>
 <p>The syntax for an "all" list is like:</p>
-<p>&#123;cms_module module=\'Cataloger\' action=\'all\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list.
+<p>&#123;Cataloger action=\'all\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list.
 There is an optional parameter, alias=\'page_alias\', where page_alias indicates the top of the tree (e.g., a place in your menu
 hierarchy, typically a category page) in which to look for new items. A special value for "page_alias" is "/", which means to
 start at the root.</p>
 <p>This is useful for catalog-wide operations. For example, to get a list of all categories (and do something with them),
-you could use the tag &#123;cms_module module=\'Cataloger\' action=\'all\' sub_template=\'my_sub_template\' alias=\'/\' recurse=\'categories_all\'}. Your template could then throw
+you could use the tag &#123;Cataloger action=\'all\' sub_template=\'my_sub_template\' alias=\'/\' recurse=\'categories_all\'}. Your template could then throw
 those categories into a pulldown menu that redirected you to that category\'s page, for example:</p>
 <pre>
 &lt;select name="foo" onchange="document.location=this.options[this.selectedIndex].value;">
@@ -175,7 +177,7 @@ those categories into a pulldown menu that redirected you to that category\'s pa
 </pre>
 <p>If you wanted that to only show categories that were in the very top level of your heirarchy, you\'d replace the recurse=\'categories_all\' with
 recurse=\'categories_one\'. Or if you wanted it to be all catalog Items instead of categories, you could use a tag like:
-&#123;cms_module module=\'Cataloger\' action=\'all\' sub_template=\'my_sub_template\' alias=\'/\' recurse=\'items_all\'}
+&#123;Cataloger action=\'all\' sub_template=\'my_sub_template\' alias=\'/\' recurse=\'items_all\'}
 <p>Similarly, you could have it list only categories under the current page (by omitting the "alias=\'/\'"). The combinations are basically limitless!</p>
 <p>All supported values of recurse include:<ul>
 <li>items_one - Catalog items, no more than one level below the current page (or alias point)</li>
@@ -189,13 +191,13 @@ recurse=\'categories_one\'. Or if you wanted it to be all catalog Items instead 
 <h4>Recently Added Feature List</h4>
 <p>To use a "most-recently added" list will allow you to display the most recently-added catalog items under a specified part of your hierarchy.</p>
 <p>The syntax for a "most recently added" list is like:</p>
-<p>&#123;cms_module module=\'Cataloger\' action=\'recent\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a place in your menu hierarchy, typically a category page) in which to look for new items. A special value for "page_alias" is "/", which means to use <i>all</i> pages in the site.</p>
+<p>&#123;Cataloger action=\'recent\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a place in your menu hierarchy, typically a category page) in which to look for new items. A special value for "page_alias" is "/", which means to use <i>all</i> pages in the site.</p>
 <h4>Random Items Feature List</h4>
 <p>The syntax for a "random" list is like:</p>
-<p>&#123;cms_module module=\'Cataloger\' action=\'random\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a place in your menu hierarchy, typically a category page) in which to look for new items. A special value for "page_alias" is "/", which means to use <i>all</i> pages in the site.</p>
+<p>&#123;cCataloger action=\'random\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a place in your menu hierarchy, typically a category page) in which to look for new items. A special value for "page_alias" is "/", which means to use <i>all</i> pages in the site.</p>
 <h4>Variable</h4>
 <p>You can grab variables (attributes) outside of your Cataloger templates, say in a global content block, using the variable method. The syntax looks like:</p>
-<p>&#123;cms_module module=\'Cataloger\' action=\'variable\' name=\'itemnotes\' default=\'no notes\'}, where name is the attribute to display (using the same all lower-case, punctuation-free representation like the smarty template variables), and default is the value to use if the attribute is not defined.</p>
+<p>&#123;Cataloger action=\'variable\' name=\'itemnotes\' default=\'no notes\'}, where name is the attribute to display (using the same all lower-case, punctuation-free representation like the smarty template variables), and default is the value to use if the attribute is not defined.</p>
 <h3>Customization and Advanced Topics</h3>
 <h4>Catalog Item Attributes</h4>
 <p>The default item attributes are typical for a catalog of products or artworks, but by going into Extensions &gt; Cataloger &gt; Manage User-Defined Attributes, you can change the attributes. It\'s best to define the attributes before you start entering Catalog Items.</p>

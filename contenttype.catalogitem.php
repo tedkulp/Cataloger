@@ -32,6 +32,11 @@ class CatalogItem extends CMSModuleContentType
 {
   var $attrs;
 
+  function CatalogItem()
+  {
+	$this->ContentBase();
+  }
+
   function ModuleName()
   {
     return 'Cataloger';
@@ -44,17 +49,19 @@ class CatalogItem extends CMSModuleContentType
 
   function SetProperties()
   {
-    $this->getUserAttributes();
+	 parent::SetProperties();
+  	$this->getUserAttributes();
     foreach ($this->attrs as $thisAttr)
       {
-	$this->mProperties->Add('string', $thisAttr->attr, '');
+	  $this->AddExtraProperty($thisAttr->attr);
       }
-    $this->mProperties->Add('string', 'sub_template', '');
+	  
+	$this->AddExtraProperty('sub_template');
 
-#Turn on preview
+	#Turn on preview
     $this->mPreview = true;
 
-#Turn off caching
+	#Turn off caching
     $this->mCachable = false;
   }
 
@@ -64,7 +71,6 @@ class CatalogItem extends CMSModuleContentType
 	Cataloger::getUserAttributes('catalog_attrs');
     $vars = &$gCms->variables;
 	$this->attrs = &$vars['catalog_attrs'];
-	
   }
     
   function getItemAttr($name)
@@ -104,8 +110,8 @@ class CatalogItem extends CMSModuleContentType
   {
     global $gCms;
     $config = &$gCms->config;
-    $module =& $this->GetModuleInstance();
-    $db = &$gCms->db;
+    $module = $this->GetModuleInstance();
+    $db = $gCms->GetDb();
     $wysiwyg = (strlen(get_preference(get_userid(), 'wysiwyg')) > 0);
     $has_images = (get_site_preference('Cataloger_mapi_pref_item_image_count', 0)>0);
     $has_files = (get_site_preference('Cataloger_mapi_pref_item_file_count', 0)>0);
@@ -232,20 +238,20 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 				$filesrc = '<table>';
 				for ($i=0; $i< $filecount; $i++)
 				  {
-				    $filesrc .= '<tr><td style="vertical-align:top;">';
+				    $filesrc .= '<tr><td style="vertical-align:middle;">';
 					if (isset($filelist[$i]))
 						{
 						$filesrc .= '<img src="'.$gCms->config['root_url'].'/modules/FileManager/icons/themes/default/extensions/16px/'.
-							$filetype[$i].'.png" />';
+							$filetype[$i].'.png" /></td><td style="vertical-align:middle">';
 						$filesrc .= $filelist[$i];
 						}
 					else
 						{
-						$filesrc .= $this->lang('namefiles').' '.($i+1).':';
+						$filesrc .= $this->lang('namefile').'</td><td style="vertical-align:middle">#'.($i+1);
 						}
 				
-					$filesrc .='</td><td style="vertical-align:top;">';
-				    $filesrc .= '<td style="vertical-align:top;">&nbsp;<input type="file" name="file'.$i.'" />';
+					$filesrc .='</td><td style="vertical-align:middle;">';
+				    $filesrc .= '<td style="vertical-align:middle;">&nbsp;<input type="file" name="file'.$i.'" />';
 					if (isset($filelist[$i]))
 						{
 				    	$filesrc .= '<input type="checkbox" id="rm_file_'.$this->mAlias.
@@ -289,7 +295,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
   {
     global $gCms;
     $config = &$gCms->config;
-    $db = &$gCms->db;
+    $db = $gCms->GetDb();
 
     if (isset($params))
       {
@@ -449,7 +455,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
   {
     global $gCms;
     $config = &$gCms->config;
-    $db = &$gCms->db;
+    $db = $gCms->GetDb();
 
     $parameters = array('sub_template');
     foreach ($parameters as $oneparam)

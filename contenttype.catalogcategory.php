@@ -44,18 +44,17 @@ class CatalogCategory extends CMSModuleContentType
 
   function SetProperties()
   {
-    global $gCms;
-    $config = &$gCms->config;
-    $this->getUserAttributes();
-    foreach($this->attrs as $thisAttr)
+	 parent::SetProperties();
+  	$this->getUserAttributes();
+    foreach ($this->attrs as $thisAttr)
       {
-	$this->mProperties->Add('string', $thisAttr->attr, '');
+	  $this->AddExtraProperty($thisAttr->attr);
       }
 
-    $this->mProperties->Add('string', 'sort_order', '');
-    $this->mProperties->Add('string', 'recurse', '');
-    $this->mProperties->Add('string', 'sub_template', '');
-    $this->mProperties->Add('int', 'items_per_page', -1);
+    $this->AddExtraProperty('sort_order');
+    $this->AddExtraProperty('recurse');
+    $this->AddExtraProperty('sub_template');
+    $this->AddExtraProperty('items_per_page', 'int');
 		
 #Turn on preview
     $this->mPreview = true;
@@ -98,8 +97,8 @@ class CatalogCategory extends CMSModuleContentType
   {
     global $gCms;
     $config = &$gCms->config;
-    $module =& $this->GetModuleInstance();
-    $db = &$gCms->db;
+    $module = $this->GetModuleInstance();
+    $db = $gCms->GetDb();
     $wysiwyg = (strlen(get_preference(get_userid(), 'wysiwyg')) > 0);
     $ret = array();
     $stylesheet = '';
@@ -262,7 +261,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
   {
     global $gCms;
     $config = &$gCms->config;
-    $db = &$gCms->db;
+    $db = $gCms->GetDb();
 
     if (isset($params))
       {
@@ -382,7 +381,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
   {
     global $gCms;
     $config = &$gCms->config;
-    $db = &$gCms->db;
+    $db = $gCms->GetDb();
 
     $parameters = array('sub_template', 'sort_order', 'recurse', 'items_per_page');
     foreach ($parameters as $oneparam)
