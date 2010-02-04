@@ -27,6 +27,7 @@
 		$dbresult = $db->Execute($query,array(CTEMPLATE_CATEGORY, $this->Lang('category_page')));
 		$dbresult = $db->Execute($query,array(CTEMPLATE_CATALOG, $this->Lang('catalog_printable')));
 		$dbresult = $db->Execute($query,array(CTEMPLATE_COMPARISON, $this->Lang('item_comparison')));
+		$dbresult = $db->Execute($query,array(CTEMPLATE_FEATURE, $this->Lang('catalog_short_list')));
 
 		$flds = "
 			id I KEY,

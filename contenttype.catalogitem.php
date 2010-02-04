@@ -186,16 +186,18 @@ class CatalogItem extends CMSModuleContentType
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
 	  {
-            $safeattr = strtolower(preg_replace('/\W/','', $thisAttr->attr));
+            //$safeattr = strtolower(preg_replace('/\W/','', $thisAttr->attr));
 			if ($thisAttr->is_text)
 				{
 				$ret[] = array($thisAttr->attr,
-					create_textarea($wysiwyg, $this->GetPropertyValue($thisAttr->attr), $safeattr, '', $thisAttr->attr, '', $stylesheet, 80, 10));	
+					//create_textarea($wysiwyg, $this->GetPropertyValue($thisAttr->attr), $safeattr, '', $thisAttr->attr, '', $stylesheet, 80, 10));
+					create_textarea($wysiwyg, $this->GetPropertyValue($thisAttr->attr), $thisAttr->safe, '', $thisAttr->attr, '', $stylesheet, 80, 10));	
 				}
 			else
 				{
 	    		$ret[] = array($thisAttr->attr,
-			   		'<input type="text" name="'.$safeattr.'" value="'.
+			   		//'<input type="text" name="'.$safeattr.'" value="'.
+					'<input type="text" name="'.$thisAttr->safe.'" value="'.
 			   		htmlspecialchars($this->GetPropertyValue($thisAttr->attr),ENT_QUOTES).
 			   		'" />');
 				}

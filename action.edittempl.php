@@ -38,16 +38,18 @@ if (! $this->CheckAccess()) exit;
         $dbresult = $db->Execute($query);
         $attrs = '<h3>'.$this->Lang('title_item_template_vars').'</h3>{$title}, {$notes}, ';
         $cattrs = '<h3>'.$this->Lang('title_cat_template_vars').'</h3>{$title}, {$notes}, {$prev}, {$prevurl}, {$navstr}, {$next}, {$nexturl}, {$items}, ';
-        $feattrs = '<h3>'.$this->Lang('title_feature_template_vars').'</h3>{$items},';
+        $pcattrs = '<h3>'.$this->Lang('title_catalog_template_vars').'</h3>{$items}, {$attrlist}';
+        $compattrs = '<h3>'.$this->Lang('title_compare_template_vars').'</h3>{$items}, {$attrlist}';
+        $feattrs = '<h3>'.$this->Lang('title_feature_template_vars').'</h3>{$items}';
 
         while ($dbresult !== false && $row = $dbresult->FetchRow())
         	{
             $safeattr = strtolower(preg_replace('/\W/','',$row['attribute']));
-            if ($row['type_id'] == 1)
+            if ($row['type_id'] == CTEMPLATE_ITEM)
             	{
             	$attrs .= '{$'.$safeattr.'}, ';
             	}
-            else if ($row['type_id'] == 2)
+            else if ($row['type_id'] == CTEMPLATE_CATEGORY)
             	{
 				$cattrs .= '{$'.$safeattr.'}, ';
 				}
@@ -82,9 +84,17 @@ if (! $this->CheckAccess()) exit;
         $cattrs .= '{$image_thumb_url_array}';
         $cattrs = rtrim($cattrs,', ');
         $cattrs .= '<h3>$items array contents:</h3>';
-        $cattrs .= '$items[].title, $items[].link, $items[].image, $items[].<i>attrname</i>';
+        $cattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attrname</i>';
+        $pcattrs .= '<h3>$items array contents:</h3>';
+        $pcattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attrname</i>';
+        $pcattrs .= '<h3>$attrlist array contents:</h3>';
+        $pcattrs .= '$attrlist[]->attr, $attrlist[]->safe';
+        $compattrs .= '<h3>$items array contents:</h3>';
+        $compattrs .= '$items[].title, $items[].link, $items[].image, $items[].<i>attrname</i>';
+        $compattrs .= '<h3>$attrlist array contents:</h3>';
+        $compattrs .= '$attrlist[]->attr, $attrlist[]->safe';
         $feattrs .= '<h3>$items array contents:</h3>';
-        $feattrs .= '$items[].title, $items[].link, $items[].image, $items[].<i>attrname</i>';
+        $feattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attrname</i>';
 
         
 		$this->smarty->assign('startform', $this->CreateFormStart($id, 'submittempl', $returnid));
@@ -96,15 +106,23 @@ if (! $this->CheckAccess()) exit;
 		$this->smarty->assign('title_avail_attrs',$this->Lang('title_avail_attrs'));
 		if (isset($type_id))
 			{
-			if ($type_id == 1)
+			if ($type_id == CTEMPLATE_ITEM)
 				{
 				$this->smarty->assign_by_ref('avail_attrs',$attrs);
 				}
-			else if ($type_id == 2)
+			else if ($type_id == CTEMPLATE_CATEGORY)
 				{
 				$this->smarty->assign_by_ref('avail_attrs',$cattrs);		
 				}
-			else if ($type_id == 5)
+			else if ($type_id == CTEMPLATE_CATALOG)
+				{
+				$this->smarty->assign_by_ref('avail_attrs',$pcattrs);		
+				}
+			else if ($type_id == CTEMPLATE_COMPARISON)
+				{
+				$this->smarty->assign_by_ref('avail_attrs',$compattrs);		
+				}
+			else if ($type_id == CTEMPLATE_FEATURE)
 				{
 				$this->smarty->assign_by_ref('avail_attrs',$feattrs);		
 				}

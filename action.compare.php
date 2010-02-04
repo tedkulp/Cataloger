@@ -15,7 +15,7 @@
 			}
 		if (count($itemlist)>0)
 			{
-				$vars = &$gCms->variables;
+			$vars = &$gCms->variables;
 			$this->smarty->assign('attrlist',$vars['catalog_attrs']);
 			}
 		else
@@ -23,7 +23,6 @@
 			// blank array
 			$this->smarty->assign('attrlist',$itemlist);
 			}
-		
 
  		$this->smarty->assign('items',$itemlist);
 		echo $this->ProcessTemplateFromDatabase($this->getTemplateFromAlias($params['sub_template']));

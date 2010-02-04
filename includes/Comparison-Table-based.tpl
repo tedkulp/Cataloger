@@ -1,1 +1,1 @@
-<div class="item_comparison">	{$show_template_vars}<table>	<tr><th></th>	{section name=at loop=$attrlist}	<th>{$attrlist[at].name}</th>	{/section}	</tr></table></div>
+<div class="item_comparison"><table>	<tr>		<th></th>		{section name=at loop=$attrlist}			<th>{$attrlist[at]->attr}</th>		{/section}	</tr>	{foreach from=$items item=ti}		<tr>			<td>{$ti.title}</td>			{section name=at loop=$attrlist}				<td>					{assign var=attrkey value=`$attrlist[at]->safe`}{$ti[$attrkey]}				</td>			{/section}		</tr>	{/foreach}</table></div>

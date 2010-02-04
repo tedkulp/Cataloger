@@ -31,6 +31,7 @@ define('CTEMPLATE_ITEM',1);
 define('CTEMPLATE_CATEGORY',2);
 define('CTEMPLATE_CATALOG',3);
 define('CTEMPLATE_COMPARISON',4);
+define('CTEMPLATE_FEATURE',5);
 
 class Cataloger extends CMSModule
 {
@@ -121,7 +122,7 @@ class Cataloger extends CMSModule
     return '';	
   }
 
-  function importSampleTemplates()
+  function importSampleTemplates($onlytype='all')
   {
     global $gCms;
     $db =& $gCms->GetDb();
@@ -155,21 +156,25 @@ class Cataloger extends CMSModule
 	  }
 	$type_id = -1;
 	$type = substr($temp_name,0,strpos($temp_name,'-'));
-	if ($type == 'Item')
+	if ($type == 'Item' && ($onlytype=='all'||$onlytype='Item'))
 	  {
 	    $type_id = CTEMPLATE_ITEM;
 	  }
-	else if ($type == 'Category')
+	else if ($type == 'Category' && ($onlytype=='all'||$onlytype='Category'))
 	  {
 	    $type_id = CTEMPLATE_CATEGORY;
 	  }
-	else if ($type == 'Printable')
+	else if ($type == 'Printable' && ($onlytype=='all'||$onlytype='Printable'))
 	  {
 	    $type_id = CTEMPLATE_CATALOG;
 	  }
-	else if ($type == 'Comparison')
+	else if ($type == 'Comparison' && ($onlytype=='all'||$onlytype='Comparison'))
 	  {
 	    $type_id = CTEMPLATE_COMPARISON;
+	  }
+	else if ($type == 'Feature' && ($onlytype=='all'||$onlytype='Feature'))
+	  {
+	    $type_id = CTEMPLATE_FEATURE;
 	  }
        		
 	$temp_id = $db->GenID(cms_db_prefix().
@@ -320,6 +325,7 @@ class Cataloger extends CMSModule
 		$thisAttr = new stdClass();
 		$thisAttr->attr = $row['attribute'];
 		$thisAttr->is_text = $row['is_textarea'];
+		$thisAttr->safe = strtolower(preg_replace('/\W/','',$row['attribute']));
 	    array_push($vars[$global_ref],$thisAttr);
 	  }
       }
@@ -333,7 +339,9 @@ class Cataloger extends CMSModule
 	    $hm =& $gCms->GetHierarchyManager();
    	    $pageNode = $hm->sureGetNodeByAlias($alias);
    		$page = $pageNode->GetContent();
-   	    return $page;
+		$node = $this->itemToArray($page, '');
+
+   	    return $node;
 	}
 
 
@@ -450,7 +458,7 @@ class Cataloger extends CMSModule
 	    continue;
 	  }
 	// in the category, and approved for addition
-	$catThumbSize = $this->GetPreference('category_image_size_thumbnail',90);
+/*	$catThumbSize = $this->GetPreference('category_image_size_thumbnail',90);
 	$itemThumbSize = $this->GetPreference('item_image_size_category',70);
 	$missingImage = $this->GetPreference('show_missing','1');
 	switch ($thispagecontent->Type())
@@ -480,10 +488,51 @@ class Cataloger extends CMSModule
 	    $safeattr = strtolower(preg_replace('/\W/','',$thisAttr->attr));
 	    $thisItem[$safeattr] = $thispagecontent->GetPropertyValue($thisAttr->attr);
 	  }
+	*/
+	$thisItem = $this->itemToArray($thispagecontent,$lastcat);
 	array_push($categoryItems,$thisItem);
       }
     return array($curPage,$categoryItems);
   }
+
+  function itemToArray($pagecontent, $lastcat)
+	{
+		$thisItem = array();
+		$catThumbSize = $this->GetPreference('category_image_size_thumbnail',90);
+		$itemThumbSize = $this->GetPreference('item_image_size_category',70);
+		$missingImage = $this->GetPreference('show_missing','1');
+		switch ($pagecontent->Type())
+		  {
+		  case 'catalogitem':
+		    $thisItem['image'] = $this->imageSpec($pagecontent->Alias(),
+		    	's', 1, $itemThumbSize);
+		    $thisItem['image_src'] = $this->srcImageSpec($pagecontent->Alias(),
+		    	1);
+		    break;
+		  case 'catalogcategory':
+		    $thisItem['image'] = $this->imageSpec($pagecontent->Alias(),
+		    	'ct', 1, $catThumbSize);
+		    break;
+		  }
+		$thisItem['link'] = $pagecontent->GetUrl();
+		$thisItem['title'] = $pagecontent->Name();
+		$thisItem['alias'] = $pagecontent->Alias();
+		$thisItem['menutitle'] = $pagecontent->MenuText();
+		$thisItem['modifieddate']=$pagecontent->GetModifiedDate();
+		$thisItem['category']=$lastcat;
+		$thisItem['cat']=$lastcat;
+		$thisItem['createdate']=$pagecontent->GetCreationDate();
+		$thisItem['attrs'] = array();
+		$theseAttrs = $pagecontent->getAttrs();
+		foreach ($theseAttrs as $thisAttr)
+		  {
+		    //$safeattr = strtolower(preg_replace('/\W/','',$thisAttr->attr));
+		    $thisItem[$thisAttr->safe] = $pagecontent->GetPropertyValue($thisAttr->attr);
+			$thisItem['attrs'][$thisAttr->safe] = $pagecontent->GetPropertyValue($thisAttr->attr);
+		  }
+		return $thisItem;
+		
+	}
 
 
   function imageSpec($alias, $type, $image_number, $size, $anticache=true, $forceshowmissing=false)

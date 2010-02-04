@@ -34,7 +34,9 @@ $lang['title_file_tab']='Other File Settings';
 $lang['title_image_tab']='Other Image Settings';
 $lang['title_item_template_vars'] = 'Item Template Variables';
 $lang['title_cat_template_vars'] = 'Category Template Variables';
-$lang['title_feature_template_vars']='Features Template Variables';
+$lang['title_catalog_template_vars']='Catalog Template Variables';
+$lang['title_compare_template_vars']='Comparison Template Variables';
+$lang['title_feature_template_vars']='Feature list Template Variables';
 $lang['title_show_only_existing_images']='Don\'t include missing images';
 $lang['title_show_only_existing_images_help']='This will only put image references into lists if the image exists.<br />(Normally, this is fine, but if you are doing something clever with image<br />array indexes, this could cause you trouble.)';
 $lang['title_flush_cats']='Flush category page buffers';
@@ -198,6 +200,14 @@ recurse=\'categories_one\'. Or if you wanted it to be all catalog Items instead 
 <h4>Variable</h4>
 <p>You can grab variables (attributes) outside of your Cataloger templates, say in a global content block, using the variable method. The syntax looks like:</p>
 <p>&#123;Cataloger action=\'variable\' name=\'itemnotes\' default=\'no notes\'}, where name is the attribute to display (using the same all lower-case, punctuation-free representation like the smarty template variables), and default is the value to use if the attribute is not defined.</p>
+<h4>Item Comparisons</h4>
+<p>As of version 0.7.7, there is a product comparison action:</p>
+<p>&#123;cCataloger action=\'compare\' sub_template=\'my_sub_template\' items=\'item1,item2,item3\'}, where sub_template is the template to use to render the list, and items is a comma-delimited list of item page aliases to compare. Bolder users may also choose to pass in the items to compare as request variables, thereby enabling dynamic comparisons based on user selections. Do this by setting the "items" variable on the request passed to the page containing the Cataloger tag with a compare action.</p>
+<p>The default item comparison template could use some styling, e.g.,:</p>
+<pre>
+.item_comparison th {font-weight: bold; padding: 5px; text-align:center;}
+.item_comparison td {border: 1px solid gray; padding: 3px 5px;text-align:right;}
+</pre>
 <h3>Customization and Advanced Topics</h3>
 <h4>Catalog Item Attributes</h4>
 <p>The default item attributes are typical for a catalog of products or artworks, but by going into Extensions &gt; Cataloger &gt; Manage User-Defined Attributes, you can change the attributes. It\'s best to define the attributes before you start entering Catalog Items.</p>
@@ -274,6 +284,7 @@ of the license for the full disclaimer.</p>
 <p>This module has been released under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GNU Public License</a>. You must agree to this license before using the module.</p>';
 $lang['changelog']='
 <ul>
+<li>Version 0.7.7 - Feb 2010. Added files associated with Items. Added item comparison action.</li>
 <li>Version 0.7.6 - 10 Sept 2009. Fix for that last fix. Doh!</li>
 <li>Version 0.7.5 - 10 Sept 2009. Fixed Printable Catalog... did that ever work??</li>
 <li>Version 0.7.4 - 22 June 2009. Incorporated Calguy\'s fixes for 1.6.</li>
