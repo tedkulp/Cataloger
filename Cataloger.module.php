@@ -345,6 +345,14 @@ class Cataloger extends CMSModule
 	}
 
 
+  function smartyBasics()
+	{
+	global $gCms;
+	$this->smarty->assign('root_url',$gCms->config['root_url']);
+	$this->smarty->assign('image_root',$gCms->config['root_url'].
+			'/modules/Cataloger/Cataloger.Image.php');
+	}
+
   function getCatalogItemsList(&$params)
   {
     global $gCms;

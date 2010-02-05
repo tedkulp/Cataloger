@@ -20,5 +20,6 @@
         $categoryItems = array_splice($categoryItems, $start, $end);
         $this->smarty->assign('items',$categoryItems);
  		
+		$this->smartyBasics();
 		echo $this->ProcessTemplateFromDatabase($this->getTemplateFromAlias($params['sub_template']));
 ?>

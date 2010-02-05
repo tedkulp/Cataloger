@@ -131,6 +131,7 @@
 		$this->smarty->assign_by_ref('image_url_array',$imageArray);
 		$this->smarty->assign_by_ref('src_image_url_array',$srcImgArray);
         $this->smarty->assign_by_ref('image_thumb_url_array',$thumbArray);
+		$this->smartyBasics();
  
 		echo $this->ProcessTemplateFromDatabase('catalog_'.$params['sub_template']);
 ?>

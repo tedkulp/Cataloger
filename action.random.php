@@ -35,6 +35,6 @@
         	$this->smarty->assign('items',$catTmp);
         	}
         
- 		
+ 		$this->smartyBasics();
 		echo $this->ProcessTemplateFromDatabase($this->getTemplateFromAlias($params['sub_template']));
 ?>

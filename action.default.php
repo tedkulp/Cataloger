@@ -63,5 +63,6 @@
 		$this->smarty->assign('file_count',$actualfilecount);
         $this->smarty->assign_by_ref('image_thumb_url_array',$thumbArray);
         $this->smarty->assign_by_ref('src_image_url_array',$srcImgArray);
+		$this->smartyBasics();
 		echo $this->ProcessTemplateFromDatabase('catalog_'.$params['sub_template']);	
 ?>

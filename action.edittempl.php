@@ -38,9 +38,9 @@ if (! $this->CheckAccess()) exit;
         $dbresult = $db->Execute($query);
         $attrs = '<h3>'.$this->Lang('title_item_template_vars').'</h3>{$title}, {$notes}, ';
         $cattrs = '<h3>'.$this->Lang('title_cat_template_vars').'</h3>{$title}, {$notes}, {$prev}, {$prevurl}, {$navstr}, {$next}, {$nexturl}, {$items}, ';
-        $pcattrs = '<h3>'.$this->Lang('title_catalog_template_vars').'</h3>{$items}, {$attrlist}';
-        $compattrs = '<h3>'.$this->Lang('title_compare_template_vars').'</h3>{$items}, {$attrlist}';
-        $feattrs = '<h3>'.$this->Lang('title_feature_template_vars').'</h3>{$items}';
+        $pcattrs = '<h3>'.$this->Lang('title_catalog_template_vars').'</h3>{$items}, {$attrlist}, {$root_url}, {$image_root}';
+        $compattrs = '<h3>'.$this->Lang('title_compare_template_vars').'</h3>{$items}, {$attrlist}, {$root_url}, {$image_root}';
+        $feattrs = '<h3>'.$this->Lang('title_feature_template_vars').'</h3>{$items}, {$root_url}, {$image_root}';
 
         while ($dbresult !== false && $row = $dbresult->FetchRow())
         	{
@@ -70,7 +70,7 @@ if (! $this->CheckAccess()) exit;
         	$attrs .= '_ext}, ';
         	}
         $attrs .= '{$file_url_array}, {$file_name_array}, ';
-        $attrs .= '{$file_ext_array}';
+        $attrs .= '{$file_ext_array}, {$root_url}, {$image_root}';
         $attrs = rtrim($attrs,', ');
 
         $image_count = $this->GetPreference('category_image_count', '1');
@@ -81,7 +81,7 @@ if (! $this->CheckAccess()) exit;
         	}
         $cattrs .= '{$image_url_array}, ';
         $cattrs .= '{$src_image_url_array}, ';
-        $cattrs .= '{$image_thumb_url_array}';
+        $cattrs .= '{$image_thumb_url_array}, {$root_url}, {$image_root}';
         $cattrs = rtrim($cattrs,', ');
         $cattrs .= '<h3>$items array contents:</h3>';
         $cattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attrname</i>';
