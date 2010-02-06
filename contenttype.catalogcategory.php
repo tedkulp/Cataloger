@@ -31,6 +31,7 @@
 class CatalogCategory extends CMSModuleContentType
 {
   var $attrs;
+  var $validation;
 
   function ModuleName()
   {
@@ -257,10 +258,30 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
     return $ret;
   }
 
+  function ValidateData()
+  {
+	$v = parent::ValidateData();
+	if ($v !== FALSE)
+		return $v;
+	
+	return $this->validation;
+  }
+
+  function validationError($msg)
+	{
+	if (!is_array($this->validation))
+		{
+		$this->validation = array();
+		}
+	array_push($this->validation, $msg);
+	}
+
+
   function FillParams(&$params)
   {
     global $gCms;
     $config = &$gCms->config;
+	$this->validation = FALSE;
     $db = $gCms->GetDb();
 
     if (isset($params))
@@ -355,12 +376,21 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  {
 	    if (isset($_FILES['image'.$i]['size']) && $_FILES['image'.$i]['size']>0)
 	      {
-		// we's gots us an upload!
-		// transfer it ...
-		copy($_FILES['image'.$i]['tmp_name'],
+			  if (! preg_match('/\.jpg$|\.jpeg$/i',$_FILES['image'.$i]['name']))
+				{
+				$this->validationError($pf->Lang('badimageformat',$_FILES['image'.$i]['name']));
+				}
+			  else
+				{
+		$cres = copy($_FILES['image'.$i]['tmp_name'],
 		     dirname($config['uploads_path'].
 			     '/images/catalog_src/index.html') .
 		     '/'.$this->mAlias.'_src_'.$i.'.jpg');
+		  if (!$cres)
+			{
+			$this->validationError($pf->Lang('badimage',$_FILES['image'.$i]['name']));
+			}
+			}
 	      }
 	  }
 	  foreach ($params as $thisParam=>$thisParamVal)
