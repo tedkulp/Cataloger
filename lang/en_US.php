@@ -44,6 +44,9 @@ $lang['title_flush_cats_help']='If you have a huge number of items displayed<br 
 $lang['title_item_file_types']='Permitted file types';
 $lang['cataloger']='Cataloger';
 
+$lang['title_attr_order_by']='Order';
+$lang['title_attr_alias']='Attribute Alias (Smarty Friendly)';
+
 $lang['item_page'] = 'Item Page';
 $lang['category_page'] = 'Category Page';
 $lang['catalog_printable'] = 'Printable Catalog';

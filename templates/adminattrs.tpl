@@ -8,11 +8,11 @@
 <div class="pageoverflow">
 	<p>{$title_item_attributes_help}</p>
 	<table>
-		<tr><th>{$title_item_attributes}</th><th>{$title_is_textfield}</th><th>{$title_delete}</th></tr>
+		<tr><th>{$title_item_attributes}</th><th>{$title_attr_alias}</th><th>{$title_attr_order_by}</th><th>{$title_is_textfield}</th><th>{$title_delete}</th></tr>
 	   {foreach from=$attribute_inputs item=entry}
 			{if $entry->type == 1}
             <tr>
-              <td>{$entry->input}</td><td>{$entry->istext}</td><td>{$entry->delete}{$entry->hidden}</td></tr>
+              <td>{$entry->order_by}{$entry->input}</td><td>{$entry->aliasinput}</td><td>{$entry->order_sel}</td><td>{$entry->istext}</td><td>{$entry->delete}{$entry->hidden}</td></tr>
             {/if}
 	   {/foreach}
 	</table>
@@ -22,10 +22,10 @@
 <div class="pageoverflow">
 	<p>{$title_category_attributes_help}</p>
 	<table>
-		<tr><th>{$title_category_attributes}</th><th>{$title_is_textfield}</th><th>{$title_delete}</th></tr>
+		<tr><th>{$title_category_attributes}</th><th>{$title_attr_alias}</th><th>{$title_attr_order_by}</th><th>{$title_is_textfield}</th><th>{$title_delete}</th></tr>
 	   {foreach from=$attribute_inputs item=entry}
 			{if $entry->type == 2}
-	        <tr><td>{$entry->input}</td><td>{$entry->istext}</td><td>{$entry->delete}{$entry->hidden}</td></tr>
+	        <tr><td>{$entry->input}</td><td>{$entry->aliasinput}</td><td>{$entry->order_sel}</td><td>{$entry->istext}</td><td>{$entry->delete}{$entry->hidden}</td></tr>
 	        {/if}
 	   {/foreach}
 	</table>
@@ -35,11 +35,11 @@
 <div class="pageoverflow">
 	<p>{$title_catalog_attributes_help}</p>
 	<table>
-		<tr><th>{$title_catalog_attributes}</th><th>{$title_is_textfield}</th><th>{$title_delete}</th></tr>
+		<tr><th>{$title_catalog_attributes}</th><th>{$title_attr_alias}</th><th>{$title_attr_order_by}</th><th>{$title_is_textfield}</th><th>{$title_delete}</th></tr>
 	   {foreach from=$attribute_inputs item=entry}
 			{if $entry->type == 3}
 	        <tr>
-	          <td>{$entry->input}</td>
+	          <td>{$entry->input}</td><td>{$entry->aliasinput}</td><td>{$entry->order_sel}</td>
 	          <td>{$entry->istext}</td><td>{$entry->delete}{$entry->hidden}</td></tr>
 	        {/if}
 	   {/foreach}

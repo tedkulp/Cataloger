@@ -9,7 +9,7 @@ if (! $this->CheckAccess()) exit;
 		$this->smarty->assign('submit', $this->CreateInputSubmit($id, 'submit', 'Submit'));
 
         $attributes = array();
-        $query = "SELECT id, attribute, type_id, is_textarea FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY id ASC";
+        $query = "SELECT id, attribute, alias, type_id, is_textarea, order_by FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY order_by ASC";
         $dbresult = $db->Execute($query);
 		$countbytype = array();
 		$countbytype[1]=0;
@@ -20,10 +20,16 @@ if (! $this->CheckAccess()) exit;
 	       $onerow = new stdClass();
            $onerow->input = $this->CreateInputText($id, 'attr_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				$row['attribute'], 25, 255);
+           $onerow->aliasinput = $this->CreateInputText($id, 'alias_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
+				$row['alias'], 25, 255);
        	   $onerow->hidden = $this->CreateInputHidden($id, 'old_'.$row['type_id'].'_'.$countbytype[$row['type_id']],$row['id']);
            $onerow->type = $row['type_id'];
            $onerow->istext = $this->CreateInputCheckbox($id, 'istext_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				1, $row['is_textarea']);
+
+		   debug_display($row['order_by'].' '.(empty($row['order_by'])?'empty':'not empty').' '.($row['order_by']==''?'is ""':'is not ""'));
+		   $onerow->order_by = (!empty($row['order_by'])?$row['order_by']:($countbytype[$row['type_id']]+1));
+		   $onerow->cbt = $countbytype[$row['type_id']];
            $onerow->delete = $this->CreateInputCheckbox($id, 'delete_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				1, 0);
 		   $countbytype[$row['type_id']]++;
@@ -37,13 +43,33 @@ if (! $this->CheckAccess()) exit;
            		$onerow->input = $this->CreateInputText($id, 'attr_'.$j.'_'.$countbytype[$j], '', 25, 255);
 	            $onerow->istext = $this->CreateInputCheckbox($id, 'istext_'.$j.'_'.$countbytype[$j],
 					1, 0);
+	            $onerow->aliasinput = $this->CreateInputText($id, 'alias_'.$j.'_'.$countbytype[$j],'', 25, 255);
 	           	$onerow->delete = '';
 				$onerow->hidden = '';
            		$onerow->type = $j;
-				$countbytype[$j]++;
+				$onerow->order_by = $countbytype[$j] + 1;
+				$onerow->cbt = $countbytype[$j]++;
            		array_push($attributes, $onerow);
 				}
         }
+
+		for ($i=1;$i<4;$i++)
+			{
+			$sc = array();
+			for ($j=0;$j<=$countbytype[$i];$j++)
+				{
+					$sc[$j]=$j;
+				}
+			for ($k=0;$k<count($attributes);$k++)
+				{
+				if ($attributes[$k]->type == $i)
+					{
+					$attributes[$k]->order_sel = $this->CreateInputDropdown($id, 'orderby_'.$i.'_'.$attributes[$k]->cbt, $sc, -1, $attributes[$k]->order_by);
+					}
+				}
+			}
+
+
 //debug_display($attributes);
         $this->smarty->assign('tab_headers',$this->StartTabHeaders().
             $this->SetTabHeader('item',$this->Lang('title_item_tab')).
@@ -59,6 +85,8 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('message', isset($params['message'])?$params['message']:'');
         $this->smarty->assign('attribute_inputs', $attributes);
         $this->smarty->assign('title_item_attributes', $this->Lang('title_item_tab'));
+		$this->smarty->assign('title_attr_alias', $this->Lang('title_attr_alias'));
+		$this->smarty->assign('title_attr_order_by', $this->Lang('title_attr_order_by'));
         $this->smarty->assign('title_catalog_attributes', $this->Lang('title_printable_tab'));
         $this->smarty->assign('title_category_attributes', $this->Lang('title_category_tab'));
         $this->smarty->assign('title_item_attributes_help', $this->Lang('title_item_attributes_help'));

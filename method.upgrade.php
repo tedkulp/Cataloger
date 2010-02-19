@@ -77,7 +77,13 @@
 					touch($fileDir.'/index.html');
 	            	}
 				$this->importSampleTemplates('Comparison');
-				
+			case "0.8":
+				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
+   				 	"order_by I");
+				$dict->ExecuteSQLArray($sqlarray);
+				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
+   				 	"alias C(60)");
+				$dict->ExecuteSQLArray($sqlarray);
         }
 
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('upgraded',$this->GetVersion()));
