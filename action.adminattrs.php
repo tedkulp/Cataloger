@@ -27,8 +27,7 @@ if (! $this->CheckAccess()) exit;
            $onerow->istext = $this->CreateInputCheckbox($id, 'istext_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				1, $row['is_textarea']);
 
-		   debug_display($row['order_by'].' '.(empty($row['order_by'])?'empty':'not empty').' '.($row['order_by']==''?'is ""':'is not ""'));
-		   $onerow->order_by = (!empty($row['order_by'])?$row['order_by']:($countbytype[$row['type_id']]+1));
+		   $onerow->order_by = $row['order_by'];
 		   $onerow->cbt = $countbytype[$row['type_id']];
            $onerow->delete = $this->CreateInputCheckbox($id, 'delete_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				1, 0);

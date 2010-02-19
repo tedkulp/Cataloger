@@ -12,7 +12,7 @@
 	   {foreach from=$attribute_inputs item=entry}
 			{if $entry->type == 1}
             <tr>
-              <td>{$entry->order_by}{$entry->input}</td><td>{$entry->aliasinput}</td><td>{$entry->order_sel}</td><td>{$entry->istext}</td><td>{$entry->delete}{$entry->hidden}</td></tr>
+              <td>{$entry->input}</td><td>{$entry->aliasinput}</td><td>{$entry->order_sel}</td><td>{$entry->istext}</td><td>{$entry->delete}{$entry->hidden}</td></tr>
             {/if}
 	   {/foreach}
 	</table>
