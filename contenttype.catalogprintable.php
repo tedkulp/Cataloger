@@ -147,18 +147,31 @@ class CatalogPrintable extends CMSModuleContentType
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
 	  {
-            $safeattr = strtolower(preg_replace('/\W/','', $thisAttr->attr));
+            $v = $this->GetPropertyValue($thisAttr->attr);
+			if (empty($v) && !empty($thisAttr->default))
+				{
+				$v = $thisAttr->default;
+				}
 			if ($thisAttr->is_text)
 				{
 				$ret[] = array($thisAttr->attr,
-					create_textarea($wysiwyg, $this->GetPropertyValue($thisAttr->attr), $safeattr, '', $thisAttr->attr, '', $stylesheet, 80, 10));	
+					create_textarea($wysiwyg, $v, $thisAttr->safe, '', $thisAttr->attr, '', $stylesheet, 80, 10));	
 				}
 			else
 				{
+				$l = $thisAttr->length;
+				if (empty($l))
+					{
+					$l = 25;
+					$m = 1024;
+					}
+				else
+					{
+					$m = $l;
+					}
 	    		$ret[] = array($thisAttr->attr,
-			   		'<input type="text" name="'.$safeattr.'" value="'.
-			   		htmlspecialchars($this->GetPropertyValue($thisAttr->attr),ENT_QUOTES).
-			   		'" />');
+					'<input type="text" name="'.$thisAttr->safe.'" value="'.
+			   		htmlspecialchars($v,ENT_QUOTES).'" size="'.$l.'" maxlength="'.$m.'" />');
 				}
 	  }
 
@@ -174,9 +187,6 @@ class CatalogPrintable extends CMSModuleContentType
 	$module =& $this->GetModuleInstance();
 	array_push($ret,array($this->Lang('title_global_item_sort_order2'),$module->CreateInputDropdown('', 'sort_order',
 									   array($this->Lang('natural_order')=>'natural', $this->Lang('alpha_order')=>'alpha'), -1, $so)));
-
-
-
 
    $item = new CatalogItem();
 	$itemAttrs = $item->getAttrs();

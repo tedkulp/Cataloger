@@ -46,6 +46,10 @@ $lang['cataloger']='Cataloger';
 
 $lang['title_attr_order_by']='Order';
 $lang['title_attr_alias']='Attribute Alias (Smarty Friendly)';
+$lang['title_attr_length']='Length*';
+$lang['title_attr_default']='Default Value';
+$lang['title_attr_length_help']='(*Length does not apply to Text Areas)';
+
 
 $lang['item_page'] = 'Item Page';
 $lang['category_page'] = 'Category Page';

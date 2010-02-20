@@ -22,12 +22,14 @@ foreach ($params as $thisParamKey=>$thisParamValue)
 	          $oldval = $db->GetOne($query,array($params['old_'.$attrType.'_'.$attrNum]));
 	       
 			  // write new value
-			  $query = "UPDATE ".cms_db_prefix().'module_catalog_attr SET is_textarea=?, attribute=?, alias=?, order_by=? where id=?';
+			  $query = "UPDATE ".cms_db_prefix().'module_catalog_attr SET is_textarea=?, attribute=?, alias=?, order_by=?, defaultval=?, length=? where id=?';
 	       	  $dbresult = $db->Execute($query,array(
 					($is_text?1:0),
 					$thisParamValue,
 					$params['alias_'.$attrType.'_'.$attrNum],
 					$params['orderby_'.$attrType.'_'.$attrNum],			
+					$params['default_'.$attrType.'_'.$attrNum],			
+					$params['len_'.$attrType.'_'.$attrNum],			
 					$params['old_'.$attrType.'_'.$attrNum]));
 	       	  if ($dbresult === false)
 				  {
@@ -60,10 +62,12 @@ foreach ($params as $thisParamKey=>$thisParamValue)
 		      {
 	       	  $new_id = $db->GenID(cms_db_prefix().'module_catalog_attr_seq');
 	       	  $query = 'INSERT INTO '. cms_db_prefix().
-	           'module_catalog_attr (id,type_id,is_textarea,attribute,alias,order_by) VALUES (?,?,?,?,?,?)';
+	           'module_catalog_attr (id,type_id,is_textarea,attribute,alias,defaultval,length,order_by) VALUES (?,?,?,?,?,?,?,?)';
 	       	  $dbresult = $db->Execute($query,
 					array($new_id,$attrType,($is_text?1:0),$thisParamValue,
 						$params['alias_'.$attrType.'_'.$attrNum],
+						$params['default_'.$attrType.'_'.$attrNum],			
+						$params['len_'.$attrType.'_'.$attrNum],			
 						$params['orderby_'.$attrType.'_'.$attrNum]));
 	       	  if ($dbresult === false)
 				  {

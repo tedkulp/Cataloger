@@ -65,7 +65,6 @@
 			case "0.7.4":
 			case "0.7.5":
 			case "0.7.6":
-			case "0.7.7":
 				$catalogdirs = array('/catalogerfiles');
 				foreach ($catalogdirs as $thisDir)
 					{
@@ -77,12 +76,19 @@
 					touch($fileDir.'/index.html');
 	            	}
 				$this->importSampleTemplates('Comparison');
-			case "0.8":
+			case "0.7.7":
+			case "0.8b1":
 				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
    				 	"order_by I");
 				$dict->ExecuteSQLArray($sqlarray);
 				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
    				 	"alias C(60)");
+				$dict->ExecuteSQLArray($sqlarray);
+				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
+   				 	"length I");
+				$dict->ExecuteSQLArray($sqlarray);
+				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
+   				 	"defaultval X");
 				$dict->ExecuteSQLArray($sqlarray);
         }
 

@@ -75,7 +75,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.8';
+    return '0.8b1';
   }
 
   function MinimumCMSVersion()
@@ -308,7 +308,7 @@ class Cataloger extends CMSModule
     if (! isset($vars[$global_ref]) || ! is_array($vars[$global_ref]))
       {
 	$vars[$global_ref] = array();
-	$query = "SELECT attribute, alias, is_textarea FROM ".
+	$query = "SELECT attribute, alias, defaultval, length, is_textarea FROM ".
 	  cms_db_prefix()."module_catalog_attr WHERE type_id=? ORDER BY order_by ASC";
 	$type_id = 1;
 	if ($global_ref == 'catalog_cat_attrs')
@@ -326,6 +326,8 @@ class Cataloger extends CMSModule
 		$thisAttr->attr = $row['attribute'];
 		$thisAttr->alias = $row['alias'];
 		$thisAttr->is_text = $row['is_textarea'];
+		$thisAttr->length = $row['length'];
+		$thisAttr->default = $row['defaultval'];
 		$thisAttr->safe = strtolower(preg_replace('/\W/','',$row['attribute']));
 	    array_push($vars[$global_ref],$thisAttr);
 	  }

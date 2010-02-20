@@ -49,6 +49,7 @@
 
             }
 		$this->smarty->assign('attrlist',$fldlist);
+		$this->smarty->assign('attrlistf',$params['attrlist']);
 
 		$this->smarty->assign_by_ref('image_url_array',$imageArray);
 		$this->smarty->assign_by_ref('src_image_url_array',$srcImgArray);

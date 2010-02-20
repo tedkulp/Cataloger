@@ -93,6 +93,7 @@
 
 		$navstr = rtrim($navstr,$this->Lang('navTab'));
         $categoryItems = array_splice($categoryItems, $start, $end);
+
         $this->smarty->assign('items',$categoryItems);
         if (strlen($navstr) > 1)
         	{

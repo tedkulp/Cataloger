@@ -33,7 +33,11 @@
 			id I KEY,
 			type_id I,
 			is_textarea I,
-			attribute C(255)
+			attribute C(255),
+			order_by I,
+			alias C(60),
+			length I,
+			defaultval X
 		";
 		$sqlarray = $dict->CreateTableSQL(cms_db_prefix()."module_catalog_attr",
 				$flds, $taboptarray);

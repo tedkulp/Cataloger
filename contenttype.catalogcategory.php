@@ -146,23 +146,33 @@ class CatalogCategory extends CMSModuleContentType
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
 	  {
-      $safeattr = strtolower(preg_replace('/\W/','', $thisAttr->attr));
-	  if ($thisAttr->is_text)
-		{
-			$ret[] = array($thisAttr->attr,
-				create_textarea($wysiwyg, $this->GetPropertyValue($thisAttr->attr), $safeattr, '', $thisAttr->attr, '', $stylesheet, 80, 10));	
-			
-		}
-	  else
-		{
-	     	$ret[] = array($thisAttr->attr,
-				  '<input type="text" name="'.$safeattr.'" value="'.
-				  htmlspecialchars($this->GetPropertyValue($thisAttr->attr),ENT_QUOTES).
-				  '" />');
-		}
+            $v = $this->GetPropertyValue($thisAttr->attr);
+			if (empty($v) && !empty($thisAttr->default))
+				{
+				$v = $thisAttr->default;
+				}
+			if ($thisAttr->is_text)
+				{
+				$ret[] = array($thisAttr->attr,
+					create_textarea($wysiwyg, $v, $thisAttr->safe, '', $thisAttr->attr, '', $stylesheet, 80, 10));	
+				}
+			else
+				{
+				$l = $thisAttr->length;
+				if (empty($l))
+					{
+					$l = 25;
+					$m = 1024;
+					}
+				else
+					{
+					$m = $l;
+					}
+	    		$ret[] = array($thisAttr->attr,
+					'<input type="text" name="'.$thisAttr->safe.'" value="'.
+			   		htmlspecialchars($v,ENT_QUOTES).'" size="'.$l.'" maxlength="'.$m.'" />');
+				}
 	  }
-
-//	array_push($ret,array('Notes',create_textarea(true, $this->GetPropertyValue('notes'), 'notes', '', 'notes', '', $stylesheet, 80, 10)));
       }
 
 

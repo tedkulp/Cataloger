@@ -9,7 +9,7 @@ if (! $this->CheckAccess()) exit;
 		$this->smarty->assign('submit', $this->CreateInputSubmit($id, 'submit', 'Submit'));
 
         $attributes = array();
-        $query = "SELECT id, attribute, alias, type_id, is_textarea, order_by FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY order_by ASC";
+        $query = "SELECT id, attribute, alias, defaultval, type_id, length, is_textarea, order_by FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY order_by ASC";
         $dbresult = $db->Execute($query);
 		$countbytype = array();
 		$countbytype[1]=0;
@@ -20,6 +20,10 @@ if (! $this->CheckAccess()) exit;
 	       $onerow = new stdClass();
            $onerow->input = $this->CreateInputText($id, 'attr_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				$row['attribute'], 25, 255);
+           $onerow->defaultinput = $this->CreateInputText($id, 'default_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
+				$row['defaultval'], 25, 1024);
+           $onerow->leninput = $this->CreateInputText($id, 'len_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
+				(!empty($row['length'])?$row['length']:25), 4, 4);
            $onerow->aliasinput = $this->CreateInputText($id, 'alias_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				$row['alias'], 25, 255);
        	   $onerow->hidden = $this->CreateInputHidden($id, 'old_'.$row['type_id'].'_'.$countbytype[$row['type_id']],$row['id']);
@@ -43,6 +47,8 @@ if (! $this->CheckAccess()) exit;
 	            $onerow->istext = $this->CreateInputCheckbox($id, 'istext_'.$j.'_'.$countbytype[$j],
 					1, 0);
 	            $onerow->aliasinput = $this->CreateInputText($id, 'alias_'.$j.'_'.$countbytype[$j],'', 25, 255);
+	            $onerow->defaultinput = $this->CreateInputText($id, 'default_'.$j.'_'.$countbytype[$j],'', 25, 1024);
+	            $onerow->leninput = $this->CreateInputText($id, 'len_'.$j.'_'.$countbytype[$j],25, 4, 4);
 	           	$onerow->delete = '';
 				$onerow->hidden = '';
            		$onerow->type = $j;
@@ -85,6 +91,10 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('attribute_inputs', $attributes);
         $this->smarty->assign('title_item_attributes', $this->Lang('title_item_tab'));
 		$this->smarty->assign('title_attr_alias', $this->Lang('title_attr_alias'));
+		$this->smarty->assign('title_attr_length', $this->Lang('title_attr_length'));
+		$this->smarty->assign('title_attr_length_help', $this->Lang('title_attr_length_help'));
+		
+		$this->smarty->assign('title_attr_default', $this->Lang('title_attr_default'));
 		$this->smarty->assign('title_attr_order_by', $this->Lang('title_attr_order_by'));
         $this->smarty->assign('title_catalog_attributes', $this->Lang('title_printable_tab'));
         $this->smarty->assign('title_category_attributes', $this->Lang('title_category_tab'));
