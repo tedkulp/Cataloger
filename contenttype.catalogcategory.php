@@ -309,15 +309,9 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
 	  {
-	    array_push($parameters,$thisAttr->attr);
-	  }
-
-	foreach ($parameters as $thisParam)
-	  {
-	    $safeattr = strtolower(preg_replace('/\W/','', $thisParam));
-	    if (isset($params[$safeattr]))
+	    if (isset($params[$thisAttr->safe]))
 	      {
-		$this->SetPropertyValue($thisParam, $params[$safeattr]);
+			$this->SetPropertyValue($thisAttr->attr, $params[$thisAttr->safe]);
 	      }
 	  }
 
@@ -433,21 +427,30 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  }
       }
 		
-    $this->getUserAttributes();
-    foreach ($this->attrs as $thisAttr)
-      {
-	array_push($parameters,$thisAttr->attr);
-      }
+   $this->getUserAttributes();
+	$safeattrlist = array();
 
-    foreach ($parameters as $thisParam)
-      {
-	$safeattr = strtolower(preg_replace('/\W/','', $thisParam));
-	$tmp = $this->GetPropertyValue($thisParam);
-	if (isset($tmp) && ! empty($tmp))
-	  {
-	    $params[$safeattr] = $tmp;
+	foreach ($this->attrs as $thisAttr)
+		{
+		$tmp = $this->GetPropertyValue($thisAttr->attr);
+		if (isset($tmp) && $tmp!='')
+	  		{
+	    	$params[$thisAttr->safe] = $tmp;
+			if (isset($thisAttr->alias) && $thisAttr->alias!='')
+				{
+				$params[$thisAttr->alias] = $tmp;
+				}
+			$thisSafeAttr = array();
+			$thisSafeAttr['name']=ucfirst($thisAttr->attr);
+			$thisSafeAttr['key']='{$'.$thisAttr->safe.'}';
+			if ($thisAttr->alias != '')
+				{
+				$thisSafeAttr['aliaskey'] = '{$'.$thisAttr->alias.'}';
+				}
+			array_push($safeattrlist,$thisSafeAttr);
+	      	}
 	  }
-      }
+
     $params['title'] = $this->mName;
     $params['menutext'] = $this->mMenuText;
     $params['template_id'] = $this->mTemplateId;
@@ -455,6 +458,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
     $params['parent_id'] = $this->mParentId;
     $params['active'] = $this->mActive;
     $params['showinmenu']=$this->mShowInMenu;
+	$params['attrlist'] = $safeattrlist;
 
   }
 

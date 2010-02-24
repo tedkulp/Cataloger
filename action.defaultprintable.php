@@ -48,6 +48,7 @@
 				$this->srcImageSpec($params['alias'], $i));
 
             }
+
 		$this->smarty->assign('attrlist',$fldlist);
 		$this->smarty->assign('attrlistf',$params['attrlist']);
 

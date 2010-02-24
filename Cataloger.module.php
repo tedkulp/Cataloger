@@ -112,7 +112,7 @@ class Cataloger extends CMSModule
   function getTemplateFromAlias($alias)
   {
     global $gCms;
-    $db =& $gCms->GetDb();
+    $db = $gCms->GetDb();
     $dbresult = $db->Execute('SELECT id from '.cms_db_prefix().
 			     'module_catalog_template where title=?',array($alias));
     if ($dbresult !== false && $row = $dbresult->FetchRow())
@@ -125,7 +125,7 @@ class Cataloger extends CMSModule
   function importSampleTemplates($onlytype='all')
   {
     global $gCms;
-    $db =& $gCms->GetDb();
+    $db = $gCms->GetDb();
     $dir=opendir(dirname(__FILE__).'/includes');
     $temps = array();
     while($filespec=readdir($dir))
@@ -277,7 +277,7 @@ class Cataloger extends CMSModule
     {
       global $gCms;
       $content = array();
-      $hm =& $gCms->GetHierarchyManager();
+      $hm = $gCms->GetHierarchyManager();
       /* Works with new addition to Tree, but getFlatList is default
        $rn = $hm->sureGetNodeById($startNodeId); 
        $count = 0;
@@ -291,7 +291,7 @@ class Cataloger extends CMSModule
     {
       global $gCms;
       $content = array();
-      $hm =& $gCms->GetHierarchyManager();
+      $hm = $gCms->GetHierarchyManager();
 		
       $rn = $hm->GetRootNode(); 
       $count = 0;
@@ -304,7 +304,7 @@ class Cataloger extends CMSModule
   {
     global $gCms;
     $vars = &$gCms->variables;
-    $db = &$gCms->db;
+    $db = $gCms->GetDb();
     if (! isset($vars[$global_ref]) || ! is_array($vars[$global_ref]))
       {
 	$vars[$global_ref] = array();
@@ -330,16 +330,30 @@ class Cataloger extends CMSModule
 		$thisAttr->default = $row['defaultval'];
 		$thisAttr->safe = strtolower(preg_replace('/\W/','',$row['attribute']));
 	    array_push($vars[$global_ref],$thisAttr);
-	  }
+		}
       }
   }
 
+
+/*
+if ($as_array)
+	{
+	$thisAttr = $row;
+	$thisAttr['name'] = $row['attribute'];
+	$thisAttr['is_text'] = $row['is_textarea'];
+	$thisAttr['default'] = $row['defaultval'];
+	$thisAttr['safe'] = strtolower(preg_replace('/\W/','',$row['attribute']));
+   	array_push($ret,$thisAttr);
+	}
+else
+	{
+	*/
 
   function &getCatalogItem($alias)
 	{
 	    global $gCms;
 
-	    $hm =& $gCms->GetHierarchyManager();
+	    $hm = $gCms->GetHierarchyManager();
    	    $pageNode = $hm->sureGetNodeByAlias($alias);
    		$page = $pageNode->GetContent();
 		$node = $this->itemToArray($page, '');
@@ -360,7 +374,7 @@ class Cataloger extends CMSModule
   {
     global $gCms;
 
-    $hm =& $gCms->GetHierarchyManager();
+    $hm = $gCms->GetHierarchyManager();
     $lastcat = "";
 		
     if ( isset($params['alias'])&& $params['alias']=='/')
@@ -417,7 +431,6 @@ class Cataloger extends CMSModule
 	$depth_ok = false;
 	if ($thispagecontent->Type() == 'contentalias')
 	  {
-	     //$curHierarchy = $thispagecontent->TargetHierarchy();
          $thispagecontent = $thispagecontent->GetAliasContent();
 	     $curHierLen = strlen($curHierarchy);
 	     $curHierDepth = substr_count($curHierarchy,'.');
@@ -469,37 +482,6 @@ class Cataloger extends CMSModule
 	    continue;
 	  }
 	// in the category, and approved for addition
-/*	$catThumbSize = $this->GetPreference('category_image_size_thumbnail',90);
-	$itemThumbSize = $this->GetPreference('item_image_size_category',70);
-	$missingImage = $this->GetPreference('show_missing','1');
-	switch ($thispagecontent->Type())
-	  {
-	  case 'catalogitem':
-	    $thisItem['image'] = $this->imageSpec($thispagecontent->Alias(),
-	    	's', 1, $itemThumbSize);
-	    $thisItem['image_src'] = $this->srcImageSpec($thispagecontent->Alias(),
-	    	1);
-	    break;
-	  case 'catalogcategory':
-	    $thisItem['image'] = $this->imageSpec($thispagecontent->Alias(),
-	    	'ct', 1, $catThumbSize);
-	    break;
-	  }
-	$thisItem['link'] = $thispagecontent->GetUrl();
-	$thisItem['title'] = $thispagecontent->Name();
-	$thisItem['alias'] = $thispagecontent->Alias();
-	$thisItem['menutitle'] = $thispagecontent->MenuText();
-	$thisItem['modifieddate']=$thispagecontent->GetModifiedDate();
-	$thisItem['category']=$lastcat;
-	$thisItem['cat']=$lastcat;
-	$thisItem['createdate']=$thispagecontent->GetCreationDate();
-	$theseAttrs = $thispagecontent->getAttrs();
-	foreach ($theseAttrs as $thisAttr)
-	  {
-	    $safeattr = strtolower(preg_replace('/\W/','',$thisAttr->attr));
-	    $thisItem[$safeattr] = $thispagecontent->GetPropertyValue($thisAttr->attr);
-	  }
-	*/
 	$thisItem = $this->itemToArray($thispagecontent,$lastcat);
 	array_push($categoryItems,$thisItem);
       }
@@ -578,12 +560,7 @@ class Cataloger extends CMSModule
   		{
   		$this->showMissing = $this->GetPreference('show_missing','1');
   		}
-/*	$srcSpec = $gCms->config['uploads_path'].'/images/catalog_src/'.$alias .
-			'_src_'.$image_number.'.jpg';
 
-	$orig = @stat($srcSpec);
-	if ($orig === false)
-*/
 	if (! $this->srcExists($alias, $image_number))
 		{
 		if ($this->showMissing != '1')

@@ -77,7 +77,6 @@ class CatalogItem extends CMSModuleContentType
   function getItemAttr($name)
   {
       $this->getUserAttributes();
-      //debug_display($this->attrs);
       return $this->attrs[$name];
 
   }
@@ -344,17 +343,12 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	$this->getUserAttributes();
 	foreach ($this->attrs as $thisAttr)
 	  {
-	    array_push($parameters,$thisAttr->attr);
-	  }
-	foreach ($parameters as $thisParam)
-	  {
-	    $safeattr = strtolower(preg_replace('/\W/','', $thisParam));
-	    if (isset($params[$safeattr]))
+	    if (isset($params[$thisAttr->safe]))
 	      {
-		$this->SetPropertyValue($thisParam, $params[$safeattr]);
+			$this->SetPropertyValue($thisAttr->attr, $params[$thisAttr->safe]);
 	      }
 	  }
-
+	
 	if (isset($params['title']))
 	  {
 	    $this->mName = $params['title'];
@@ -515,27 +509,35 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
       }
 		
     $this->getUserAttributes();
-    foreach ($this->attrs as $thisAttr)
-      {
-	array_push($parameters,$thisAttr->attr);
-      }
-    $safeattrlist = array();
-    foreach ($parameters as $thisParam)
-      {
-	$safeattr = strtolower(preg_replace('/\W/','', $thisParam));
-	$tmp = $this->GetPropertyValue($thisParam);
-	if (isset($tmp) && ! empty($tmp))
-	  {
-	    $params[$safeattr] = $tmp;
-	    if ($safeattr != 'sub_template')
-	      {
-		$thisSafeAttr = array();
-		$thisSafeAttr['name']=ucfirst($thisParam);
-		$thisSafeAttr['key']='{$'.$safeattr.'}';
-		array_push($safeattrlist,$thisSafeAttr);
-	      }
+	$safeattrlist = array();
+
+	foreach ($this->attrs as $thisAttr)
+		{
+		$tmp = $this->GetPropertyValue($thisAttr->attr);
+		if (isset($tmp) && $tmp!='')
+	  		{
+	    	$params[$thisAttr->safe] = $tmp;
+			if (isset($thisAttr->alias) && $thisAttr->alias!='')
+				{
+				$params[$thisAttr->alias] = $tmp;
+				}
+			$thisSafeAttr = array();
+			$thisSafeAttr['name']=ucfirst($thisAttr->attr);
+			$thisSafeAttr['key']='{$'.$thisAttr->safe.'}';
+			if ($thisAttr->alias != '')
+				{
+				$thisSafeAttr['aliaskey'] = '{$'.$thisAttr->alias.'}';
+				}
+			array_push($safeattrlist,$thisSafeAttr);
+	      	}
+		else
+			{
+			$params[$thisAttr->safe] = '';
+			$params[$thisAttr->alias] = '';			
+			}
+
 	  }
-      }
+
     $params['title'] = $this->mName;
     $params['menutext'] = $this->mMenuText;
     $params['template_id'] = $this->mTemplateId;
