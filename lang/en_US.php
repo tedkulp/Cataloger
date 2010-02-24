@@ -296,7 +296,11 @@ is designed to prevent browser caching. So examining the name piece by piece (se
 </ul>
 <p>
 This will take an image in root_path/uploads/images/catalog_src/itemname_src_1
-</p>
+<h4>Accessing your Original Image</h4>
+<p>When Cataloger uploads images, it puts them into a directory called "cataloger_src" in your uploads/images/ directory. They images are named according to the alias of the page:
+alias_src_#.jpg where # is the image number for that page.</p>
+<p>So, to access the originally uploaded images on a Category page, you\'d generate the URL manually.</p>
+<p>So on a category page, for example, instead of using {$items[numloop].image} you\'d use "/uploads/images/cataloger_src/{$items[numloop].alias}_src_1.jpg".</p>
 <h3>Credits</h3>
 <p>Thanks to <a href="http://www.id-a.co.uk">Paul Cooper</a> for sponsoring the development of textarea attributes.</p>
 <p>Thanks to numerous patient users and bug testers (many of whom had no idea what they were getting into.)</p> 
