@@ -4,6 +4,42 @@ if (! $this->CheckAccess()) exit;
 
 		$this->initAdminNav($id, $params, $returnid);
 
+		$params['message']='';
+		if (isset($params['submit']) || isset($params['apply']))
+			{
+			if (! empty($params['template_id']))
+				{
+				// updating a template
+				$query = 'UPDATE '. cms_db_prefix().
+					'module_catalog_template set title=?, template=?, type_id=? WHERE id=?';
+				$dbresult = $db->Execute($query,array($params['title'],$params['templ'],
+					$params['type_id'], $params['template_id']));
+				$template_id = $params['template_id'];
+				}
+			else
+				{
+				// creating a template
+				$query = 'INSERT INTO '. cms_db_prefix().
+					'module_catalog_template (id, title, type_id, template) VALUES (?,?,?,?)';
+				$template_id = $db->GenID(cms_db_prefix().'module_catalog_template_seq');
+				$dbresult = $db->Execute($query,array($template_id,$params['title'],$params['type_id'],$params['templ']));
+				}
+
+			// force a cache clear?
+			$this->DeleteTemplate('catalog_'.$template_id);
+			// and recreate
+			$this->SetTemplate('catalog_'.$template_id,$params['templ']);
+
+			$params['message'] = $this->Lang('templateupdated');
+			
+			if (isset($params['submit']))
+				{
+				$this->DoAction('defaultadmin', $id, $params);
+				return;
+				}
+			}
+
+
 		$typeids = array();
 		$query = 'SELECT type_id, name FROM ' .
 				cms_db_prefix(). 'module_catalog_template_type';
@@ -97,7 +133,7 @@ if (! $this->CheckAccess()) exit;
         $feattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attrname</i>';
 
         
-		$this->smarty->assign('startform', $this->CreateFormStart($id, 'submittempl', $returnid));
+		$this->smarty->assign('startform', $this->CreateFormStart($id, 'edittempl', $returnid));
 		$this->smarty->assign('endform', $this->CreateFormEnd());
 		$this->smarty->assign('hidden',$this->CreateInputHidden($id, 'template_id', $templateid));
         $this->smarty->assign('title_title',$this->Lang('title_title'));
@@ -136,9 +172,11 @@ if (! $this->CheckAccess()) exit;
 //		$this->smarty->assign_by_ref('avail_imattrs',$imattrs);
 		$this->smarty->assign('input_template_type',$this->CreateInputDropdown($id, 'type_id', $typeids, -1, isset($type_id)?$type_id:''));
 
+		$this->smarty->assign('message',$params['message']);
         $this->smarty->assign('input_title',$this->CreateInputText($id, 'title', $title, 20, 255));
         $this->smarty->assign('input_template',$this->CreateTextArea(false, $id, $template, 'templ'));
 
-		$this->smarty->assign('submit', $this->CreateInputSubmit($id, 'submit', 'Submit'));
+		$this->smarty->assign('submit', $this->CreateInputSubmit($id, 'submit', lang('submit')));
+		$this->smarty->assign('apply', $this->CreateInputSubmit($id, 'apply', lang('apply')));
 		echo $this->ProcessTemplate('edittemplate.tpl');
 ?>

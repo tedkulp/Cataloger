@@ -1,7 +1,7 @@
 {$innernav}
 <br />
 <h3>{$category}</h3>
-{if $message!=''}<h4>{$message}</h4>{/if}
+{if $message!=''}<p class="pagemessage">{$message}</p>{/if}
 {$startform}
 {$tab_headers}
 {$start_item_image_tab}
