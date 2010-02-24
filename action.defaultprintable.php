@@ -26,10 +26,12 @@
             }
             
         $count = count($pageItems);
-        $fldlist = explode(',',$params['fieldlist']);
-        foreach($fldlist as $tk=>$tv)
+        $fl = explode(',',$params['fieldlist']);
+		$fldlist = array();
+        foreach($fl as $tk=>$tv)
             {
-            $fldlist[$tk] = strtolower(preg_replace('/\W/','', $tv));
+            $attr = strtolower(preg_replace('/\W/','', $tv));
+			$fldlist[$attr] = $tv;
             }
         $this->smarty->assign('items',$pageItems);
         $fullSize = $this->GetPreference('item_image_size_catalog', '100');
@@ -50,7 +52,6 @@
             }
 
 		$this->smarty->assign('attrlist',$fldlist);
-		$this->smarty->assign('attrlistf',$params['attrlist']);
 
 		$this->smarty->assign_by_ref('image_url_array',$imageArray);
 		$this->smarty->assign_by_ref('src_image_url_array',$srcImgArray);
