@@ -226,6 +226,7 @@ class CatalogPrintable extends CMSModuleContentType
     global $gCms;
     $config = &$gCms->config;
     $db = $gCms->GetDb();
+    $this->mCachable = false;
 
     if (isset($params))
       {

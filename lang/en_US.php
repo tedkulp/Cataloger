@@ -230,6 +230,29 @@ recurse=\'categories_one\'. Or if you wanted it to be all catalog Items instead 
 <p>When editing a Template, the admin screen will display a list of Smarty tags available to you for that kind of template. This
 will only happen once the module knows what kind of template you\'re editing, so when you first create the template, it displays all
 the Smarty tags it knows about, only some of which being applicable.</p>
+<h4>Displaying Attributes on Item Pages</h4>
+<p>Attributes are available to Smarty as top-level variables. They are stored as sanitized versions of the attribute names, which means
+it is converted to lower case and all punctuation and non-US-ASCII characters get removed. This is because Smarty is finicky, and will not handle these characters.</p>
+<p>So, for example, if you have an attribute called "Glücklichkeit", there will be a Smarty variable {$glcklichkeit}. Note that the "ü" is omitted.</p>
+<p>Fortunately, this is simplified by the $attrlist list available. This is a list of attributes by formal name ("Glücklichkeit") and their key ("glcklichkeit"). For example:
+<pre>
+	{section name=at loop=$attrlist}
+	&lt;div class="item_attribute_name">{$attrlist[at].name}:&lt;/div>&lt;div class="item_attribute_val">{eval var=$attrlist[at].key}&lt;/div>
+	{/section}
+</pre>
+<p>As of version 0.8, you can assign an alias to each attribute. These aliases need to be US-ASCII and contain no punctuation. They can be used instead of the sanitized attribute name (e.g., you could use the alias "gluecklichkeit").</p>
+<h4>Displaying Attributes on Pages with Lists of Items</h4>
+<p>Attributes are included in the $itemlists[#] in two different ways: top-level attributes of the item, and as part of the item\'s "attr" array. They are stored as sanitized versions of the attribute names, which means
+it is converted to lower case and all punctuation and non-US-ASCII characters get removed. This is because Smarty is finicky, and will not handle these characters.</p>
+<p>So, for example, if you have an attribute called "Glücklichkeit", the item will have $item.glcklichkeit and $item.attrs[\'glcklichkeit\']. Note that the "ü" is omitted. You can refer to this attribute in your template
+with Smarty code like: {$itemlist[index].glcklickkeit} or {$itemlist[index].attrs.glcklichkeit}.</p>
+<p>Fortunately, this is simplified by the $attrlist list available. This is a list of attributes by formal name ("Glücklichkeit") and their key ("glcklichkeit"). For example:
+<pre>
+    {foreach from=$attrlist item=attr key=k}
+    {$attr}: {$items[numloop][$k]}
+    {/foreach}
+</pre>
+<p>As of version 0.8, you can assign an alias to each attribute. These aliases need to be US-ASCII and contain no punctuation. They can be used instead of the sanitized attribute name (e.g., you could use the alias "gluecklichkeit").</p>
 <h4>Smarty tags in Attributes</h4>
 <p>Sometimes, you\'ll want the descriptions of your items to include smarty tags (e.g., cms_selflink). To make that work, you\'ll need to
 update your template. For the attributes where you want smarty tags to be active, you\'ll need to nest the smarty evaluations in your template. For example:</p>

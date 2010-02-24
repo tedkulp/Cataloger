@@ -33,6 +33,8 @@
             $attr = strtolower(preg_replace('/\W/','', $tv));
 			$fldlist[$attr] = $tv;
             }
+
+//debug_display($pageItems);
         $this->smarty->assign('items',$pageItems);
         $fullSize = $this->GetPreference('item_image_size_catalog', '100');
         $imageArray = array();

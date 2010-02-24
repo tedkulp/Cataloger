@@ -522,6 +522,11 @@ else
 		    //$safeattr = strtolower(preg_replace('/\W/','',$thisAttr->attr));
 		    $thisItem[$thisAttr->safe] = $pagecontent->GetPropertyValue($thisAttr->attr);
 			$thisItem['attrs'][$thisAttr->safe] = $pagecontent->GetPropertyValue($thisAttr->attr);
+			if (isset($thisAttr->alias) && $thisAttr->alias != '')
+				{
+				$thisItem[$thisAttr->alias] = $pagecontent->GetPropertyValue($thisAttr->attr);
+				$thisItem['attrs'][$thisAttr->alias] = $pagecontent->GetPropertyValue($thisAttr->attr);	
+				}
 		  }
 		return $thisItem;
 		

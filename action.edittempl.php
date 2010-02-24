@@ -70,7 +70,7 @@ if (! $this->CheckAccess()) exit;
 			$template='';
 			$this->smarty->assign('op', $this->Lang('addtemplate'));
 			}
-        $query = "SELECT attribute, type_id FROM ".cms_db_prefix()."module_catalog_attr";
+        $query = "SELECT attribute, alias, type_id FROM ".cms_db_prefix()."module_catalog_attr";
         $dbresult = $db->Execute($query);
         $attrs = '<h3>'.$this->Lang('title_item_template_vars').'</h3>{$title}, {$notes}, ';
         $cattrs = '<h3>'.$this->Lang('title_cat_template_vars').'</h3>{$title}, {$notes}, {$prev}, {$prevurl}, {$navstr}, {$next}, {$nexturl}, {$items}, ';
@@ -84,10 +84,18 @@ if (! $this->CheckAccess()) exit;
             if ($row['type_id'] == CTEMPLATE_ITEM)
             	{
             	$attrs .= '{$'.$safeattr.'}, ';
+				if ($row['alias'] != '')
+					{
+					$attrs .= '{$'.$row['alias'].'}, ';
+					}
             	}
             else if ($row['type_id'] == CTEMPLATE_CATEGORY)
             	{
 				$cattrs .= '{$'.$safeattr.'}, ';
+				if ($row['alias'] != '')
+					{
+					$cattrs .= '{$'.$row['alias'].'}, ';
+					}
 				}
         	}
         $image_count = $this->GetPreference('item_image_count', '1');
@@ -120,17 +128,17 @@ if (! $this->CheckAccess()) exit;
         $cattrs .= '{$image_thumb_url_array}, {$root_url}, {$image_root}';
         $cattrs = rtrim($cattrs,', ');
         $cattrs .= '<h3>$items array contents:</h3>';
-        $cattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attrname</i>';
+        $cattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attribute_name</i>, $items[].<i>attribute_alias</i>';
         $pcattrs .= '<h3>$items array contents:</h3>';
-        $pcattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attrname</i>';
+        $pcattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attribute_name</i>, $items[].<i>attribute_alias</i>';
         $pcattrs .= '<h3>$attrlist array contents:</h3>';
         $pcattrs .= '$attrlist[]->attr, $attrlist[]->safe';
         $compattrs .= '<h3>$items array contents:</h3>';
-        $compattrs .= '$items[].title, $items[].link, $items[].image, $items[].<i>attrname</i>';
+        $compattrs .= '$items[].title, $items[].link, $items[].image, $items[].<i>attribute_name</i>, $items[].<i>attribute_alias</i>';
         $compattrs .= '<h3>$attrlist array contents:</h3>';
         $compattrs .= '$attrlist[]->attr, $attrlist[]->safe';
         $feattrs .= '<h3>$items array contents:</h3>';
-        $feattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attrname</i>';
+        $feattrs .= '$items[].title, $items[].link, $items[].image, $items[].cat, $items[].<i>attribute_name</i>, $items[].<i>attribute_alias</i>';
 
         
 		$this->smarty->assign('startform', $this->CreateFormStart($id, 'edittempl', $returnid));
