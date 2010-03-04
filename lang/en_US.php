@@ -186,7 +186,7 @@ those categories into a pulldown menu that redirected you to that category\'s pa
 &#123;/foreach}
 &lt;/select>
 </pre>
-<p>If you wanted that to only show categories that were in the very top level of your heirarchy, you\'d replace the recurse=\'categories_all\' with
+<p>If you wanted that to only show categories that were in the very top level of your hierarchy, you\'d replace the recurse=\'categories_all\' with
 recurse=\'categories_one\'. Or if you wanted it to be all catalog Items instead of categories, you could use a tag like:
 &#123;Cataloger action=\'all\' sub_template=\'my_sub_template\' alias=\'/\' recurse=\'items_all\'}
 <p>Similarly, you could have it list only categories under the current page (by omitting the "alias=\'/\'"). The combinations are basically limitless!</p>
@@ -199,10 +199,24 @@ recurse=\'categories_one\'. Or if you wanted it to be all catalog Items instead 
 <li>mixed_all - Catalog items and Categories, at any level below the current page (or alias point)</li>
 </ul>
 </p>
+<p>Items in these lists come back in hierarchy order. You can change this using the \'global_sort\' parameter. Your choices are:</p>
+<ul>
+<li>alpha - alphabetically by title</li>
+<li>date - in order of item creation date</li>
+<li>mdate - in order of item modification date</li>
+</ul>
+<p>You may order these sorts using the \'global_sort_dir\' parameter, which will allow \'asc\' or \'desc\'.</p>
+<p>So, for a thorough example:</p>
+<p>&#123;Cataloger action=\'all\' sub_template=\'my_sub_template\' alias=\'/\' recurse=\'categories_all\' global_sort=\'alpha\' global_sort_dir=\'asc\'}</p>
 <h4>Recently Added Feature List</h4>
 <p>To use a "most-recently added" list will allow you to display the most recently-added catalog items under a specified part of your hierarchy.</p>
 <p>The syntax for a "most recently added" list is like:</p>
-<p>&#123;Cataloger action=\'recent\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a place in your menu hierarchy, typically a category page) in which to look for new items. A special value for "page_alias" is "/", which means to use <i>all</i> pages in the site.</p>
+<p>&#123;Cataloger action=\'recent\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list.
+There are four optional parameters, count=\'3\' alias=\'page_alias\', global_sort=\'date\', global_sort_dir=\'desc\' where count
+is the number of items to include, page_alias indicates the top of the tree (e.g., a place in your menu hierarchy,
+typically a category page) in which to look for new items. A special value for "page_alias" is "/", which means
+to use <i>all</i> pages in the site. global_sort may be \'date\' (for item creation date) or \'mdate\' for modification date, and
+global_sort_dir may be \'asc\' or \'desc\'.</p>
 <h4>Random Items Feature List</h4>
 <p>The syntax for a "random" list is like:</p>
 <p>&#123;cCataloger action=\'random\' sub_template=\'my_sub_template\'}, where sub_template is the template to use to render the list. There are two optional parameters, count=\'3\' alias=\'page_alias\', where count is the number of items to include, and page_alias indicates the top of the tree (e.g., a place in your menu hierarchy, typically a category page) in which to look for new items. A special value for "page_alias" is "/", which means to use <i>all</i> pages in the site.</p>
