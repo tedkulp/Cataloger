@@ -292,6 +292,8 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
     global $gCms;
     $config = &$gCms->config;
 	$this->validation = FALSE;
+	$this->mCachable = false;
+    
     $db = $gCms->GetDb();
 
     if (isset($params))

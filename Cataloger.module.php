@@ -106,7 +106,8 @@ class Cataloger extends CMSModule
   $this->SetParameterType('action',CLEAN_STRING);
   $this->SetParameterType('recurse',CLEAN_STRING);
   $this->SetParameterType('items',CLEAN_STRING);
-			  			  
+  $this->SetParameterType('global_sort',CLEAN_STRING);
+  $this->SetParameterType('global_sort_dir',CLEAN_STRING);
   }
 
   function getTemplateFromAlias($alias)
@@ -203,6 +204,20 @@ class Cataloger extends CMSModule
       }
     return 0;
   }
+
+  function created($a, $b)
+  {
+    if ($a['createdate'] > $b['createdate'])
+      {
+      	return -1;
+      }
+    if ($a['createdate'] < $b['createdate'])
+      {
+      	return 1;
+      }
+    return 0;
+  }
+
 
   function initAdminNav($id, &$params, $returnid)
   {
@@ -376,6 +391,7 @@ else
 
     $hm = $gCms->GetHierarchyManager();
     $lastcat = "";
+    $lastcatfull = null;
 		
     if ( isset($params['alias'])&& $params['alias']=='/')
       {
@@ -438,6 +454,7 @@ else
 	if ($thispagecontent->Type() == 'catalogcategory')
 	  {
 	  $lastcat = $thispagecontent->Name();
+	  //debug_display($thispagecontent);
 	  }
 	if ($thispagecontent->Type() == 'catalogitem' &&
 	    ($params['recurse'] == 'items_one' ||
