@@ -75,7 +75,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.8b1';
+    return '0.8b2';
   }
 
   function MinimumCMSVersion()
@@ -598,7 +598,7 @@ else
 		}
 	else
 		{
-		return $gCms->config['uploads_url'].'/images/catalog_src/'.$alias .
+		return $gCms->config['uploads_url'].$this->getAssetPath('s').'/'.$alias .
 			'_src_'.$image_number.'.jpg';
 		}
   }
@@ -606,7 +606,7 @@ else
   function srcExists($alias, $image_number)
   {
   global $gCms;
-	$srcSpec = $gCms->config['uploads_path'].'/images/catalog_src/'.$alias .
+	$srcSpec = $gCms->config['uploads_path'].$this->getAssetPath('s').'/'.$alias .
 			'_src_'.$image_number.'.jpg';
 	return file_exists($srcSpec);
   }
@@ -615,7 +615,7 @@ else
   function getFiles($alias)
   {
 	global $gCms;
-	$dirspec = $gCms->config['uploads_path'].'/catalogerfiles/'.$alias;
+	$dirspec = $gCms->config['uploads_path'].$this->getAssetPath('f').'/'.$alias;
 	$files = array();
 	$types = array();
 	if (is_dir($dirspec))
@@ -649,7 +649,7 @@ else
   function purgeScaledImages($alias, $imageNumber)
   {
   	global $gCms;
-  	$srcDir = $gCms->config['uploads_path'].'/images/catalog';
+  	$srcDir = $gCms->config['uploads_path'].$this->getAssetPath('f').'/';
   	$toDel = array();
    if ($dh = opendir($srcDir))
    		{
@@ -672,7 +672,7 @@ else
   function purgeSourceImage($alias, $imageNumber)
   {
   	global $gCms;
-	$srcSpec = $gCms->config['uploads_path'].'/images/catalog_src/'.$alias .
+	$srcSpec = $gCms->config['uploads_path'].$this->getAssetPath('s').'/'.$alias .
 			'_src_'.$imageNumber.'.jpg';
 	unlink($srcSpec);
   }
@@ -681,14 +681,14 @@ else
   function renameImages($old, $newAlias)
   {
   	global $gCms;
-	if ($handle = opendir($gCms->config['uploads_path'].'/images/catalog_src/'))
+	if ($handle = opendir($gCms->config['uploads_path'].$this->getAssetPath('s').'/'))
 		{
 	    while (false !== ($file = readdir($handle)))
 			{
 	        if (substr($file,0,strlen($old)) == $old)
 				{
 				$newspec = $newAlias . substr($file,strlen($old));
-	            rename ($gCms->config['uploads_path'].'/images/catalog_src/'.$file,$gCms->config['uploads_path'].'/images/catalog_src/'.$newspec);
+	            rename ($gCms->config['uploads_path'].$this->getAssetPath('s').'/'.$file,$gCms->config['uploads_path'].$this->getAssetPath('s').'/'.$newspec);
 	        	}
 	    	}
 	    closedir($handle);
@@ -726,6 +726,35 @@ else
 			}
 	}
 
+
+	// type can be "s" - source image, "i" - processed image, or "f" - file
+	function getAssetPath($type="i", $default=false)
+	{
+		global $gCms;
+		$uploadbase = str_replace($gCms->config['uploads_path'],$gCms->config['root_path'],'');
+		if ($default)
+			{
+			switch ($type)
+				{
+				case 's':
+					return $uploadbase.'/images/catalog_src';
+				case 'i':
+					return $uploadbase.'/images/catalog';
+				case 'f':
+					return $uploadbase.'/catalogerfiles';
+				}
+			}
+			switch ($type)
+				{
+				case 's':
+					return $this->GetPreference('image_upload_path',$uploadbase.'/images/catalog_src');
+				case 'i':
+					return $this->GetPreference('image_proc_path',$uploadbase.'/images/catalog');
+				case 'f':
+					return $this->GetPreference('file_upload_path',$uploadbase.'/catalogerfiles');
+				}
+		
+	}
 
 }
 

@@ -10,10 +10,6 @@
         <p class="pageinput">{$input_item_image_count}</p>
 	</div>
 	<div class="pageoverflow">
-        <p class="pagetext">{$title_item_file_count}</p>
-        <p class="pageinput">{$input_item_file_count}</p>
-	</div>
-	<div class="pageoverflow">
         <p class="pagetext">{$title_show_only_existing_images}</p>
         <p class="pageinput">{$input_show_only_existing_images}</p>
 	</div>
@@ -32,6 +28,16 @@
 	<div class="pageoverflow">
         <p class="pagetext">{$title_item_image_size_catalog}</p>
         <p class="pageinput">{$input_item_image_size_catalog}</p>
+	</div>
+{$end_tab}
+{$start_file_tab}
+	<div class="pageoverflow">
+	    <p class="pagetext">{$title_item_file_count}</p>
+	    <p class="pageinput">{$input_item_file_count}</p>
+	</div>
+	<div class="pageoverflow">
+        <p class="pagetext">{$title_item_file_types}</p>
+        <p class="pageinput">{$input_item_file_types}</p>
 	</div>
 {$end_tab}
 {$start_category_image_tab}
@@ -76,11 +82,23 @@
         <p class="pageinput">{$input_show_missing_images}</p>
 	</div>
 {$end_tab}
-{$start_file_tab}
+{$start_path_tab}
 	<div class="pageoverflow">
-        <p class="pagetext">{$title_item_file_types}</p>
-        <p class="pageinput">{$input_item_file_types}</p>
+		{$path_help}
 	</div>
+	<div class="pageoverflow">
+        <p class="pagetext">{$title_image_upload_path}</p>
+        <p class="pageinput">{$input_image_upload_path}</p>
+	</div>
+	<div class="pageoverflow">
+        <p class="pagetext">{$title_image_proc_path}</p>
+        <p class="pageinput">{$input_image_proc_path}</p>
+	</div>
+	<div class="pageoverflow">
+        <p class="pagetext">{$title_file_upload_path}</p>
+        <p class="pageinput">{$input_file_upload_path}</p>
+	</div>
+
 {$end_tab}
 {$tab_footers}
 	<div class="pageoverflow">

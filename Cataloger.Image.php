@@ -1,6 +1,13 @@
 <?php
 	require_once(dirname(__FILE__).'/../../include.php');
 	
+	$catmod = new Cataloger();
+	if ($catmod == null)
+		{
+		echo "Error! Cannot access Cataloger module.";
+		exit;
+		}
+	
 	$spec = $_GET['i'];
 	$debug = isset($_GET['debug']);
 	$anticache = isset($_GET['ac']);
@@ -10,7 +17,8 @@
 		return returnMissing($config['root_url'], true, $debug);
 		}
 		
-	$sized = @stat($config['uploads_path'].'/images/catalog/'.$spec);
+	if ($debug) error_log("Checking on ".$config['uploads_path'].$catmod->getAssetPath('i').'/'.$spec);
+	$sized = @stat($config['uploads_path'].$catmod->getAssetPath('i').'/'.$spec);
 
 	$spec = substr($spec, 0, strrpos($spec,'.'));
 	$parts = explode('_',$spec);
@@ -25,7 +33,7 @@
 		{
 		$name .= $parts[$j].'_';
 		}
-	$srcSpec = $config['uploads_path'].'/images/catalog_src/'.$name;
+	$srcSpec = $config['uploads_path'].$catmod->getAssetPath('s').'/'.$name;
 	$srcSpec .= 'src_'.$imgno.'.jpg';
 	if ($debug)
 		{
@@ -40,16 +48,16 @@
 		}
 	if (!$sized || $sized['mtime'] < $orig['mtime'])
 		{
-		if ($debug) error_log("newer than existant, transforming");
+		if ($debug) error_log("newer than existent, transforming");
 		// we don't have a cached version we can use
-		$destSpec = $config['uploads_path'].'/images/catalog/'.$spec.'.jpg';
+		$destSpec = $config['uploads_path'].$catmod->getAssetPath('i').'/'.$spec.'.jpg';
 		// so we make one
 		imageTransform($srcSpec, $destSpec, $size, $config);
 		$newImage = true;
 		}
 
 	$dest = "Location: ".$config['uploads_url'].
-		'/images/catalog/'.$spec.'.jpg';
+		$catmod->getAssetPath('i').'/'.$spec.'.jpg';
 	if ($newImage || $anticache)
 		{
 		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");

@@ -390,7 +390,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 				{
 		$cres = copy($_FILES['image'.$i]['tmp_name'],
 		     dirname($config['uploads_path'].
-			     '/images/catalog_src/index.html') .
+			     $pf->getAssetPath('s').'/index.html') .
 		     '/'.$this->mAlias.'_src_'.$i.'.jpg');
 		  if (!$cres)
 			{

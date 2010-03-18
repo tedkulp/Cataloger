@@ -19,7 +19,9 @@ if (! $this->CheckAccess()) exit;
 		$this->SetPreference('category_items_per_page', isset($params['items_per_page'])?$params['items_per_page']:'10');
 		$this->SetPreference('show_extant', isset($params['show_extant'])?$params['show_extant']:'1');
 		$this->SetPreference('flush_cats', isset($params['flush_cats'])?$params['flush_cats']:'0');
-		
+		$this->SetPreference('image_upload_path',isset($params['image_upload_path'])?$params['image_upload_path']:$this->getAssetPath('s',true));
+		$this->SetPreference('file_upload_path',isset($params['file_upload_path'])?$params['file_upload_path']:$this->getAssetPath('f',true));
+		$this->SetPreference('image_proc_path',isset($params['image_proc_path'])?$params['image_proc_path']:$this->getAssetPath('i',true));
 		
 	
 	$this->SetPreference('show_missing',

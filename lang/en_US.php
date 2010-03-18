@@ -25,12 +25,13 @@ $lang['listtempl']='Manage Sub-templates';
 $lang['title_item_tab']='Item Attributes';
 $lang['title_category_tab']='Category Attributes';
 $lang['title_printable_tab']='Printable Catalog Attributes';
-$lang['title_item_image_tab']='Item Image Sizes';
+$lang['title_item_image_tab']='Item Image Settings';
 $lang['title_category_image_tab']='Category Page Settings';
 $lang['title_printable_tab']='Printable Catalog Settings';
+$lang['title_path_tab']='Paths';
 $lang['title_is_textfield']='Text Area?';
 $lang['title_delete']='Delete?';
-$lang['title_file_tab']='Other File Settings';
+$lang['title_file_tab']='Item File Settings';
 $lang['title_image_tab']='Other Image Settings';
 $lang['title_item_template_vars'] = 'Item Template Variables';
 $lang['title_cat_template_vars'] = 'Category Template Variables';
@@ -42,6 +43,11 @@ $lang['title_show_only_existing_images_help']='This will only put image referenc
 $lang['title_flush_cats']='Flush category page buffers';
 $lang['title_flush_cats_help']='If you have a huge number of items displayed<br />in a category, some PHP installs will fail to display the page<br />correctly. Check this box to solve this problem (test for side effects).';
 $lang['title_item_file_types']='Permitted file types';
+$lang['title_image_upload_path']='Location for uploaded image files';
+$lang['title_file_upload_path']='Location for other uploaded item files';
+$lang['title_image_proc_path']='Location for processed images (thumbnails, scaled images, etc)';
+$lang['path_help']='You can specify where Cataloger stores files. These paths are relative to the <i>uploads_path</i> defined in your config.php<br />NOTE: If you change these paths after files or images have been uploaded, Cataloger will lose the already-uploaded assets (they will still be there, but Cataloger will not know about them, so you will need to re-upload them for Cataloger to figure it out).';
+
 $lang['cataloger']='Cataloger';
 
 $lang['title_attr_order_by']='Order';

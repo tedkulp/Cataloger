@@ -45,8 +45,8 @@
 			foreach ($fileArray as $i=>$v)
 			    {
 					$this->smarty->assign('file_'.($i+1).'_url',
-						$gCms->config['uploads_url'].'/catalogerfiles/'.$params['alias'].'/'.$fileArray[$i]);
-					array_push($fileUrlArray,$gCms->config['uploads_url'].'/catalogerfiles/'.$params['alias'].'/'.$fileArray[$i]);
+						$gCms->config['uploads_url'].$this->getAssetPath('f').'/'.$params['alias'].'/'.$fileArray[$i]);
+					array_push($fileUrlArray,$gCms->config['uploads_url'].$this->getAssetPath('f').'/'.$params['alias'].'/'.$fileArray[$i]);
 					$this->smarty->assign('file_'.($i+1).'_name',
 						$fileArray[$i]);
 					$this->smarty->assign('file_'.($i+1).'_ext',

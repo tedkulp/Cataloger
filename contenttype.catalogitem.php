@@ -425,7 +425,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 			{
 		$cres = copy($_FILES['image'.$i]['tmp_name'],
 		     dirname($config['uploads_path'].
-			     '/images/catalog_src/index.html') .
+			     $pf->getAssetPath('s').'/index.html') .
 		     '/'.$this->mAlias.'_src_'.$i.'.jpg');
 		  if (!$cres)
 			{
@@ -449,7 +449,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	$types = explode(',',$typelist);
 	if ($filecount > 0)
 		{
-		$dirspec = $config['uploads_path'].'/catalogerfiles/'.$this->mAlias;
+		$dirspec = $config['uploads_path'].$pf->getAssetPath('f').'/'.$this->mAlias;
 		if (!is_dir($dirspec))
            	{
            	mkdir($dirspec);
@@ -484,7 +484,7 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
 	  	if (substr($thisParam,0,8) == 'rm_file_')
 	  		{
 			$pSpec = preg_replace('/\.\.|\//','',$thisParamVal);
-			$spec = $config['uploads_path'].'/catalogerfiles/'.$this->mAlias.'/'.$pSpec;
+			$spec = $config['uploads_path'].$pf->getAssetPath('f').'/'.$this->mAlias.'/'.$pSpec;
 	  		unlink($spec);
 	  		}
 	  }

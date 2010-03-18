@@ -10,10 +10,11 @@ if (! $this->CheckAccess()) exit;
 
         $this->smarty->assign('tab_headers',$this->StartTabHeaders().
         $this->SetTabHeader('itemimage',$this->Lang('title_item_image_tab')).
+        $this->SetTabHeader('file',$this->Lang('title_file_tab')).
         $this->SetTabHeader('categoryimage',$this->Lang('title_category_image_tab')).
         $this->SetTabHeader('printable',$this->Lang('title_printable_tab')).
         $this->SetTabHeader('image',$this->Lang('title_image_tab')).
-        $this->SetTabHeader('file',$this->Lang('title_file_tab')).
+        $this->SetTabHeader('path',$this->Lang('title_path_tab')).
         $this->EndTabHeaders().$this->StartTabContent());
         $this->smarty->assign('end_tab',$this->EndTab());
         $this->smarty->assign('tab_footers',$this->EndTabContent());
@@ -21,6 +22,7 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('start_category_image_tab',$this->StartTab('categoryimage'));
         $this->smarty->assign('start_printable_tab',$this->StartTab('printable'));
         $this->smarty->assign('start_file_tab',$this->StartTab('file'));
+        $this->smarty->assign('start_path_tab',$this->StartTab('path'));
 	$this->smarty->assign('start_image_tab',$this->StartTab('image'));
 
         $this->smarty->assign('title_item_image_count', $this->Lang('title_item_image_count'));
@@ -40,6 +42,12 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('title_item_image_size_catalog', $this->Lang('title_item_image_size_catalog'));
         $this->smarty->assign('title_category_recurse',$this->Lang('title_category_recurse'));
         $this->smarty->assign('title_printable_sort_order',$this->Lang('title_printable_sort_order'));
+
+        $this->smarty->assign('title_image_upload_path',$this->Lang('title_image_upload_path'));
+        $this->smarty->assign('title_file_upload_path',$this->Lang('title_file_upload_path'));
+        $this->smarty->assign('title_image_proc_path',$this->Lang('title_image_proc_path'));
+        $this->smarty->assign('path_help',$this->Lang('path_help'));
+
         $number = array();
         for ($i=0;$i<16;$i++)
         	{
@@ -49,6 +57,11 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('input_category_image_count', $this->CreateInputDropdown($id, 'category_image_count', $number, -1,  $this->GetPreference('category_image_count', '1')));
         $this->smarty->assign('input_item_file_count', $this->CreateInputDropdown($id, 'item_file_count', $number, -1,  $this->GetPreference('item_file_count', '0')));
         $this->smarty->assign('input_item_file_types', $this->CreateInputText($id, 'item_file_types',$this->GetPreference('item_file_types', 'pdf,swf,flv,doc,odt,ods,xls')));
+
+		
+       $this->smarty->assign('input_image_upload_path', $this->CreateInputText($id, 'image_upload_path',$this->GetPreference('image_upload_path', $this->getAssetPath('s',true))));
+       $this->smarty->assign('input_image_proc_path', $this->CreateInputText($id, 'image_proc_path',$this->GetPreference('image_proc_path', $this->getAssetPath('i',true))));
+       $this->smarty->assign('input_file_upload_path', $this->CreateInputText($id, 'file_upload_path',$this->GetPreference('file_upload_path', $this->getAssetPath('f',true))));
 
 
 		$recurse =  $this->GetPreference('category_recurse', 'mixed_one'); 
