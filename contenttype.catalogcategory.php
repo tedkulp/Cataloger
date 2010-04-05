@@ -31,7 +31,7 @@
 class CatalogCategory extends CMSModuleContentType
 {
   var $attrs;
-  var $validation;
+  var $validation=FALSE;
 
   function ModuleName()
   {

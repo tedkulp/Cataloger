@@ -31,7 +31,7 @@
 class CatalogItem extends CMSModuleContentType
 {
   var $attrs;
-  var $validation;
+  var $validation=FALSE;
 
   function CatalogItem()
   {
