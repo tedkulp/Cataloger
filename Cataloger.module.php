@@ -75,7 +75,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.8b2';
+    return '0.8.0';
   }
 
   function MinimumCMSVersion()
@@ -284,7 +284,8 @@ class Cataloger extends CMSModule
 
   function GetChangeLog()
   {
-    return $this->Lang('changelog');
+    return $this->ProcessTemplate("changelog.tpl");
+    //$this->Lang('changelog');
   }
 
 
