@@ -66,11 +66,8 @@ class CatalogPrintable extends CMSModuleContentType
 
   function getUserAttributes()
   {
-	global $gCms;
-	Cataloger::getUserAttributes('catalog_print_attrs');
-	$vars = &$gCms->variables;
+	$vars = Cataloger::getUserAttributes('catalog_print_attrs');
 	$this->attrs = &$vars['catalog_print_attrs'];
-
   }
 
   function &getAttrs()
@@ -78,7 +75,6 @@ class CatalogPrintable extends CMSModuleContentType
       $this->getUserAttributes();
       return $this->attrs;
     }
-
 
   function GetCreationDate()
   {

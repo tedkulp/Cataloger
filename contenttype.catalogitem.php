@@ -36,7 +36,8 @@ class CatalogItem extends CMSModuleContentType
   function CatalogItem()
   {
 	$this->ContentBase();
-  }
+	$this->mCachable = false;
+	}
 
   function ModuleName()
   {
@@ -68,9 +69,9 @@ class CatalogItem extends CMSModuleContentType
 
   function getUserAttributes()
   {
-	global $gCms;
-	Cataloger::getUserAttributes('catalog_attrs');
-    $vars = &$gCms->variables;
+	//global $gCms;
+	$vars = Cataloger::getUserAttributes('catalog_attrs');
+  //$vars = &$gCms->variables;
 	$this->attrs = &$vars['catalog_attrs'];
   }
     

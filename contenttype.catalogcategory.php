@@ -33,6 +33,12 @@ class CatalogCategory extends CMSModuleContentType
   var $attrs;
   var $validation=FALSE;
 
+	function CatalogCategory()
+	{
+		$this->ContentBase();
+		$this->mCachable = false;
+	}
+
   function ModuleName()
   {
     return 'Cataloger';
@@ -66,12 +72,10 @@ class CatalogCategory extends CMSModuleContentType
 
   function getUserAttributes()
   {
-	global $gCms;
-	Cataloger::getUserAttributes('catalog_cat_attrs');
-	$vars = &$gCms->variables;
+	$vars = Cataloger::getUserAttributes('catalog_cat_attrs');
 	$this->attrs = &$vars['catalog_cat_attrs'];
-
   }
+
 
   function &getAttrs()
     {

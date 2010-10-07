@@ -319,11 +319,11 @@ class Cataloger extends CMSModule
   function getUserAttributes($global_ref='catalog_attrs')
   {
     global $gCms;
-    $vars = &$gCms->variables;
+    //$vars = &$gCms->variables;
     $db = $gCms->GetDb();
-    if (! isset($vars[$global_ref]) || ! is_array($vars[$global_ref]))
+    if (! isset($this->attrs[$global_ref]) || ! is_array($this->attrs[$global_ref]))
       {
-	$vars[$global_ref] = array();
+	$this->attrs[$global_ref] = array();
 	$query = "SELECT attribute, alias, defaultval, length, is_textarea FROM ".
 	  cms_db_prefix()."module_catalog_attr WHERE type_id=? ORDER BY order_by ASC";
 	$type_id = 1;
@@ -345,25 +345,11 @@ class Cataloger extends CMSModule
 		$thisAttr->length = $row['length'];
 		$thisAttr->default = $row['defaultval'];
 		$thisAttr->safe = strtolower(preg_replace('/\W/','',$row['attribute']));
-	    array_push($vars[$global_ref],$thisAttr);
+	    array_push($this->attrs[$global_ref],$thisAttr);
 		}
       }
-  }
-
-
-/*
-if ($as_array)
-	{
-	$thisAttr = $row;
-	$thisAttr['name'] = $row['attribute'];
-	$thisAttr['is_text'] = $row['is_textarea'];
-	$thisAttr['default'] = $row['defaultval'];
-	$thisAttr['safe'] = strtolower(preg_replace('/\W/','',$row['attribute']));
-   	array_push($ret,$thisAttr);
-	}
-else
-	{
-	*/
+  return $this->attrs;
+}
 
   function &getCatalogItem($alias)
 	{
