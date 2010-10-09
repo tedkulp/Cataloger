@@ -66,7 +66,8 @@ class CatalogPrintable extends CMSModuleContentType
 
   function getUserAttributes()
   {
-	$vars = Cataloger::getUserAttributes('catalog_print_attrs');
+	$module = $this->GetModuleInstance('Cataloger');
+	$vars = $module->getUserAttributes('catalog_print_attrs');
 	$this->attrs = &$vars['catalog_print_attrs'];
   }
 
@@ -93,8 +94,8 @@ class CatalogPrintable extends CMSModuleContentType
 
   function EditAsArray($adding = false, $tab = 0, $showadmin=false)
   {
-    global $gCms;
-    $config = &$gCms->config;
+		$gCms = cmsms();
+    $config = $gCms->GetConfig();
     $db = $gCms->GetDb();
     $wysiwyg = (strlen(get_preference(get_userid(), 'wysiwyg')) > 0);
     $ret = array();
@@ -126,17 +127,12 @@ class CatalogPrintable extends CMSModuleContentType
 	  {
 	    $subTemplates[$row['title']]=$row['id'];
 	  }		
+   $ret[] = $this->display_single_element('title', $adding);
+   $ret[] = $this->display_single_element('menutext', $adding);
+   $ret[] = $this->display_single_element('parent', $adding);
 
-	array_push($ret,array(lang('title'),'<input type="text" name="title" value="'.htmlspecialchars($this->mName).'" />'));
-	array_push($ret,array(lang('menutext'),'<input type="text" name="menutext" value="'.htmlspecialchars($this->mMenuText,ENT_QUOTES).'" />'));
-	if (!($config['auto_alias_content'] == true && $adding))
-	  {
-	    array_push($ret,array(lang('pagealias'),'<input type="text" name="alias" value="'.htmlspecialchars($this->mAlias,ENT_QUOTES).'" />'));
-	  }
-	$contentops = $gCms->GetContentOperations();
-	array_push($ret,array(lang('parent').'/'.$this->Lang('category_page'),$contentops->CreateHierarchyDropdown($this->mId, $this->mParentId)));
 	array_push($ret,array($this->Lang('namepage').' '.lang('template'),$templateops->TemplateDropdown('template_id', $this->mTemplateId)));
-	$module =& $this->GetModuleInstance();
+	$module = $this->GetModuleInstance();
 	
 	array_push($ret,array($this->Lang('Sub').' '.lang('template'),$module->CreateInputDropdown('', 'sub_template', $subTemplates, -1, $this->GetPropertyValue('sub_template'))));
         
@@ -180,7 +176,7 @@ class CatalogPrintable extends CMSModuleContentType
 	    $so = get_site_preference('Cataloger_mapi_pref_printable_sort_order', 'natural');
 	  }
 
-	$module =& $this->GetModuleInstance();
+	$module = $this->GetModuleInstance();
 	array_push($ret,array($this->Lang('title_global_item_sort_order2'),$module->CreateInputDropdown('', 'sort_order',
 									   array($this->Lang('natural_order')=>'natural', $this->Lang('alpha_order')=>'alpha'), -1, $so)));
 
@@ -202,25 +198,31 @@ class CatalogPrintable extends CMSModuleContentType
       }
     if ($tab == 2)
       {        
-	array_push($ret,array(lang('active'),'<input type="checkbox" name="active"'.($this->mActive?' checked="checked"':'').' />'));
-	array_push($ret,array(lang('showinmenu'),'<input type="checkbox" name="showinmenu"'.($this->mShowInMenu?' checked="checked"':'').' />'));
-	if (!$adding && $showadmin)
-	  {
-	    $userops = $gCms->GetUserOperations();
-	    array_push($ret, array($this->lang('Owner'),@$userops->GenerateDropdown($this->Owner())));
-	  }
-	if ($adding || $showadmin)
-	  {
-	    array_push($ret, $this->ShowAdditionalEditors());
-	  }
+        global $CMS_VERSION;
+        $ret[] = $this->display_single_element('active', $adding);
+        $ret[] = $this->display_single_element('showinmenu', $adding);
+        $ret[] = $this->display_single_element('secure', $adding);
+        $ret[] = $this->display_single_element('alias', $adding);
+
+        if (version_compare($CMS_VERSION, '1.9-beta1') > -1)
+           {
+           $ret[] = $this->display_single_element('page_url', $adding);
+           }
+
+        $ret[] = array(lang('metadata').':', create_textarea(false, $this->Metadata(), 'metadata', 'pagesmalltextarea', 'metadata', '', '', '80', '6'));
+        $ret[] = $this->display_single_element('titleattribute', $adding);
+        $ret[] = $this->display_single_element('tabindex', $adding);
+        $ret[] = $this->display_single_element('accesskey', $adding);
+        $ret[] = $this->display_single_element('owner', $adding);
+        $ret[] = $this->display_single_element('additionaleditors', $adding);
       }
     return $ret;
   }
 
   function FillParams(&$params)
   {
-    global $gCms;
-    $config = &$gCms->config;
+    $gCms = cmsms();
+    $config = $gCms->GetConfig();
     $db = $gCms->GetDb();
     $this->mCachable = false;
 
@@ -316,8 +318,8 @@ class CatalogPrintable extends CMSModuleContentType
 
   function PopulateParams(&$params)
   {
-    global $gCms;
-    $config = &$gCms->config;
+    $gCms = cmsms();
+    $config = $gCms->GetConfig();
     $db = $gCms->GetDb();
 
     $parameters = array('sub_template', 'sort_order','fieldlist');
@@ -372,12 +374,9 @@ class CatalogPrintable extends CMSModuleContentType
 
   function Show()
   {
-    global $gCms;
-
     $params = array();
 
     $this->PopulateParams($params);
-
     $pf = new Cataloger();
 
     @ob_start();

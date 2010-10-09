@@ -112,8 +112,7 @@ class Cataloger extends CMSModule
 
   function getTemplateFromAlias($alias)
   {
-    global $gCms;
-    $db = $gCms->GetDb();
+    $db = $this->GetDb();
     $dbresult = $db->Execute('SELECT id from '.cms_db_prefix().
 			     'module_catalog_template where title=?',array($alias));
     if ($dbresult !== false && $row = $dbresult->FetchRow())
@@ -125,8 +124,7 @@ class Cataloger extends CMSModule
 
   function importSampleTemplates($onlytype='all')
   {
-    global $gCms;
-    $db = $gCms->GetDb();
+    $db = $this->GetDb();
     $dir=opendir(dirname(__FILE__).'/includes');
     $temps = array();
     while($filespec=readdir($dir))
@@ -221,24 +219,25 @@ class Cataloger extends CMSModule
 
   function initAdminNav($id, &$params, $returnid)
   {
-    global $gCms;
-    $this->smarty->assign('innernav',
+    $config = $this->GetConfig();
+		$vars = $this->GetVariables();
+   $this->smarty->assign('innernav',
 			  $this->CreateLink($id, 'defaultadmin', $returnid,
-					    $gCms->variables['admintheme']->DisplayImage('icons/topfiles/template.gif',
+					    $vars['admintheme']->DisplayImage('icons/topfiles/template.gif',
 											 $this->Lang('listtempl'),'','','systemicon'), array()) .
 			  $this->CreateLink($id, 'defaultadmin', $returnid, $this->Lang('listtempl'), array()) .
 			  ' : ' .
 			  $this->CreateLink($id, 'adminattrs', $returnid,
-					    $gCms->variables['admintheme']->DisplayImage('icons/topfiles/images.gif',
+					    $vars['admintheme']->DisplayImage('icons/topfiles/images.gif',
 											 $this->Lang('manageattrs'),'','','systemicon'), array()) .
 			  $this->CreateLink($id, 'adminattrs', $returnid, $this->Lang('manageattrs'), array()) .
 			  ' : ' .
 			  $this->CreateLink($id, 'globalops', $returnid,
-					    '<img class="systemicon" alt="'.$this->Lang('globalops').'" title="'.$this->Lang('globalops').'" src="'.$gCms->config['root_url'].'/modules/Cataloger/images/global.gif" />') .
+					    '<img class="systemicon" alt="'.$this->Lang('globalops').'" title="'.$this->Lang('globalops').'" src="'.$config['root_url'].'/modules/Cataloger/images/global.gif" />') .
 			  $this->CreateLink($id, 'globalops', $returnid, $this->Lang('globalops'), array()) .
 			  ' : ' .
 			  $this->CreateLink($id, 'adminprefs', $returnid,
-					    $gCms->variables['admintheme']->DisplayImage('icons/topfiles/siteprefs.gif',
+					    $vars['admintheme']->DisplayImage('icons/topfiles/siteprefs.gif',
 											 $this->Lang('manageprefs'),'','','systemicon'), array()) .
 			  $this->CreateLink($id, 'adminprefs', $returnid, $this->Lang('manageprefs'), array()));
   }
@@ -291,7 +290,7 @@ class Cataloger extends CMSModule
 
   function & getSubContent($startNodeId)
     {
-      global $gCms;
+      $gCms=cmsms();
       $content = array();
       $hm = $gCms->GetHierarchyManager();
       /* Works with new addition to Tree, but getFlatList is default
@@ -305,7 +304,7 @@ class Cataloger extends CMSModule
 
   function & getAllContent()
     {
-      global $gCms;
+      $gCms=cmsms();
       $content = array();
       $hm = $gCms->GetHierarchyManager();
 		
@@ -318,9 +317,7 @@ class Cataloger extends CMSModule
 
   function getUserAttributes($global_ref='catalog_attrs')
   {
-    global $gCms;
-    //$vars = &$gCms->variables;
-    $db = $gCms->GetDb();
+    $db = cmsms()->GetDb();
     if (! isset($this->attrs[$global_ref]) || ! is_array($this->attrs[$global_ref]))
       {
 	$this->attrs[$global_ref] = array();
@@ -353,28 +350,68 @@ class Cataloger extends CMSModule
 
   function &getCatalogItem($alias)
 	{
-	    global $gCms;
+	    $gCms=cmsms();
 
 	    $hm = $gCms->GetHierarchyManager();
-   	    $pageNode = $hm->sureGetNodeByAlias($alias);
+   	  $pageNode = $hm->sureGetNodeByAlias($alias);
    		$page = $pageNode->GetContent();
-		$node = $this->itemToArray($page, '');
+		  $node = $this->itemToArray($page, '');
+   	  return $node;
+	}
 
-   	    return $node;
+  function &getCatalogItemById($id)
+	{
+	    $gCms=cmsms();
+
+	    $hm = $gCms->GetHierarchyManager();
+   	  $pageNode = $hm->sureGetNodeById($id);
+   		$page = $pageNode->GetContent();
+		  $node = $this->itemToArray($page, '');
+   	  return $node;
 	}
 
 
   function smartyBasics()
 	{
-	global $gCms;
-	$this->smarty->assign('root_url',$gCms->config['root_url']);
-	$this->smarty->assign('image_root',$gCms->config['root_url'].
+	$config = $this->GetConfig();
+	$this->smarty->assign('root_url',$config['root_url']);
+	$this->smarty->assign('image_root',$config['root_url'].
 			'/modules/Cataloger/Cataloger.Image.php');
+	}
+
+
+	function getCatalogItemsIDList(&$params)
+	{
+		$gCms = cmsms();
+		$db = $gCms->GetDb();
+		$ret = array();
+		if (!isset($params['alias']) || $params['alias']=='/')
+				{
+				$dbresult = $db->Execute('SELECT content_id from '.cms_db_prefix().
+				     'content where type=\'catalogitem\'');
+				}
+		else
+				{
+				$base_hierarchy = $db->GetOne('SELECT hierarchy from '.cms_db_prefix().
+				     'content where content_alias=?',array($params['alias']));
+				if (! $base_hierarchy)
+					{
+					return $ret;
+					}
+					$dbresult = $db->Execute('SELECT content_id from '.cms_db_prefix().
+					     'content where type=\'catalogitem\' and hierarchy LIKE \''.$base_hierarchy.'%\'');
+				}
+	  while ($dbresult !== false && $row = $dbresult->FetchRow())
+	      {
+				array_push($ret,$row['content_id']);
+	      }
+		return $ret;
 	}
 
   function getCatalogItemsList(&$params)
   {
-    global $gCms;
+    $gCms=cmsms();
+		$vars = $this->GetVariables();
 
     $hm = $gCms->GetHierarchyManager();
     $lastcat = "";
@@ -392,7 +429,7 @@ class Cataloger extends CMSModule
       {
    	if (isset($params['content_id']))
    	  {
-   	    $curPageID = $gCms->variables[$params['content_id']];
+   	    $curPageID = $vars[$params['content_id']];
    	    $curPageNode = $hm->sureGetNodeById($curPageID);
    	    $curPage = $curPageNode->GetContent();
    	  }
@@ -539,7 +576,7 @@ class Cataloger extends CMSModule
 
   function imageSpec($alias, $type, $image_number, $size, $anticache=true, $forceshowmissing=false)
   {
-    global $gCms;
+    $config = $this->GetConfig();
   	if ($this->showMissing == '')
   		{
   		$this->showMissing = $this->GetPreference('show_missing','1');
@@ -554,7 +591,7 @@ class Cataloger extends CMSModule
 			}
   		}
 
-	return $gCms->config['root_url'].
+	return $config['root_url'].
 			'/modules/Cataloger/Cataloger.Image.php?i='.
 			$alias.'_'.$type.'_'.$image_number.
 			'_'.$size.
@@ -564,7 +601,7 @@ class Cataloger extends CMSModule
 
   function srcImageSpec($alias, $image_number)
   {
-  	global $gCms;
+    $config = $this->GetConfig();
   	if ($this->showMissing == '')
   		{
   		$this->showMissing = $this->GetPreference('show_missing','1');
@@ -574,26 +611,26 @@ class Cataloger extends CMSModule
 		{
 		if ($this->showMissing != '1')
 			{
-			return $gCms->config['root_url'].
+			return $config['root_url'].
 				'/modules/Cataloger/images/trans.gif';
 			}
 		else
 			{
-			return $gCms->config['root_url'].
+			return $config['root_url'].
 				'/modules/Cataloger/images/no-image.gif';
 			}
 		}
 	else
 		{
-		return $gCms->config['uploads_url'].$this->getAssetPath('s').'/'.$alias .
+		return $config['uploads_url'].$this->getAssetPath('s').'/'.$alias .
 			'_src_'.$image_number.'.jpg';
 		}
   }
 
   function srcExists($alias, $image_number)
   {
-  global $gCms;
-	$srcSpec = $gCms->config['uploads_path'].$this->getAssetPath('s').'/'.$alias .
+    $config = $this->GetConfig();
+	$srcSpec = $config['uploads_path'].$this->getAssetPath('s').'/'.$alias .
 			'_src_'.$image_number.'.jpg';
 	return file_exists($srcSpec);
   }
@@ -601,8 +638,9 @@ class Cataloger extends CMSModule
 
   function getFiles($alias)
   {
-	global $gCms;
-	$dirspec = $gCms->config['uploads_path'].$this->getAssetPath('f').'/'.$alias;
+	  $config = $this->GetConfig();
+  
+	$dirspec = $config['uploads_path'].$this->getAssetPath('f').'/'.$alias;
 	$files = array();
 	$types = array();
 	if (is_dir($dirspec))
@@ -635,8 +673,8 @@ class Cataloger extends CMSModule
   
   function purgeScaledImages($alias, $imageNumber)
   {
-  	global $gCms;
-  	$srcDir = $gCms->config['uploads_path'].$this->getAssetPath('f').'/';
+  	$config = $this->GetConfig();
+  	$srcDir = $config['uploads_path'].$this->getAssetPath('f').'/';
   	$toDel = array();
    if ($dh = opendir($srcDir))
    		{
@@ -658,8 +696,8 @@ class Cataloger extends CMSModule
 
   function purgeSourceImage($alias, $imageNumber)
   {
-  	global $gCms;
-	$srcSpec = $gCms->config['uploads_path'].$this->getAssetPath('s').'/'.$alias .
+  	$config = $this->GetConfig();
+	$srcSpec = $config['uploads_path'].$this->getAssetPath('s').'/'.$alias .
 			'_src_'.$imageNumber.'.jpg';
 	unlink($srcSpec);
   }
@@ -667,15 +705,15 @@ class Cataloger extends CMSModule
 
   function renameImages($old, $newAlias)
   {
-  	global $gCms;
-	if ($handle = opendir($gCms->config['uploads_path'].$this->getAssetPath('s').'/'))
+  	$config = $this->GetConfig();
+	if ($handle = opendir($config['uploads_path'].$this->getAssetPath('s').'/'))
 		{
 	    while (false !== ($file = readdir($handle)))
 			{
 	        if (substr($file,0,strlen($old)) == $old)
 				{
 				$newspec = $newAlias . substr($file,strlen($old));
-	            rename ($gCms->config['uploads_path'].$this->getAssetPath('s').'/'.$file,$gCms->config['uploads_path'].$this->getAssetPath('s').'/'.$newspec);
+	            rename ($config['uploads_path'].$this->getAssetPath('s').'/'.$file,$config['uploads_path'].$this->getAssetPath('s').'/'.$newspec);
 	        	}
 	    	}
 	    closedir($handle);
@@ -717,8 +755,8 @@ class Cataloger extends CMSModule
 	// type can be "s" - source image, "i" - processed image, or "f" - file
 	function getAssetPath($type="i", $default=false)
 	{
-		global $gCms;
-		$uploadbase = str_replace($gCms->config['uploads_path'],$gCms->config['root_path'],'');
+		$config = $this->GetConfig();
+		$uploadbase = str_replace($config['uploads_path'],$config['root_path'],'');
 		if ($default)
 			{
 			switch ($type)
