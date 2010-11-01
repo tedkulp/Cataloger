@@ -137,37 +137,61 @@ class CatalogPrintable extends CMSModuleContentType
 	array_push($ret,array($this->Lang('Sub').' '.lang('template'),$module->CreateInputDropdown('', 'sub_template', $subTemplates, -1, $this->GetPropertyValue('sub_template'))));
         
 	$this->getUserAttributes();
-	foreach ($this->attrs as $thisAttr)
-	  {
-            $v = $this->GetPropertyValue($thisAttr->attr);
-			if (empty($v) && !empty($thisAttr->default))
+    foreach ($this->attrs as $thisAttr)
+       {
+       $v = $this->GetPropertyValue($thisAttr->attr);
+       
+       if (empty($v) && !empty($thisAttr->default))
+          {
+          $v = $thisAttr->default;
+          }
+       
+		if ($thisAttr->field_type == 'select')
+		{
+			$select_values = array();
+			if (isset($thisAttr->select_values) && $thisAttr->select_values != '')
+			{
+				$select_values = array_map('trim', explode(',', htmlspecialchars($thisAttr->select_values, ENT_QUOTES)));
+			}
+			$to_ret = '<select type="dropdown" name="' . $thisAttr->safe . '">';
+			foreach ($select_values as $one_val)
+			{
+				$to_ret .= '<option value="' . $one_val . '"';
+				if (htmlspecialchars($v, ENT_QUOTES) == $one_val)
 				{
-				$v = $thisAttr->default;
+					$to_ret .= ' selected="selected"';
 				}
-			if ($thisAttr->is_text)
-				{
-				$ret[] = array($thisAttr->attr,
-					create_textarea($wysiwyg, $v, $thisAttr->safe, '', $thisAttr->attr, '', $stylesheet, 80, 10));	
-				}
-			else
-				{
-				$l = $thisAttr->length;
-				if (empty($l))
-					{
-					$l = 25;
-					$m = 1024;
-					}
-				else
-					{
-					$m = $l;
-					}
-	    		$ret[] = array($thisAttr->attr,
-					'<input type="text" name="'.$thisAttr->safe.'" value="'.
-			   		htmlspecialchars($v,ENT_QUOTES).'" size="'.$l.'" maxlength="'.$m.'" />');
-				}
-	  }
+				$to_ret .= '>' . $one_val . '</option>';
+			}
+			$to_ret .= '</select>';
+			$ret[] = array($thisAttr->attr, $to_ret);
+		}
+		else
+		{
+           if ($thisAttr->is_text)
+              {
+              $ret[] = array($thisAttr->attr, create_textarea($wysiwyg, $v, $thisAttr->safe, '', $thisAttr->attr, '', $stylesheet, 80, 10));
+              }
+           else
+              {
+              $l = $thisAttr->length;
 
-      }
+              if (empty($l))
+                 {
+                 $l = 25;
+                 $m = 1024;
+                 }
+              else
+                 {
+                 $m = $l;
+                 }
+
+              $ret[] = array($thisAttr->attr, '<input type="text" name="'.$thisAttr->safe.'" value="'.
+			   		htmlspecialchars($v,ENT_QUOTES).'" size="'.$l.'" maxlength="'.$m.'" />');
+              }
+           }
+		}
+    }
     if ($tab == 1)
       {
 	$so = $this->GetPropertyValue('sort_order');
