@@ -780,6 +780,11 @@ class Cataloger extends CMSModule
 				}
 		
 	}
+	
+	function getFieldTypes()
+	{
+		return array('text' => $this->Lang('text'), 'select' => $this->Lang('dropdown'));
+	}
 
 }
 

@@ -9,7 +9,7 @@ if (! $this->CheckAccess()) exit;
 		$this->smarty->assign('submit', $this->CreateInputSubmit($id, 'submit', 'Submit'));
 
         $attributes = array();
-        $query = "SELECT id, attribute, alias, defaultval, type_id, length, is_textarea, order_by FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY order_by ASC";
+        $query = "SELECT id, attribute, alias, defaultval, type_id, length, is_textarea, order_by, field_type, select_values FROM ".cms_db_prefix(). "module_catalog_attr ORDER BY order_by ASC";
         $dbresult = $db->Execute($query);
 		$countbytype = array();
 		$countbytype[1]=0;
@@ -30,6 +30,9 @@ if (! $this->CheckAccess()) exit;
            $onerow->type = $row['type_id'];
            $onerow->istext = $this->CreateInputCheckbox($id, 'istext_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
 				1, $row['is_textarea']);
+		   $onerow->field_type = $this->CreateInputDropdown($id, 'field_type_'.$row['type_id'].'_'.$countbytype[$row['type_id']], array_flip($this->getFieldTypes()), -1, $row['field_type']);
+		   $onerow->select_values = $this->CreateInputText($id, 'select_values_'.$row['type_id'].'_'.$countbytype[$row['type_id']],
+					$row['select_values'], 25, 255);
 
 		   $onerow->order_by = $row['order_by'];
 		   $onerow->cbt = $countbytype[$row['type_id']];
@@ -49,6 +52,8 @@ if (! $this->CheckAccess()) exit;
 	            $onerow->aliasinput = $this->CreateInputText($id, 'alias_'.$j.'_'.$countbytype[$j],'', 25, 255);
 	            $onerow->defaultinput = $this->CreateInputText($id, 'default_'.$j.'_'.$countbytype[$j],'', 25, 1024);
 	            $onerow->leninput = $this->CreateInputText($id, 'len_'.$j.'_'.$countbytype[$j],25, 4, 4);
+				$onerow->field_type = $this->CreateInputDropdown($id, 'field_type_'.$j.'_'.$countbytype[$j], array_flip($this->getFieldTypes()), -1, $row['field_type']);
+				$onerow->select_values = $this->CreateInputText($id, 'select_values_'.$j.'_'.$countbytype[$j], '', 25, 255);
 	           	$onerow->delete = '';
 				$onerow->hidden = '';
            		$onerow->type = $j;
@@ -102,6 +107,8 @@ if (! $this->CheckAccess()) exit;
         $this->smarty->assign('title_catalog_attributes_help', $this->Lang('title_catalog_attributes_help'));
         $this->smarty->assign('title_category_attributes_help', $this->Lang('title_category_attributes_help'));
         $this->smarty->assign('title_is_textfield', $this->Lang('title_is_textfield'));
+		$this->smarty->assign('title_select_values', $this->Lang('title_select_values'));
+		$this->smarty->assign('title_field_type', $this->Lang('title_field_type'));
         $this->smarty->assign('title_delete', $this->Lang('title_delete'));
         $this->smarty->assign('category', $this->Lang('manageattrs'));
 

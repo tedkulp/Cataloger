@@ -22,6 +22,8 @@ $lang['areyousure']='Are you sure you want to delete this %s?';
 $lang['uniquecode']='Unique Code';
 $lang['templatelist']='Sub-templates';
 $lang['listtempl']='Manage Sub-templates';
+$lang['title_field_type'] = 'Field Type';
+$lang['title_select_values'] = 'Select Values*';
 $lang['title_item_tab']='Item Attributes';
 $lang['title_category_tab']='Category Attributes';
 $lang['title_printable_tab']='Printable Catalog Attributes';
@@ -29,7 +31,7 @@ $lang['title_item_image_tab']='Item Image Settings';
 $lang['title_category_image_tab']='Category Page Settings';
 $lang['title_printable_tab']='Printable Catalog Settings';
 $lang['title_path_tab']='Paths';
-$lang['title_is_textfield']='Text Area?';
+$lang['title_is_textfield']='Text Area?*';
 $lang['title_delete']='Delete?';
 $lang['title_file_tab']='Item File Settings';
 $lang['title_image_tab']='Other Image Settings';
@@ -54,7 +56,10 @@ $lang['title_attr_order_by']='Order';
 $lang['title_attr_alias']='Attribute Alias (Smarty Friendly)';
 $lang['title_attr_length']='Length*';
 $lang['title_attr_default']='Default Value';
-$lang['title_attr_length_help']='(*Length does not apply to Text Areas)';
+$lang['title_attr_length_help']='(*Text Area only applies to Text, Length does not apply to Text Areas or Dropdowns, Select Values only applies to Dropdowns)';
+
+$lang['text'] = 'Text';
+$lang['dropdown'] = 'Dropdown';
 
 
 $lang['item_page'] = 'Item Page';
