@@ -37,7 +37,9 @@
 			order_by I,
 			alias C(60),
 			length I,
-			defaultval X
+			defaultval X,
+			field_type C(25) default 'text',
+			select_values X default ''
 		";
 		$sqlarray = $dict->CreateTableSQL(cms_db_prefix()."module_catalog_attr",
 				$flds, $taboptarray);
