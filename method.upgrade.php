@@ -90,6 +90,13 @@
 				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
    				 	"defaultval X");
 				$dict->ExecuteSQLArray($sqlarray);
+			case "0.8.0":
+				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
+				 	"field_type C(25) default 'text'");
+				$dict->ExecuteSQLArray($sqlarray);
+				$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_catalog_attr",
+				 	"select_values X default ''");
+				$dict->ExecuteSQLArray($sqlarray);
         }
 
 		$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang('upgraded',$this->GetVersion()));

@@ -75,7 +75,7 @@ class Cataloger extends CMSModule
 
   function GetVersion()
   {
-    return '0.8.0';
+    return '0.8.1';
   }
 
   function MinimumCMSVersion()
@@ -321,7 +321,7 @@ class Cataloger extends CMSModule
     if (! isset($this->attrs[$global_ref]) || ! is_array($this->attrs[$global_ref]))
       {
 	$this->attrs[$global_ref] = array();
-	$query = "SELECT attribute, alias, defaultval, length, is_textarea FROM ".
+	$query = "SELECT attribute, alias, defaultval, length, is_textarea, field_type, select_values FROM ".
 	  cms_db_prefix()."module_catalog_attr WHERE type_id=? ORDER BY order_by ASC";
 	$type_id = 1;
 	if ($global_ref == 'catalog_cat_attrs')
@@ -341,6 +341,8 @@ class Cataloger extends CMSModule
 		$thisAttr->is_text = $row['is_textarea'];
 		$thisAttr->length = $row['length'];
 		$thisAttr->default = $row['defaultval'];
+		$thisAttr->select_values = $row['select_values'];
+		$thisAttr->field_type = $row['field_type'];
 		$thisAttr->safe = strtolower(preg_replace('/\W/','',$row['attribute']));
 	    array_push($this->attrs[$global_ref],$thisAttr);
 		}
@@ -779,6 +781,11 @@ class Cataloger extends CMSModule
 					return $this->GetPreference('file_upload_path',$uploadbase.'/catalogerfiles');
 				}
 		
+	}
+	
+	function getFieldTypes()
+	{
+		return array('text' => $this->Lang('text'), 'select' => $this->Lang('dropdown'));
 	}
 
 }
