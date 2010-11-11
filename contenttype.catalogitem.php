@@ -471,6 +471,9 @@ $config['root_url'].'/modules/Cataloger/Cataloger.Image.php?i='.$this->mAlias.'_
             {
             $this->mTabIndex = $params['tabindex'];
             }
+
+         $this->mCachable = false;
+
          // Copy the image files...
          $imgcount = get_site_preference('Cataloger_mapi_pref_item_image_count', '2');
          $herosize = get_site_preference('Cataloger_mapi_pref_item_image_size_hero', '400');

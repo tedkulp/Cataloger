@@ -325,6 +325,8 @@ class CatalogPrintable extends CMSModuleContentType
 				$this->mTitleAttribute = $params['titleattribute'];
 			if (isset($params['tabindex']))
 				$this->mTabIndex = $params['tabindex'];
+				
+    $this->mCachable = false;
 
 	if (isset($params['fieldlist']))
 	  {
