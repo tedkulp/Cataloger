@@ -787,6 +787,60 @@ class Cataloger extends CMSModule
 	{
 		return array('text' => $this->Lang('text'), 'select' => $this->Lang('dropdown'));
 	}
+	
+	function get_product_info($page_id)
+	{
+		$gCms = cmsms();
+
+		$hm = $gCms->GetHierarchyManager();
+		$pageNode = $hm->sureGetNodeById($page_id);
+		$page = $pageNode->GetContent();
+
+		$obj = new cg_ecomm_productinfo();
+		$obj->set_product_id($page_id);
+		$obj->set_name($page->Name());
+		
+		if ($page->HasProperty("Price") &&
+			$page->GetPropertyValue("Price") != '' &&
+			is_numeric($page->GetPropertyValue("Price")))
+		{
+			$obj->set_price($page->GetPropertyValue("Price"));
+		}
+		else if ($page->HasProperty("price") &&
+			$page->GetPropertyValue("price") != '' &&
+			is_numeric($page->GetPropertyValue("price")))
+		{
+			$obj->set_price($page->GetPropertyValue("price"));
+		}
+		
+		if ($page->HasProperty("Weight") &&
+			$page->GetPropertyValue("Weight") != '' &&
+			is_numeric($page->GetPropertyValue("Weight")))
+		{
+			$obj->set_weight($page->GetPropertyValue("Weight"));
+		}
+		else if ($page->HasProperty("weight") &&
+			$page->GetPropertyValue("weight") != '' &&
+			is_numeric($page->GetPropertyValue("weight")))
+		{
+			$obj->set_weight($page->GetPropertyValue("weight"));
+		}
+		
+		if ($page->HasProperty("SKU") &&
+			$page->GetPropertyValue("SKU") != '')
+		{
+			$obj->set_sku($page->GetPropertyValue("SKU"));
+		}
+		else if ($page->HasProperty("sku") &&
+			$page->GetPropertyValue("sku") != '')
+		{
+			$obj->set_sku($page->GetPropertyValue("sku"));
+		}
+		
+		$obj->set_type(cg_ecomm_productinfo::TYPE_PRODUCT);
+		
+		return $obj;
+	}
 
 }
 
